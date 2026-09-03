@@ -1,0 +1,2422 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>02 — EAST Data Governance</title>
+
+<style>
+:root {
+    --bg: #f3f2ee;
+    --paper: #faf9f5;
+    --ink: #171717;
+    --muted: #77736b;
+    --line: #d5d1c8;
+    --accent: #a45139;
+    --slash-gray: #999999;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 14px/1.4 Arial, Helvetica, sans-serif;
+    transition: padding-right 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.wrap {
+    max-width: 1280px;
+    margin: auto;
+    padding: 0 42px;
+    transition: max-width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+body.flow-panel-open .wrap {
+    max-width: calc(1280px - 30vw);
+}
+
+/* ============================================================
+   NAV
+   ============================================================ */
+
+.nav {
+    height: 78px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+
+.nav a {
+    color: var(--muted);
+    text-decoration: none;
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+
+.hero {
+    display: flex;
+    flex-direction: column;
+    padding: 90px 0 75px;
+    border-bottom: 1px solid var(--line);
+}
+
+.hero .kicker {
+    order: 1;
+    margin-bottom: 25px;
+}
+
+.hero h1 {
+    order: 2;
+    margin: 0;
+}
+
+.heroGrid {
+    order: 3;
+    display: flex;
+    gap: 70px;
+    align-items: stretch;
+    margin-top: -25px;
+}
+
+.heroGrid > div:first-child {
+    flex: 1.7;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.lead-group {
+    margin: auto 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.lead-group .lead {
+    margin: 0;
+}
+
+.heroGrid > div:first-child .small {
+    margin-top: auto;
+}
+
+.heroGrid .meta {
+    flex: 0.8;
+    border-left: 1px solid var(--line);
+    padding-left: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.meta div {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.meta div:last-child {
+    border-bottom: none;
+}
+
+.meta b {
+    display: block;
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 400;
+}
+
+.kicker,
+.label {
+    font-size: 10px;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+
+h1 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: clamp(70px, 10vw, 132px);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -.06em;
+    max-width: 1050px;
+    margin-bottom: 24px;
+    color: #171717;
+}
+
+.section-title {
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -.04em;
+    margin: 0;
+    color: var(--ink);
+    line-height: 1.2;
+}
+
+.section-title .before {
+    font-size: 36px;
+    color: var(--ink);
+    display: inline;
+    vertical-align: bottom;
+}
+
+.section-title .after {
+    font-size: 30px;
+    color: var(--slash-gray);
+    display: inline;
+    vertical-align: bottom;
+}
+
+.subsection-title {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -.03em;
+    margin: 60px 0 28px 0;
+    color: var(--muted);
+    line-height: 1.3;
+}
+
+.subsection-title .before {
+    font-size: 24px;
+    color: var(--muted);
+    display: inline;
+    vertical-align: bottom;
+}
+
+.subsection-title .after {
+    font-size: 20px;
+    color: var(--slash-gray);
+    display: inline;
+    vertical-align: bottom;
+}
+
+.subsection-title .dot {
+    font-size: 24px;
+    color: var(--muted);
+    display: inline;
+    vertical-align: bottom;
+}
+
+.card-title {
+    font-size: 17px;
+    font-weight: 700;
+    margin: 0 0 13px;
+    color: var(--ink);
+}
+
+.lead {
+    font-size: 22px;
+    line-height: 1.35;
+    max-width: 760px;
+}
+
+section {
+    padding: 82px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.head {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    margin-bottom: 45px;
+}
+
+p {
+    color: #343434;
+    line-height: 1.4;
+}
+
+.small {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+/* ============================================================
+   CONTENT
+   ============================================================ */
+
+.grid2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    background: var(--line);
+}
+
+.card {
+    background: var(--paper);
+    padding: 34px;
+    min-height: 220px;
+}
+
+.card ul,
+.list {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.card li,
+.list li {
+    padding: 9px 0;
+    border-bottom: 1px solid #e2ded6;
+}
+
+/* ============================================================
+   ORIGINAL FLOW
+   ============================================================ */
+
+.flow {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+}
+
+.flow > div {
+    padding: 10px 12px;
+    min-height: 100px;
+    border-right: 1px solid var(--line);
+    font-size: 13px;
+    line-height: 1.2;
+    color: var(--muted);
+}
+
+.flow > div:last-child {
+    border: 0;
+}
+
+.flow strong {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 2px;
+    color: var(--muted);
+}
+
+.data {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr 1fr;
+}
+
+.data > div {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    padding: 30px;
+    min-height: 255px;
+}
+
+.data > div + div {
+    border-left: 0;
+}
+
+.dark {
+    margin-top: 25px;
+    background: #171717;
+    color: #f4f1e9;
+    padding: 35px;
+}
+
+.darkGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: #444;
+}
+
+.darkGrid > div {
+    background: #171717;
+    padding: 25px;
+    min-height: 145px;
+}
+
+.dark .label {
+    color: #aaa;
+}
+
+.dark strong {
+    display: block;
+    font-size: 18px;
+    font-weight: 500;
+    margin: 12px 0 8px;
+}
+
+.risk {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+}
+
+.risk div {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    padding: 22px;
+    min-height: 110px;
+}
+
+.risk span {
+    display: block;
+    color: var(--muted);
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    margin-bottom: 13px;
+}
+
+.outcome {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    background: var(--line);
+}
+
+.metric {
+    background: var(--paper);
+    padding: 45px;
+}
+
+.metric strong {
+    display: block;
+    font-size: 78px;
+    line-height: 1;
+    letter-spacing: -.06em;
+    font-weight: 500;
+    margin-bottom: 15px;
+}
+
+.quote {
+    font-size: 27px;
+    line-height: 1.25;
+    border-left: 2px solid var(--accent);
+    padding-left: 24px;
+}
+
+.footer {
+    padding: 55px 0 90px;
+    display: flex;
+    justify-content: space-between;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+section:last-of-type .grid2 {
+    display: flex;
+    align-items: stretch;
+    background: var(--line);
+    gap: 2px;
+}
+
+section:last-of-type .grid2 .card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: var(--paper);
+    padding: 34px;
+    min-height: 220px;
+}
+
+/* ============================================================
+   REVEAL
+   ============================================================ */
+
+.reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+        opacity 0.7s ease,
+        transform 0.7s ease;
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ============================================================
+   SIDEBAR VARIABLES
+   ============================================================ */
+
+.flow-panel {
+    --bg: #F7F7F4;
+    --text: #181818;
+    --muted: #777777;
+    --line: #D8D8D3;
+    --accent: #8A4035;
+}
+
+/* ============================================================
+   SIDEBAR TRIGGER
+   ============================================================ */
+
+.flow-trigger {
+    position: fixed;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 9999;
+    background: rgba(138, 64, 53, 0.5);
+    color: #fff;
+    width: 40px;
+    height: 64px;
+    border: none;
+    border-radius: 8px 0 0 8px;
+    cursor: pointer;
+    font-size: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.08);
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1;
+    padding: 0;
+}
+
+.flow-trigger:hover {
+    background: rgba(138, 64, 53, 0.75);
+    width: 46px;
+    box-shadow: -4px 0 16px rgba(0, 0, 0, 0.15);
+}
+
+.flow-trigger .arrow-icon {
+    font-size: 32px;
+    font-weight: 300;
+    line-height: 1;
+}
+
+/* ============================================================
+   SIDEBAR PANEL
+   ============================================================ */
+
+.flow-panel {
+    position: fixed;
+    top: 0;
+    right: -32vw;
+    width: 30vw;
+    max-width: 520px;
+    min-width: 390px;
+    height: 100vh;
+    z-index: 10000;
+    background: rgba(247, 247, 244, 0.94);
+    backdrop-filter: blur(6px);
+    box-shadow: -8px 0 35px rgba(0, 0, 0, 0.08);
+    transition: right 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid rgba(216, 216, 211, 0.55);
+    overflow: hidden;
+    color: var(--text);
+}
+
+.flow-panel.open {
+    right: 0;
+}
+
+/* ============================================================
+   SIDEBAR HEADER
+   ============================================================ */
+
+.flow-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 20px 22px 16px;
+    border-bottom: 1px solid rgba(216, 216, 211, 0.65);
+    flex-shrink: 0;
+}
+
+.flow-panel-header h2 {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+    color: var(--text);
+}
+
+.flow-panel-header h2 span {
+    font-weight: 400;
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    display: block;
+    margin-top: 4px;
+    color: var(--muted);
+}
+
+.flow-close-btn {
+    background: none;
+    border: none;
+    font-size: 19px;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: background 0.2s, color 0.2s;
+    line-height: 1;
+}
+
+.flow-close-btn:hover {
+    background: rgba(216, 216, 211, 0.35);
+    color: var(--text);
+}
+
+/* ============================================================
+   SIDEBAR SCROLL
+   ============================================================ */
+
+.flow-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 22px 22px 30px;
+    background: transparent;
+}
+
+.flow-scroll::-webkit-scrollbar {
+    width: 4px;
+}
+
+.flow-scroll::-webkit-scrollbar-thumb {
+    background: rgba(138, 64, 53, 0.22);
+    border-radius: 4px;
+}
+
+/* ============================================================
+   NEW CLOSED-LOOP FLOW
+   ============================================================ */
+
+.gov-flow {
+    position: relative;
+    width: 100%;
+    max-width: 470px;
+    margin: 0 auto;
+    padding-bottom: 10px;
+}
+
+/* top foundation */
+
+.gov-foundation {
+    text-align: center;
+    padding: 9px 12px 11px;
+    margin-bottom: 14px;
+    border: 1px solid rgba(216,216,211,0.8);
+    background: rgba(255,255,255,0.42);
+    border-radius: 4px;
+}
+
+.gov-foundation-title {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--text);
+}
+
+.gov-foundation-desc {
+    font-size: 7px;
+    color: var(--muted);
+    margin-top: 3px;
+}
+
+/* section label */
+
+.gov-section {
+    margin: 5px 0 6px 34px;
+    font-size: 8px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.gov-section::after {
+    content: "";
+    height: 1px;
+    flex: 1;
+    background: rgba(216,216,211,0.55);
+}
+
+/* node row */
+
+.gov-row {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    min-height: 62px;
+}
+
+/* vertical process spine */
+
+.gov-spine {
+    width: 34px;
+    position: relative;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.gov-spine::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: -6px;
+    left: 50%;
+    width: 1px;
+    background: rgba(180,180,175,0.65);
+    transform: translateX(-50%);
+}
+
+/* numbered circle */
+
+.gov-step {
+    position: relative;
+    z-index: 3;
+    width: 22px;
+    height: 22px;
+    margin-top: 10px;
+    border-radius: 50%;
+    border: 1px solid rgba(138,64,53,0.55);
+    background: #F7F7F4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    font-size: 8px;
+    font-weight: 700;
+    transition:
+        background 0.25s ease,
+        color 0.25s ease,
+        transform 0.25s ease;
+}
+
+.gov-row:hover .gov-step {
+    background: var(--accent);
+    color: #fff;
+    transform: scale(1.08);
+}
+
+/* node */
+
+.gov-node {
+    position: relative;
+    flex: 1;
+    margin-bottom: 7px;
+    background: rgba(255,255,255,0.58);
+    border: 1px solid rgba(216,216,211,0.8);
+    border-radius: 4px;
+    padding: 10px 13px 9px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.025);
+    transition:
+        border-color 0.25s ease,
+        background 0.25s ease,
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.gov-row:hover .gov-node {
+    border-color: rgba(138,64,53,0.35);
+    background: rgba(255,255,255,0.82);
+    transform: translateX(-2px);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.045);
+}
+
+.gov-node.accent {
+    border-left: 3px solid var(--accent);
+}
+
+/* node number */
+
+.gov-node-number {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    font-size: 7px;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+}
+
+/* titles */
+
+.gov-node-title {
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--text);
+    letter-spacing: 0.01em;
+}
+
+.gov-node-desc {
+    font-size: 7.5px;
+    line-height: 1.4;
+    color: var(--muted);
+    margin-top: 4px;
+}
+
+.gov-node-desc ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.gov-node-desc ul li {
+    font-size: 7px;
+    line-height: 1.4;
+    padding: 1px 0;
+    color: var(--muted);
+}
+
+/* ============================================================
+   DUAL TRACK
+   ============================================================ */
+
+.gov-dual {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+    margin-top: 5px;
+}
+
+.gov-track {
+    border: 1px solid rgba(216,216,211,0.65);
+    padding: 7px 8px;
+    border-radius: 3px;
+    background: rgba(247,247,244,0.72);
+}
+
+.gov-track-label {
+    font-size: 7px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 2px;
+}
+
+.gov-track-title {
+    font-size: 6px;
+    color: var(--muted);
+    margin-bottom: 3px;
+}
+
+.gov-track ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.gov-track li {
+    font-size: 6px;
+    line-height: 1.35;
+    color: var(--muted);
+    padding: 1px 0;
+}
+
+/* ============================================================
+   CONNECTORS
+   ============================================================ */
+
+.gov-connector {
+    position: relative;
+    height: 15px;
+    margin-left: 34px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.gov-connector::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 1px;
+    height: 9px;
+    background: rgba(180,180,175,0.65);
+}
+
+.gov-arrow {
+    position: relative;
+    z-index: 2;
+    margin-top: 8px;
+    font-size: 8px;
+    color: var(--accent);
+    line-height: 1;
+}
+
+/* ============================================================
+   DARK NODE
+   ============================================================ */
+
+.gov-node.dark-accent {
+    background: rgba(23,23,23,0.94);
+    border-color: #171717;
+    border-left: 3px solid var(--accent);
+}
+
+.gov-node.dark-accent .gov-node-title {
+    color: #f4f1e9;
+}
+
+.gov-node.dark-accent .gov-node-desc {
+    color: #bdbdbd;
+}
+
+.gov-node.dark-accent .gov-node-desc ul li {
+    color: #bdbdbd;
+}
+
+/* ============================================================
+   LOOP RETURN VISUAL
+   ============================================================ */
+
+.gov-loop-zone {
+    position: relative;
+    height: 76px;
+    margin: 3px 0 0;
+}
+
+/* vertical continuation */
+
+.gov-loop-zone::before {
+    content: "";
+    position: absolute;
+    left: 17px;
+    top: 0;
+    height: 23px;
+    width: 1px;
+    background: rgba(138,64,53,0.42);
+}
+
+/* SVG loop */
+
+.gov-loop-svg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 70px;
+    overflow: visible;
+}
+
+.gov-loop-path {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 1.25;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 4 3;
+    opacity: 0.72;
+}
+
+.gov-loop-arrow {
+    fill: var(--accent);
+    opacity: 0.9;
+}
+
+.gov-loop-label {
+    position: absolute;
+    right: 12px;
+    bottom: 5px;
+    font-size: 6.5px;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: rgba(247,247,244,0.92);
+    padding: 2px 5px;
+}
+
+/* ============================================================
+   FINAL CLOSED LOOP FOOTER
+   ============================================================ */
+
+.gov-footer {
+    position: relative;
+    margin-top: 2px;
+    padding: 12px 12px 11px;
+    background: rgba(23,23,23,0.96);
+    color: #f4f1e9;
+    border-radius: 3px;
+    text-align: center;
+    border-top: 2px solid var(--accent);
+}
+
+.gov-footer::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: -7px;
+    width: 12px;
+    height: 12px;
+    background: #171717;
+    border-left: 1px solid var(--accent);
+    border-top: 1px solid var(--accent);
+    transform: translateX(-50%) rotate(45deg);
+}
+
+.gov-footer strong {
+    display: block;
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+}
+
+.gov-footer span {
+    display: block;
+    font-size: 6.8px;
+    color: #bdbdbd;
+    margin-top: 4px;
+}
+
+.gov-footer .loop-status {
+    color: #d4a79d;
+    margin-top: 5px;
+    font-size: 6.3px;
+    letter-spacing: 0.05em;
+}
+
+/* ============================================================
+   BODY SHIFT
+   ============================================================ */
+
+body.flow-panel-open {
+    padding-right: 30vw;
+}
+
+/* ============================================================
+   MOBILE SIDEBAR
+   ============================================================ */
+
+@media (max-width: 1024px) {
+
+    .flow-panel {
+        right: -100vw;
+        width: 100vw;
+        max-width: 100vw;
+        min-width: 0;
+        background: rgba(247,247,244,0.96);
+    }
+
+    .flow-panel.open {
+        right: 0;
+    }
+
+    body.flow-panel-open {
+        padding-right: 0;
+    }
+
+    body.flow-panel-open .wrap {
+        max-width: 100%;
+    }
+
+    .flow-trigger {
+        width: 32px;
+        height: 48px;
+    }
+
+    .flow-trigger .arrow-icon {
+        font-size: 24px;
+    }
+
+    .flow-scroll {
+        padding: 16px 16px 24px;
+    }
+}
+
+@media (max-width: 640px) {
+
+    .flow-scroll {
+        padding: 12px 12px 20px;
+    }
+
+    .gov-node {
+        padding: 8px 10px;
+    }
+
+    .gov-node-title {
+        font-size: 9px;
+    }
+
+    .gov-node-desc {
+        font-size: 6.5px;
+    }
+
+    .gov-node-desc ul li {
+        font-size: 6px;
+    }
+
+    .gov-footer strong {
+        font-size: 7px;
+    }
+
+    .gov-footer span {
+        font-size: 6px;
+    }
+
+    .gov-section {
+        margin-left: 28px;
+    }
+
+    .gov-spine {
+        width: 28px;
+    }
+
+    .gov-connector {
+        margin-left: 28px;
+    }
+
+    .gov-loop-zone::before {
+        left: 14px;
+    }
+
+    .gov-dual {
+        gap: 4px;
+    }
+
+    .gov-track {
+        padding: 6px;
+    }
+}
+
+/* ============================================================
+   MAIN PAGE MOBILE
+   ============================================================ */
+
+@media(max-width:800px) {
+
+    .wrap {
+        padding: 0 20px;
+    }
+
+    .heroGrid,
+    .grid2,
+    .data,
+    .outcome {
+        grid-template-columns: 1fr;
+    }
+
+    .flow {
+        grid-template-columns: 1fr;
+    }
+
+    .flow > div {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+    }
+
+    .data > div + div {
+        border-left: 1px solid var(--line);
+        border-top: 0;
+    }
+
+    .risk,
+    .darkGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .head {
+        grid-template-columns: 1fr;
+    }
+
+    .section-title {
+        font-size: 28px;
+    }
+
+    .section-title .before {
+        font-size: 28px;
+    }
+
+    .section-title .after {
+        font-size: 23px;
+    }
+
+    .subsection-title {
+        font-size: 20px;
+    }
+
+    .subsection-title .before {
+        font-size: 20px;
+    }
+
+    .subsection-title .after {
+        font-size: 17px;
+    }
+
+    .subsection-title .dot {
+        font-size: 20px;
+    }
+
+    .lead {
+        font-size: 19px;
+    }
+
+    .meta {
+        border-left: 0;
+        padding-left: 0;
+    }
+
+    .heroGrid {
+        flex-direction: column;
+        gap: 20px;
+        margin-top: 0;
+    }
+
+    .hero h1 {
+        margin-top: 15px;
+    }
+
+    section:last-of-type .grid2 {
+        flex-direction: column;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+<nav class="nav">
+    <b>JiaXin Xing / Project —— EAST Regulatory Data Governance</b>
+    <a href="../JiaXin%20Xing%20%E2%80%94%20Research%20%C2%B7%20Systems%20%C2%B7%20Design.html">← All Projects</a>
+</nav>
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+
+<header class="hero reveal">
+
+    <div class="kicker">
+        Data Governance · Regulatory Reporting · Information Architecture
+    </div>
+
+    <h1>
+        EAST Regulatory<br>
+        Data Governance
+    </h1>
+
+    <div class="heroGrid">
+
+        <div>
+
+            <div class="lead-group">
+
+                <p class="lead">
+                    Reconstructing data integrity across customer identities,
+                    historical records and internal banking systems.
+                </p>
+
+                <p class="lead">
+                    A periodic data governance project to restore missing
+                    corporate customer and historical business information
+                    across fragmented internal systems, supporting regulatory
+                    reporting and dynamic account management.
+                </p>
+
+            </div>
+
+            <p class="small">
+                China Merchants Bank · Dalian Branch · Corporate Banking
+            </p>
+
+        </div>
+
+        <div class="meta">
+
+            <div>
+                <b>Role</b>
+                Data Governance / Risk & Compliance
+            </div>
+
+            <div>
+                <b>Period</b>
+                2021 — periodic governance
+            </div>
+
+            <div>
+                <b>Scope</b>
+                60,000+ existing customers · 200,000+ historical records
+            </div>
+
+            <div>
+                <b>Core logic</b>
+                Missing Data → Identity Matching → Reconstruction → System Upgrade
+            </div>
+
+        </div>
+
+    </div>
+
+</header>
+
+<!-- ============================================================
+     CONTEXT
+     ============================================================ -->
+
+<section class="reveal">
+
+    <div class="head">
+
+        <h2 class="section-title">
+            <span class="before">Context /&nbsp;</span>
+            <span class="after">
+                From fragmented identities to a common data foundation
+            </span>
+        </h2>
+
+    </div>
+
+    <div class="grid2">
+
+        <div class="card">
+
+            <div class="label">
+                Institutional context / 2015 — 2018
+            </div>
+
+            <h4 class="card-title">
+                A unified enterprise identifier changed the regulatory data landscape.
+            </h4>
+
+            <p>
+                Before the reform, enterprises were identified through separate
+                registration records, including the business licence, organisation
+                code certificate and tax registration certificate. From 1 October
+                2015, China began implementing the “three certificates in one,
+                one licence one code” system, replacing the three certificates
+                with a business licence carrying a unified social credit code.
+                Existing records entered a transition period, with the unified
+                code becoming mandatory from 2018.
+            </p>
+
+        </div>
+
+        <div class="card">
+
+            <div class="label">
+                Operational problem / Banking data
+            </div>
+
+            <h4 class="card-title">
+                The policy created a common identifier, but legacy banking data
+                did not become unified automatically.
+            </h4>
+
+            <p>
+                Historical customer records had been accumulated under different
+                information standards and across different business systems.
+                Missing or inconsistent identifiers made it difficult to connect
+                the same corporate customer horizontally across internal systems
+                and to support complete, dynamic regulatory management of
+                corporate accounts and historical business information.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ============================================================
+     GOVERNANCE ARCHITECTURE
+     ============================================================ -->
+
+<section class="reveal">
+
+    <div class="head">
+
+        <h2 class="section-title">
+            <span class="before">Governance architecture /&nbsp;</span>
+            <span class="after">
+                A dual-track reconstruction process
+            </span>
+        </h2>
+
+    </div>
+
+    <div class="flow">
+
+        <div>
+            <strong>Data inventory</strong>
+            Locate missing and inconsistent fields
+        </div>
+
+        <div>
+            <strong>Classification</strong>
+            Customer-critical vs. business-process data
+        </div>
+
+        <div>
+            <strong>Dual-track completion</strong>
+            Customer confirmation + internal-system matching
+        </div>
+
+        <div>
+            <strong>Identity linkage</strong>
+            Construct composite matching keys across systems
+        </div>
+
+        <div>
+            <strong>System upgrade</strong>
+            Feed governance findings back into core systems
+        </div>
+
+    </div>
+
+    <!-- DATA INVENTORY -->
+
+    <div class="sub-section">
+
+        <h3 class="subsection-title">
+            <span class="dot">○ </span>
+            <span class="before">Data inventory /&nbsp;</span>
+            <span class="after">
+                Classifying what was missing before deciding how to repair it
+            </span>
+        </h3>
+
+        <div class="data">
+
+            <div>
+
+                <div class="label">
+                    Customer-critical data
+                </div>
+
+                <ul class="list">
+                    <li>Customer name</li>
+                    <li>Business licence / unified identifier</li>
+                    <li>Legal representative</li>
+                    <li>Beneficial owner</li>
+                    <li>Payment contact</li>
+                    <li>Online-banking administrator</li>
+                </ul>
+
+            </div>
+
+            <div>
+
+                <div class="label">
+                    Business-process data
+                </div>
+
+                <ul class="list">
+                    <li>Borrower / lender customer number</li>
+                    <li>Business occurrence date</li>
+                    <li>Business type</li>
+                    <li>
+                        Other historical fields missing from individual systems
+                    </li>
+                </ul>
+
+            </div>
+
+            <div>
+
+                <div class="label">
+                    Governance decision
+                </div>
+
+                <ul class="list">
+                    <li>Customer confirmation</li>
+                    <li>Internal record reconstruction</li>
+                    <li>Cross-system matching</li>
+                    <li>
+                        Regulatory-accepted completion where recovery was impossible
+                    </li>
+                </ul>
+
+            </div>
+
+        </div>
+
+        <p class="small">
+            The first distinction was not simply “complete / incomplete”,
+            but whether the missing field required customer confirmation or
+            could be reconstructed from trusted internal records.
+        </p>
+
+    </div>
+
+    <!-- DUAL TRACK -->
+
+    <div class="sub-section">
+
+        <h3 class="subsection-title">
+            <span class="dot">○ </span>
+            <span class="before">Dual-track completion /&nbsp;</span>
+            <span class="after">
+                External confirmation and internal reconstruction running in parallel
+            </span>
+        </h3>
+
+        <div class="grid2">
+
+            <div class="card">
+
+                <div class="label">
+                    Track A / Customer & external information
+                </div>
+
+                <h4 class="card-title">
+                    Recover information that only the customer or external
+                    authority could validate.
+                </h4>
+
+                <ul>
+
+                    <li>
+                        Count and prioritise missing critical customer information.
+                    </li>
+
+                    <li>
+                        Contact customers individually and set a completion
+                        deadline within the quarter.
+                    </li>
+
+                    <li>
+                        Review dormant, long-term inactive and closed accounts
+                        that still contained missing information.
+                    </li>
+
+                    <li>
+                        Apply for interbank data sharing through the regulator
+                        where appropriate.
+                    </li>
+
+                    <li>
+                        For information that could not be recovered, use
+                        regulator-accepted placeholder completion so reporting
+                        systems could operate correctly.
+                    </li>
+
+                </ul>
+
+            </div>
+
+            <div class="card">
+
+                <div class="label">
+                    Track B / Internal systems
+                </div>
+
+                <h4 class="card-title">
+                    Use existing internal records to reconstruct missing
+                    business information.
+                </h4>
+
+                <ul>
+
+                    <li>
+                        Apply for access to relevant internal systems.
+                    </li>
+
+                    <li>
+                        Extract high-value identifiers and combine them into
+                        composite matching keys.
+                    </li>
+
+                    <li>
+                        Match records across systems and supplement missing fields.
+                    </li>
+
+                    <li>
+                        Identify recurring structural gaps rather than treating
+                        each missing record as an isolated case.
+                    </li>
+
+                    <li>
+                        Submit system-optimisation requirements to head-office
+                        development teams.
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- IDENTITY LINKAGE -->
+
+    <div class="sub-section">
+
+        <h3 class="subsection-title">
+            <span class="dot">○ </span>
+            <span class="before">Identity linkage /&nbsp;</span>
+            <span class="after">
+                From individual records to a cross-system customer view
+            </span>
+        </h3>
+
+        <div class="dark">
+
+            <div class="darkGrid">
+
+                <div>
+                    <div class="label">01 / Extract</div>
+                    <strong>Critical identifiers</strong>
+                    Customer identity and key business attributes.
+                </div>
+
+                <div>
+                    <div class="label">02 / Combine</div>
+                    <strong>Composite keys</strong>
+                    Combine multiple stable fields rather than relying on
+                    one incomplete field.
+                </div>
+
+                <div>
+                    <div class="label">03 / Match</div>
+                    <strong>Cross-system records</strong>
+                    Locate the same customer and related business records
+                    in different internal systems.
+                </div>
+
+                <div>
+                    <div class="label">04 / Reconstruct</div>
+                    <strong>Complete missing fields</strong>
+                    Use trusted records to restore information where direct
+                    customer confirmation was not required.
+                </div>
+
+                <div>
+                    <div class="label">05 / Escalate</div>
+                    <strong>System optimisation</strong>
+                    Translate repeated data gaps into requirements for
+                    system-level improvement.
+                </div>
+
+                <div>
+                    <div class="label">06 / Govern</div>
+                    <strong>Periodic review</strong>
+                    Keep the data foundation usable for continuing regulatory
+                    and internal management.
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ============================================================
+     GOVERNANCE IN PRACTICE
+     ============================================================ -->
+
+<section class="reveal">
+
+    <div class="head">
+
+        <h2 class="section-title">
+            <span class="before">Governance in practice /&nbsp;</span>
+            <span class="after">
+                Repairing data while improving the systems that produce it
+            </span>
+        </h2>
+
+    </div>
+
+    <div class="grid2">
+
+        <div class="card">
+
+            <div class="label">Data layer</div>
+
+            <h4 class="card-title">
+                60,000+ existing customers
+            </h4>
+
+            <p>
+                Critical customer information was inventoried, contacted,
+                reconstructed and supplemented through a combination of
+                customer confirmation, internal matching and permitted
+                external information sources.
+            </p>
+
+        </div>
+
+        <div class="card">
+
+            <div class="label">Business layer</div>
+
+            <h4 class="card-title">
+                200,000+ historical records
+            </h4>
+
+            <p>
+                Historical business and information gaps were classified
+                and reconstructed through related internal systems, reducing
+                the need to treat every missing field as a new manual
+                data-collection task.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ============================================================
+     OUTCOME
+     ============================================================ -->
+
+<section class="reveal">
+
+    <div class="head">
+
+        <h2 class="section-title">
+            <span class="before">Outcome /&nbsp;</span>
+            <span class="after">
+                From periodic remediation to structural improvement
+            </span>
+        </h2>
+
+    </div>
+
+    <div class="outcome">
+
+        <div class="metric">
+            <strong>60K+</strong>
+            Existing corporate customers included in the
+            data-completion work.
+        </div>
+
+        <div class="metric">
+            <strong>200K+</strong>
+            Historical business / information records completed
+            or reconstructed.
+        </div>
+
+    </div>
+
+    <div class="grid2" style="margin-top:2px;">
+
+        <div class="card">
+
+            <div class="label">System impact</div>
+
+            <h4 class="card-title">
+                Internal credit system
+            </h4>
+
+            <p>
+                Key information modules were upgraded based on recurring
+                data-governance requirements.
+            </p>
+
+        </div>
+
+        <div class="card">
+
+            <div class="label">System impact</div>
+
+            <h4 class="card-title">
+                Core customer system
+            </h4>
+
+            <p>
+                Key customer-information modules were improved to support
+                more consistent data capture and maintenance.
+            </p>
+
+        </div>
+
+    </div>
+
+    <p class="small">
+        Outcome figures are based on the project information supplied for
+        this portfolio; no additional performance metrics have been added.
+    </p>
+
+</section>
+
+<!-- ============================================================
+     PROJECT LENS
+     ============================================================ -->
+
+<section class="reveal">
+
+    <div class="head">
+
+        <h2 class="section-title">
+            <span class="before">Project lens /&nbsp;</span>
+            <span class="after">
+                Why this matters for governance
+            </span>
+        </h2>
+
+    </div>
+
+    <div class="grid2">
+
+        <div class="card quote">
+            The project was not simply a data-cleaning exercise.
+            It connected regulatory requirements, customer identity,
+            fragmented internal records and system design into a
+            repeatable governance process.
+        </div>
+
+        <div class="card">
+
+            <p>
+                <b>Data Governance</b><br>
+                Define what must be complete, where reliable information
+                can be recovered, and how missing data should be handled.
+            </p>
+
+            <p>
+                <b>Information Architecture</b><br>
+                Build a usable cross-system view from fragmented identifiers
+                and business records.
+            </p>
+
+            <p>
+                <b>Regulatory Technology</b><br>
+                Translate reporting requirements into operational data workflows.
+            </p>
+
+            <p>
+                <b>Digital Transformation</b><br>
+                Feed recurring governance problems back into system design
+                rather than relying on permanent manual correction.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+<footer class="footer">
+
+    <span>
+        JiaXin Xing — Selected Project
+    </span>
+
+    <span>
+        Data · Regulation · Systems · Governance
+    </span>
+
+</footer>
+
+</div>
+
+
+<!-- ================================================================
+     SIDEBAR — EAST DATA GOVERNANCE FLOW
+     ================================================================ -->
+
+<button
+    class="flow-trigger"
+    id="flowTrigger"
+    aria-label="Toggle process flow"
+>
+    <span class="arrow-icon">▶</span>
+</button>
+
+
+<div class="flow-panel" id="flowPanel">
+
+    <div class="flow-panel-header">
+
+        <h2>
+            DATA GOVERNANCE FLOW
+            <span>
+                EAST Regulatory · Continuous Lifecycle
+            </span>
+        </h2>
+
+        <button
+            class="flow-close-btn"
+            id="flowCloseBtn"
+            aria-label="Close"
+        >
+            ✕
+        </button>
+
+    </div>
+
+
+    <div class="flow-scroll">
+
+        <div class="gov-flow">
+
+            <!-- ==================================================
+                 FOUNDATION
+                 ================================================== -->
+
+            <div class="gov-foundation">
+
+                <div class="gov-foundation-title">
+                    TRUSTED DATA FOUNDATION
+                </div>
+
+                <div class="gov-foundation-desc">
+                    Support Regulatory Reporting &amp; Dynamic Account Management
+                </div>
+
+            </div>
+
+
+            <!-- ==================================================
+                 01 DATA INVENTORY
+                 ================================================== -->
+
+            <div class="gov-section">
+                01 / Data Inventory
+            </div>
+
+            <div class="gov-row">
+
+                <div class="gov-spine">
+                    <div class="gov-step">01</div>
+                </div>
+
+                <div class="gov-node accent">
+
+                    <div class="gov-node-number">
+                        INPUT
+                    </div>
+
+                    <div class="gov-node-title">
+                        Data Inventory
+                    </div>
+
+                    <div class="gov-node-desc">
+
+                        <ul>
+                            <li>— Locate missing &amp; inconsistent fields</li>
+                            <li>— Identify critical data gaps</li>
+                            <li>— Determine recovery approach</li>
+                        </ul>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="gov-connector">
+                <div class="gov-arrow">▼</div>
+            </div>
+
+
+            <!-- ==================================================
+                 02 CLASSIFICATION
+                 ================================================== -->
+
+            <div class="gov-section">
+                02 / Classification
+            </div>
+
+            <div class="gov-row">
+
+                <div class="gov-spine">
+                    <div class="gov-step">02</div>
+                </div>
+
+                <div class="gov-node">
+
+                    <div class="gov-node-number">
+                        SORT
+                    </div>
+
+                    <div class="gov-node-title">
+                        Classification
+                    </div>
+
+                    <div class="gov-node-desc">
+
+                        <ul>
+                            <li>— Customer-critical data</li>
+                            <li>— Business-process data</li>
+                            <li>— Define governance strategy</li>
+                        </ul>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="gov-connector">
+                <div class="gov-arrow">▼</div>
+            </div>
+
+
+            <!-- ==================================================
+                 03 DUAL TRACK
+                 ================================================== -->
+
+            <div class="gov-section">
+                03 / Dual-track Completion
+            </div>
+
+            <div class="gov-row">
+
+                <div class="gov-spine">
+                    <div class="gov-step">03</div>
+                </div>
+
+                <div class="gov-node accent">
+
+                    <div class="gov-node-title">
+                        Dual-track Completion
+                    </div>
+
+                    <div class="gov-dual">
+
+                        <div class="gov-track">
+
+                            <div class="gov-track-label">
+                                TRACK A
+                            </div>
+
+                            <div class="gov-track-title">
+                                Customer &amp; External
+                            </div>
+
+                            <ul>
+                                <li>• Customer confirmation</li>
+                                <li>• External data sharing</li>
+                                <li>• Placeholder completion</li>
+                            </ul>
+
+                        </div>
+
+
+                        <div class="gov-track">
+
+                            <div class="gov-track-label">
+                                TRACK B
+                            </div>
+
+                            <div class="gov-track-title">
+                                Internal Systems
+                            </div>
+
+                            <ul>
+                                <li>• Internal system access</li>
+                                <li>• Record matching</li>
+                                <li>• Data reconstruction</li>
+                            </ul>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="gov-connector">
+                <div class="gov-arrow">▼</div>
+            </div>
+
+
+            <!-- ==================================================
+                 04 IDENTITY LINKAGE
+                 ================================================== -->
+
+            <div class="gov-section">
+                04 / Identity Linkage
+            </div>
+
+            <div class="gov-row">
+
+                <div class="gov-spine">
+                    <div class="gov-step">04</div>
+                </div>
+
+                <div class="gov-node dark-accent">
+
+                    <div class="gov-node-number">
+                        MATCH
+                    </div>
+
+                    <div class="gov-node-title">
+                        Identity Linkage
+                    </div>
+
+                    <div class="gov-node-desc">
+
+                        <ul>
+                            <li>— Extract critical identifiers</li>
+                            <li>— Build composite matching keys</li>
+                            <li>— Cross-system record matching</li>
+                            <li>— Reconstruct missing fields</li>
+                        </ul>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="gov-connector">
+                <div class="gov-arrow">▼</div>
+            </div>
+
+
+            <!-- ==================================================
+                 05 SYSTEM UPGRADE
+                 ================================================== -->
+
+            <div class="gov-section">
+                05 / System Upgrade
+            </div>
+
+            <div class="gov-row">
+
+                <div class="gov-spine">
+                    <div class="gov-step">05</div>
+                </div>
+
+                <div class="gov-node">
+
+                    <div class="gov-node-number">
+                        IMPROVE
+                    </div>
+
+                    <div class="gov-node-title">
+                        System Upgrade
+                    </div>
+
+                    <div class="gov-node-desc">
+
+                        <ul>
+                            <li>— Identify structural data gaps</li>
+                            <li>— Submit optimisation requirements</li>
+                            <li>— Upgrade key system modules</li>
+                            <li>— Improve data capture &amp; quality</li>
+                        </ul>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="gov-connector">
+                <div class="gov-arrow">▼</div>
+            </div>
+
+
+            <!-- ==================================================
+                 06 OUTCOME & REVIEW
+                 ================================================== -->
+
+            <div class="gov-section">
+                06 / Outcome &amp; Review
+            </div>
+
+            <div class="gov-row">
+
+                <div class="gov-spine">
+                    <div class="gov-step">06</div>
+                </div>
+
+                <div class="gov-node accent">
+
+                    <div class="gov-node-number">
+                        REVIEW
+                    </div>
+
+                    <div class="gov-node-title">
+                        Outcome &amp; Review
+                    </div>
+
+                    <div class="gov-node-desc">
+
+                        <ul>
+                            <li>— Data completion achieved</li>
+                            <li>— Support regulatory reporting</li>
+                            <li>— Periodic review</li>
+                            <li>— Continuous improvement</li>
+                        </ul>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ==================================================
+                 RETURN LOOP
+                 ================================================== -->
+
+            <div class="gov-loop-zone">
+
+                <svg
+                    class="gov-loop-svg"
+                    viewBox="0 0 470 70"
+                    preserveAspectRatio="none"
+                    aria-hidden="true"
+                >
+
+                    <!-- 从 06 向左回流，再向上回到主流程 -->
+
+                    <path
+                        class="gov-loop-path"
+                        d="
+                            M 254 0
+                            C 254 15, 420 15, 420 34
+                            C 420 55, 72 55, 72 34
+                            C 72 27, 72 20, 72 10
+                        "
+                    />
+
+                    <!-- 回流箭头 -->
+
+                    <path
+                        class="gov-loop-arrow"
+                        d="
+                            M 66 15
+                            L 72 6
+                            L 78 15
+                            Z
+                        "
+                    />
+
+                </svg>
+
+                <div class="gov-loop-label">
+                    CONTINUOUS FEEDBACK LOOP
+                </div>
+
+            </div>
+
+
+            <!-- ==================================================
+                 CLOSED LOOP RESULT
+                 ================================================== -->
+
+            <div class="gov-footer">
+
+                <strong>
+                    CLOSED-LOOP GOVERNANCE
+                </strong>
+
+                <span>
+                    Inventory → Classification → Completion
+                    → Linkage → Upgrade → Review
+                </span>
+
+                <div class="loop-status">
+                    ↻ REVIEW FEEDS THE NEXT DATA INVENTORY
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================================================================
+     JAVASCRIPT
+     ================================================================ -->
+
+<script>
+
+/* ============================================================
+   1. SCROLL REVEAL
+   ============================================================ */
+
+(function() {
+
+    'use strict';
+
+    const revealElements =
+        document.querySelectorAll('.reveal');
+
+    const revealObserver =
+        new IntersectionObserver(
+
+            function(entries) {
+
+                entries.forEach(function(entry) {
+
+                    if (entry.isIntersecting) {
+
+                        entry.target.classList.add('visible');
+
+                    }
+
+                });
+
+            },
+
+            {
+                threshold: 0.08,
+                rootMargin: '0px 0px -20px 0px'
+            }
+
+        );
+
+    revealElements.forEach(function(el) {
+
+        revealObserver.observe(el);
+
+    });
+
+    setTimeout(function() {
+
+        revealElements.forEach(function(el) {
+
+            const rect =
+                el.getBoundingClientRect();
+
+            const winHeight =
+                window.innerHeight ||
+                document.documentElement.clientHeight;
+
+            if (rect.top < winHeight - 60) {
+
+                el.classList.add('visible');
+
+            }
+
+        });
+
+    }, 120);
+
+})();
+
+
+/* ============================================================
+   2. SIDEBAR TOGGLE
+   ============================================================ */
+
+(function() {
+
+    const trigger =
+        document.getElementById('flowTrigger');
+
+    const panel =
+        document.getElementById('flowPanel');
+
+    const closeBtn =
+        document.getElementById('flowCloseBtn');
+
+    let isOpen = false;
+
+
+    function togglePanel(open) {
+
+        isOpen =
+            (open !== undefined)
+                ? open
+                : !isOpen;
+
+
+        if (isOpen) {
+
+            panel.classList.add('open');
+
+            document.body.classList.add(
+                'flow-panel-open'
+            );
+
+            trigger
+                .querySelector('.arrow-icon')
+                .textContent = '◀';
+
+        } else {
+
+            panel.classList.remove('open');
+
+            document.body.classList.remove(
+                'flow-panel-open'
+            );
+
+            trigger
+                .querySelector('.arrow-icon')
+                .textContent = '▶';
+
+        }
+
+    }
+
+
+    trigger.addEventListener(
+        'click',
+        function(e) {
+
+            e.stopPropagation();
+
+            togglePanel();
+
+        }
+    );
+
+
+    closeBtn.addEventListener(
+        'click',
+        function(e) {
+
+            e.stopPropagation();
+
+            if (isOpen) {
+
+                togglePanel(false);
+
+            }
+
+        }
+    );
+
+
+    document.addEventListener(
+        'keydown',
+        function(e) {
+
+            if (
+                e.key === 'Escape' &&
+                isOpen
+            ) {
+
+                togglePanel(false);
+
+            }
+
+        }
+    );
+
+})();
+
+</script>
+
+</body>
+</html>

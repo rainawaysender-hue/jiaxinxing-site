@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JiaXin Xing — Research · Systems · Design</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+    <style>
+        /* ============================================================
+                   CSS VARIABLES
+                   ============================================================ */
+        :root {
+            /* Colors */
+            --bg: #F2F0EA;
+            --primary: #1B1B19;
+            --secondary: #747169;
+            --line: #D8D4CA;
+            --paper: #F8F6F0;
+            --sage: #7C806B;
+            --clay: #A58D78;
+
+            /* Project accent colors */
+            --accent-01: #2C2C2A;
+            --accent-02: #6F7A63;
+            --accent-03: #A58D78;
+
+            /* Typography */
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            --font-mono: 'IBM Plex Mono', 'SF Mono', 'Fira Code', monospace;
+
+            /* Spacing */
+            --space-8: 8px;
+            --space-16: 16px;
+            --space-24: 24px;
+            --space-32: 32px;
+            --space-48: 48px;
+            --space-64: 64px;
+            --space-96: 96px;
+            --space-128: 128px;
+
+            /* Grid */
+            --container-max: 1280px;
+            --grid-gap: 24px;
+            --margin-side: 80px;
+
+            /* Transitions */
+            --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        /* ============================================================
+                   RESET & BASE
+                   ============================================================ */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--primary);
+            font-family: var(--font-sans);
+            font-weight: 400;
+            line-height: 1.5;
+            min-height: 100vh;
+            cursor: default;
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* ============================================================
+                   CONTAINER & GRID
+                   ============================================================ */
+        .container {
+            max-width: var(--container-max);
+            margin: 0 auto;
+            padding: 0 var(--margin-side);
+        }
+
+        /* ============================================================
+                   HERO
+                   ============================================================ */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: var(--space-64) 0;
+        }
+
+        /* Top-left name */
+        .hero__name {
+            position: absolute;
+            top: var(--space-48);
+            left: 0;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 400;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--secondary);
+            opacity: 0;
+            animation: fadeUp 0.8s var(--ease-out) 0.2s forwards;
+        }
+
+        /* Central typography */
+        .hero__title {
+            display: flex;
+            flex-direction: column;
+            max-width: 900px;
+            margin-bottom: var(--space-48);
+        }
+
+        .hero__title-word {
+            font-size: clamp(48px, 10vw, 96px);
+            font-weight: 700;
+            /* 加粗 */
+            line-height: 1.1;
+            /* 调整行高 */
+            letter-spacing: -0.05em;
+            color: var(--primary);
+            opacity: 0;
+            transform: translateY(20px);
+            margin-bottom: 0.05em;
+            /* 加大行间距 */
+        }
+
+        .hero__title-word:last-child {
+            margin-bottom: 0;
+        }
+
+        .hero__title-word:nth-child(1) {
+            animation: fadeUp 0.8s var(--ease-out) 0.3s forwards;
+        }
+        .hero__title-word:nth-child(2) {
+            animation: fadeUp 0.8s var(--ease-out) 0.5s forwards;
+        }
+        .hero__title-word:nth-child(3) {
+            animation: fadeUp 0.8s var(--ease-out) 0.7s forwards;
+        }
+
+        /* Subtitle */
+        .hero__sub {
+            max-width: 420px;
+            font-size: 15px;
+            font-weight: 400;
+            color: var(--secondary);
+            line-height: 1.6;
+            opacity: 0;
+            animation: fadeUp 0.8s var(--ease-out) 0.9s forwards;
+        }
+
+        /* Scroll indicator */
+        .hero__scroll {
+            position: absolute;
+            bottom: var(--space-48);
+            right: 0;
+            font-family: var(--font-mono);
+            font-size: 10px;
+            font-weight: 400;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--secondary);
+            opacity: 0;
+            animation: fadeUp 0.8s var(--ease-out) 1.1s forwards;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+        }
+
+        .hero__scroll span {
+            display: inline-block;
+            animation: pulseArrow 2.4s ease-in-out infinite;
+        }
+
+        @keyframes pulseArrow {
+            0%,
+            100% {
+                transform: translateY(0);
+                opacity: 0.5;
+            }
+            50% {
+                transform: translateY(6px);
+                opacity: 1;
+            }
+        }
+
+        /* ============================================================
+                   SECTION: SELECTED WORK
+                   ============================================================ */
+        .section-selected {
+            padding-top: var(--space-128);
+            padding-bottom: var(--space-64);
+        }
+
+        .section-selected__header {
+            display: flex;
+            align-items: baseline;
+            justify-content: flex-start;
+            /* 左对齐 */
+            border-bottom: 1px solid var(--line);
+            padding-bottom: var(--space-24);
+            margin-bottom: var(--space-64);
+        }
+
+        .section-selected__title {
+            font-size: clamp(28px, 4vw, 40px);
+            font-weight: 500;
+            letter-spacing: -0.02em;
+            color: var(--primary);
+        }
+
+        /* ============================================================
+                   PROJECTS LIST
+                   ============================================================ */
+        .projects {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        /* Each project row */
+        .project-row {
+            position: relative;
+            display: grid;
+            grid-template-columns: 1fr 7fr 3fr 1fr;
+            gap: var(--grid-gap);
+            align-items: center;
+            min-height: 180px;
+            padding: var(--space-32) 0;
+            border-bottom: 1px solid var(--line);
+            cursor: pointer;
+            transition: border-color 0.35s var(--ease-out);
+        }
+
+        .project-row:last-child {
+            border-bottom: none;
+        }
+
+        /* Hover state: divider change */
+        .project-row:hover {
+            border-bottom-color: var(--primary);
+        }
+
+        /* Number */
+        .project-row__number {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 400;
+            letter-spacing: 0.04em;
+            color: var(--secondary);
+            transition: color 0.35s var(--ease-out);
+        }
+
+        .project-row:hover .project-row__number {
+            color: var(--primary);
+        }
+
+        /* Title area */
+        .project-row__info {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-8);
+            transition: transform 0.4s var(--ease-out);
+        }
+
+        .project-row:hover .project-row__info {
+            transform: translateX(8px);
+        }
+
+        .project-row__title {
+            font-size: clamp(22px, 3.2vw, 40px);
+            font-weight: 500;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            color: var(--primary);
+        }
+
+        .project-row__title .amp {
+            font-weight: 300;
+            color: var(--secondary);
+        }
+
+        .project-row__meta {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            font-weight: 400;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--secondary);
+            line-height: 1.8;
+            transition: color 0.35s var(--ease-out);
+        }
+
+        .project-row:hover .project-row__meta {
+            color: var(--primary);
+        }
+
+        /* Arrow */
+        .project-row__arrow {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 400;
+            letter-spacing: 0.06em;
+            color: var(--secondary);
+            opacity: 0;
+            transition: opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out), color 0.35s var(--ease-out);
+            transform: translateX(-4px);
+            text-align: right;
+        }
+
+        .project-row:hover .project-row__arrow {
+            opacity: 1;
+            transform: translateX(0);
+            color: var(--primary);
+        }
+
+        /* ============================================================
+                   PROJECT PREVIEW IMAGE (floating)
+                   ============================================================ */
+        .project-row__preview {
+            position: fixed;
+            pointer-events: none;
+            z-index: 100;
+            width: 240px;
+            height: 180px;
+            opacity: 0;
+            transition: opacity 0.45s var(--ease-out);
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(27, 27, 25, 0.10);
+            will-change: transform, opacity;
+            transform: translate(-50%, -50%);
+        }
+
+        .project-row__preview.is-visible {
+            opacity: 1;
+        }
+
+        .project-row__preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Preview placeholder styles (will be replaced by real images) */
+        .project-row__preview .preview-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-mono);
+            font-size: 9px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.7);
+            padding: var(--space-16);
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        /* project sub-links (secondary titles) */
+        .project-row__meta .project-row__sub{display:block;color:var(--secondary);text-decoration:none}
+        .project-row__meta .project-row__sub:hover{color:var(--primary)}
+        .project-row__title .project-row__link{color:var(--primary);text-decoration:none}
+        .project-row__title .project-row__link:hover{text-decoration:underline}
+
+        .preview-placeholder--01 {
+            background: linear-gradient(145deg, #2C2C2A, #1A1A18);
+        }
+        .preview-placeholder--02 {
+            background: linear-gradient(145deg, #6F7A63, #4D5543);
+        }
+        .preview-placeholder--03 {
+            background: linear-gradient(145deg, #A58D78, #7A6856);
+        }
+
+        /* ============================================================
+                   FOOTER
+                   ============================================================ */
+        .footer {
+            padding: var(--space-96) 0 var(--space-64);
+            border-top: 1px solid var(--line);
+            margin-top: var(--space-64);
+        }
+
+        .footer__inner {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: var(--space-24);
+        }
+
+        .footer__left {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-8);
+        }
+
+        .footer__name {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 400;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--primary);
+        }
+
+        .footer__tagline {
+            font-size: 13px;
+            font-weight: 400;
+            color: var(--secondary);
+            letter-spacing: 0.02em;
+        }
+
+        .footer__right {
+            display: flex;
+            gap: var(--space-32);
+            font-family: var(--font-mono);
+            font-size: 10px;
+            font-weight: 400;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--secondary);
+        }
+
+        .footer__right a {
+            transition: color 0.3s var(--ease-out);
+        }
+
+        .footer__right a:hover {
+            color: var(--primary);
+        }
+
+        .footer__right span {
+            opacity: 0.4;
+        }
+
+        /* ============================================================
+                   ANIMATIONS
+                   ============================================================ */
+        @keyframes fadeUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ============================================================
+                   RESPONSIVE — TABLET & SMALL DESKTOP
+                   ============================================================ */
+        @media (max-width: 1024px) {
+            :root {
+                --margin-side: 48px;
+            }
+
+            .project-row {
+                grid-template-columns: 1fr 6fr 3fr 1fr;
+                min-height: 160px;
+                padding: var(--space-24) 0;
+            }
+
+            .project-row__preview {
+                width: 200px;
+                height: 150px;
+            }
+        }
+
+        /* ============================================================
+                   RESPONSIVE — MOBILE (390px)
+                   ============================================================ */
+        @media (max-width: 768px) {
+            :root {
+                --margin-side: 20px;
+                --space-128: 64px;
+                --space-96: 48px;
+                --space-64: 40px;
+                --space-48: 32px;
+            }
+
+            .hero {
+                min-height: 92vh;
+                padding: var(--space-48) 0;
+            }
+
+            .hero__name {
+                top: var(--space-24);
+                font-size: 10px;
+            }
+
+            .hero__title-word {
+                font-size: clamp(40px, 14vw, 64px);
+                line-height: 1.1;
+                margin-bottom: 0.05em;
+            }
+
+            .hero__sub {
+                font-size: 14px;
+                max-width: 320px;
+            }
+
+            .hero__scroll {
+                bottom: var(--space-24);
+                right: 0;
+                font-size: 9px;
+                writing-mode: vertical-rl;
+            }
+
+            .section-selected {
+                padding-top: var(--space-64);
+                padding-bottom: var(--space-32);
+            }
+
+            .section-selected__header {
+                padding-bottom: var(--space-16);
+                margin-bottom: var(--space-32);
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--space-8);
+            }
+
+            .section-selected__title {
+                font-size: clamp(24px, 6vw, 32px);
+            }
+
+            /* Mobile project rows — stacked layout */
+            .project-row {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--space-8);
+                min-height: 160px;
+                padding: var(--space-24) 0;
+                border-bottom: 1px solid var(--line);
+            }
+
+            .project-row:last-child {
+                border-bottom: none;
+            }
+
+            .project-row__number {
+                font-size: 10px;
+            }
+
+            .project-row__info {
+                transform: none !important;
+                width: 100%;
+            }
+
+            .project-row:hover .project-row__info {
+                transform: none !important;
+            }
+
+            .project-row__title {
+                font-size: clamp(20px, 6vw, 30px);
+            }
+
+            .project-row__meta {
+                font-size: 9px;
+            }
+
+            .project-row__arrow {
+                opacity: 1 !important;
+                transform: none !important;
+                font-size: 10px;
+                text-align: left;
+                color: var(--secondary);
+                margin-top: var(--space-8);
+            }
+
+            .project-row:hover .project-row__arrow {
+                color: var(--primary);
+            }
+
+            /* Mobile preview: appears below title on click/tap */
+            .project-row__preview {
+                position: relative !important;
+                width: 100% !important;
+                height: 160px !important;
+                opacity: 0 !important;
+                transform: none !important;
+                pointer-events: none;
+                transition: opacity 0.4s var(--ease-out), max-height 0.4s var(--ease-out);
+                border-radius: 4px;
+                margin-top: var(--space-8);
+                box-shadow: 0 4px 20px rgba(27, 27, 25, 0.08);
+                max-height: 0;
+                overflow: hidden;
+            }
+
+            .project-row__preview.is-visible {
+                opacity: 1 !important;
+                max-height: 200px;
+                pointer-events: none;
+            }
+
+            .project-row__preview img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .project-row__preview .preview-placeholder {
+                font-size: 8px;
+            }
+
+            /* Footer mobile */
+            .footer {
+                padding: var(--space-48) 0 var(--space-32);
+                margin-top: var(--space-32);
+            }
+
+            .footer__inner {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--space-16);
+            }
+
+            .footer__right {
+                gap: var(--space-24);
+                font-size: 9px;
+                flex-wrap: wrap;
+            }
+        }
+
+        /* ============================================================
+                   SMALL MOBILE
+                   ============================================================ */
+        @media (max-width: 420px) {
+            :root {
+                --margin-side: 16px;
+            }
+
+            .hero__title-word {
+                font-size: clamp(32px, 12vw, 48px);
+            }
+
+            .project-row__preview {
+                height: 130px !important;
+            }
+        }
+
+        /* ============================================================
+                   UTILITY — hide scroll indicator on mobile
+                   ============================================================ */
+        @media (max-width: 480px) {
+            .hero__scroll {
+                display: none;
+            }
+        }
+
+        /* ============================================================
+                   SELECTION
+                   ============================================================ */
+        ::selection {
+            background: var(--primary);
+            color: var(--bg);
+        }
+
+        /* ============================================================
+                   LINK PLACEHOLDER (for project pages)
+                   ============================================================ */
+        .project-link {
+            display: contents;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ============================================================
+    CONTAINER
+    ============================================================ -->
+    <div class="container">
+
+        <!-- ============================================================
+        HERO
+        ============================================================ -->
+        <section class="hero" id="top">
+
+            <!-- Top-left name -->
+            <div class="hero__name">JiaXin Xing</div>
+
+            <!-- Central title -->
+            <div class="hero__title">
+                <span class="hero__title-word">RESEARCH</span>
+                <span class="hero__title-word">SYSTEMS</span>
+                <span class="hero__title-word">DESIGN</span>
+            </div>
+
+            <!-- Subtitle -->
+            <p class="hero__sub">
+                From designing environments to thinking in technology.
+            </p>
+
+            <!-- Scroll indicator -->
+            <div class="hero__scroll">
+                <span>SCROLL TO EXPLORE ↓</span>
+            </div>
+
+        </section>
+
+        <!-- ============================================================
+        PERSONAL EXPERIENCE
+        ============================================================ -->
+        <section class="section-selected" id="work">
+
+            <div class="section-selected__header">
+                <h2 class="section-selected__title">PERSONAL EXPERIENCE</h2>
+            </div>
+
+            <!-- ============================================================
+            PROJECTS LIST
+            ============================================================ -->
+            <div class="projects" id="projectsList">
+
+                <!-- ---- PROJECT 01 ---- -->
+                <div class="project-row" data-project="01" data-link="/financial-risk-data-governance.html">
+                    <span class="project-row__number">01</span>
+
+                    <div class="project-row__info">
+                        <h3 class="project-row__title">FINANCIAL RISK &amp; DATA GOVERNANCE</h3>
+                        <span class="project-row__meta">
+                            <a class="project-row__sub" href="project_01_telecom_fraud_case_study/1%20Telecom%20Fraud%20Account%20Risk%20Governance.html">Telecom Fraud Account Risk Governance</a>
+                            <a class="project-row__sub" href="project_01_telecom_fraud_case_study/2%20EAST%20Regulatory%20Data%20Governance.html">EAST Regulatory Data Governance</a>
+                            <a class="project-row__sub" href="project_01_telecom_fraud_case_study/3%20Online%20Corporate%20Account%20Opening.html">Online Corporate Account Opening</a>
+                            <a class="project-row__sub" href="project_01_telecom_fraud_case_study/4%20Audit%20Recurrence%20Control%20Framework.html">Audit Recurrence Control Framework</a>
+                            <a class="project-row__sub" href="project_01_telecom_fraud_case_study/5%20Risk-Based%20Client%20Tiering%20%26%20Fee%20Compliance.html">Risk-Based Client Tiering &amp; Fee Compliance</a>
+                            <a class="project-row__sub" href="project_01_telecom_fraud_case_study/6%20Group%20Exposure%20%26%20Credit%20Relationship%20Mapping.html">Group Exposure &amp; Credit Relationship Mapping</a>
+                        </span>
+                    </div>
+
+                    
+
+                    <!-- Preview image (floating) -->
+                    <div class="project-row__preview" data-preview="01">
+                        <div class="preview-placeholder preview-placeholder--01">
+                            <span>Risk · Data · System</span>
+                        </div>
+                        <!-- Real image will replace the placeholder -->
+                        <!-- <img src="/project-01-preview.jpg" alt="Financial Risk & Data Governance preview" /> -->
+                    </div>
+                </div>
+
+                <!-- ---- PROJECT 02 ---- -->
+                <div class="project-row" data-project="02" data-link="/plant-landscape-colour.html">
+                    <span class="project-row__number">02</span>
+
+                    <div class="project-row__info">
+                        <h3 class="project-row__title">RESEARCH <span class="amp">+</span> DESIGN APPLICATION</h3>
+                        <span class="project-row__meta"><a class="project-row__sub" href="%E7%A1%95%E5%A3%AB%E7%A0%94%E7%A9%B6%E6%88%90%E6%9E%9C/Plant%20Landscape%20Colour%20in%20Northern%20Healthcare%20Environments.html">Plant Landscape Colour in Northern Healthcare Environments</a></span>
+                    </div>
+
+                    
+
+                    <div class="project-row__preview" data-preview="02">
+                        <div class="preview-placeholder preview-placeholder--02">
+                            <span>Plant · Landscape · Colour</span>
+                        </div>
+                        <!-- <img src="/project-02-preview.jpg" alt="Research + Design Application preview" /> -->
+                    </div>
+                </div>
+
+                <!-- ---- PROJECT 03 ---- -->
+                <div class="project-row" data-project="03" data-link="/botanical-band.html">
+                    <span class="project-row__number">03</span>
+
+                    <div class="project-row__info">
+                        <h3 class="project-row__title">BRAND VISUAL DESIGN</h3>
+                        <span class="project-row__meta"><a class="project-row__sub" href="%E7%A1%95%E5%A3%AB%E7%A0%94%E7%A9%B6%E6%88%90%E6%9E%9C/view-Gin/botanical_band_visual_archive_v5.html">Botanical Band</a></span>
+                    </div>
+
+                    
+
+                    <div class="project-row__preview" data-preview="03">
+                        <div class="preview-placeholder preview-placeholder--03">
+                            <span>Botanical · Band · Identity</span>
+                        </div>
+                        <!-- <img src="/project-03-preview.jpg" alt="Brand Visual Design preview" /> -->
+                    </div>
+                </div>
+
+            </div><!-- /projects -->
+
+        </section>
+
+        <!-- ============================================================
+        FOOTER
+        ============================================================ -->
+        <footer class="footer">
+            <div class="footer__inner">
+                <div class="footer__left">
+                    <span class="footer__name">JiaXin Xing</span>
+                    <span class="footer__tagline">RESEARCH / SYSTEMS / DESIGN</span>
+                </div>
+                <div class="footer__right">
+                    <a href="mailto:hello@jiaxinxing.com">CONTACT</a>
+                    <span>|</span>
+                    <span>&copy; 2026</span>
+                </div>
+            </div>
+        </footer>
+
+    </div><!-- /container -->
+
+    <!-- ============================================================
+    JAVASCRIPT
+    ============================================================ -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ------------------------------------------------------------
+            // 1. PROJECT LINK CONFIG — change these to match your actual file paths
+            // ------------------------------------------------------------
+            const PROJECT_LINKS = {
+                '01': 'project_01_telecom_fraud_case_study/1%20Telecom%20Fraud%20Account%20Risk%20Governance.html',
+                '02': '%E7%A1%95%E5%A3%AB%E7%A0%94%E7%A9%B6%E6%88%90%E6%9E%9C/Plant%20Landscape%20Colour%20in%20Northern%20Healthcare%20Environments.html',
+                '03': '%E7%A1%95%E5%A3%AB%E7%A0%94%E7%A9%B6%E6%88%90%E6%9E%9C/view-Gin/botanical_band_visual_archive_v5.html',
+            };
+
+            // ------------------------------------------------------------
+            // 2. PREVIEW IMAGE CONFIG — replace placeholder src with real images
+            // ------------------------------------------------------------
+            const PREVIEW_IMAGES = {
+                '01': '/project-01-preview.jpg',
+                '02': '/project-02-preview.jpg',
+                '03': '/project-03-preview.jpg',
+            };
+
+            // ------------------------------------------------------------
+            // 3. DOM REFS
+            // ------------------------------------------------------------
+            const rows = document.querySelectorAll('.project-row');
+            const previews = document.querySelectorAll('.project-row__preview');
+
+            // ------------------------------------------------------------
+            // 4. LOAD REAL IMAGES (if available)
+            // ------------------------------------------------------------
+            function loadPreviewImages() {
+                previews.forEach((el) => {
+                    const key = el.dataset.preview;
+                    const src = PREVIEW_IMAGES[key];
+                    if (src) {
+                        const img = document.createElement('img');
+                        img.src = src;
+                        img.alt = `Preview for project ${key}`;
+                        img.onload = function() {
+                            const placeholder = el.querySelector('.preview-placeholder');
+                            if (placeholder) {
+                                placeholder.style.display = 'none';
+                            }
+                            el.appendChild(img);
+                        };
+                        img.onerror = function() {
+                            console.log(`Preview image not found: ${src}`);
+                        };
+                    }
+                });
+            }
+
+            // ------------------------------------------------------------
+            // 5. DESKTOP HOVER: floating preview + mouse tracking
+            // ------------------------------------------------------------
+            function initDesktopInteractions() {
+                if (window.innerWidth <= 768) return;
+
+                rows.forEach((row) => {
+                    const preview = row.querySelector('.project-row__preview');
+                    if (!preview) return;
+
+                    row.addEventListener('mouseenter', function(e) {
+                        preview.classList.add('is-visible');
+                        updatePreviewPosition(e, preview);
+                    });
+
+                    row.addEventListener('mousemove', function(e) {
+                        if (preview.classList.contains('is-visible')) {
+                            updatePreviewPosition(e, preview);
+                        }
+                    });
+
+                    row.addEventListener('mouseleave', function() {
+                        preview.classList.remove('is-visible');
+                    });
+
+                    row.addEventListener('click', function(e) {
+                        const link = row.dataset.link || PROJECT_LINKS[row.dataset.project];
+                        if (link) {
+                            window.location.href = link;
+                        }
+                    });
+                });
+            }
+
+            function updatePreviewPosition(e, preview) {
+                const x = e.clientX;
+                const y = e.clientY;
+
+                const offsetX = 20;
+                const offsetY = -20;
+
+                const w = preview.offsetWidth || 240;
+                const h = preview.offsetHeight || 180;
+
+                let left = x + offsetX;
+                let top = y + offsetY;
+
+                if (left + w > window.innerWidth - 20) {
+                    left = x - w - offsetX;
+                }
+                if (top + h > window.innerHeight - 20) {
+                    top = y - h + offsetY;
+                }
+                if (left < 20) left = 20;
+                if (top < 20) top = 20;
+
+                preview.style.left = left + 'px';
+                preview.style.top = top + 'px';
+
+                const rowRect = preview.parentElement.getBoundingClientRect();
+                const relX = (e.clientX - rowRect.left) / rowRect.width;
+                const relY = (e.clientY - rowRect.top) / rowRect.height;
+                const moveX = (relX - 0.5) * 12;
+                const moveY = (relY - 0.5) * 12;
+
+                preview.style.transform = `translate(${moveX}px, ${moveY}px)`;
+            }
+
+            // ------------------------------------------------------------
+            // 6. MOBILE: tap to toggle preview
+            // ------------------------------------------------------------
+            function initMobileInteractions() {
+                if (window.innerWidth > 768) return;
+
+                rows.forEach((row) => {
+                    const preview = row.querySelector('.project-row__preview');
+                    if (!preview) return;
+
+                    row.addEventListener('click', function(e) {
+                        if (preview.classList.contains('is-visible')) {
+                            preview.classList.remove('is-visible');
+                            return;
+                        }
+
+                        rows.forEach((r) => {
+                            const p = r.querySelector('.project-row__preview');
+                            if (p && p !== preview) {
+                                p.classList.remove('is-visible');
+                            }
+                        });
+
+                        preview.classList.add('is-visible');
+                    });
+
+                    preview.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const link = row.dataset.link || PROJECT_LINKS[row.dataset.project];
+                        if (link) {
+                            window.location.href = link;
+                        }
+                    });
+                });
+
+                rows.forEach((row) => {
+                    let clickTimer = null;
+                    row.addEventListener('click', function(e) {
+                        const preview = row.querySelector('.project-row__preview');
+                        if (!preview) return;
+
+                        if (preview.classList.contains('is-visible')) {
+                            const link = row.dataset.link || PROJECT_LINKS[row.dataset.project];
+                            if (link) {
+                                window.location.href = link;
+                            }
+                            return;
+                        }
+
+                        clearTimeout(clickTimer);
+                        clickTimer = setTimeout(() => {
+                            if (preview.classList.contains('is-visible')) {
+                                return;
+                            }
+                        }, 300);
+                    });
+                });
+            }
+
+            // ------------------------------------------------------------
+            // 7. RESIZE HANDLER
+            // ------------------------------------------------------------
+            let resizeTimeout = null;
+
+            function handleResize() {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => {
+                    const wasMobile = window._isMobile;
+                    const isMobileNow = window.innerWidth <= 768;
+                    if (wasMobile !== undefined && wasMobile !== isMobileNow) {
+                        window.location.reload();
+                    }
+                    window._isMobile = isMobileNow;
+                }, 300);
+            }
+
+            // ------------------------------------------------------------
+            // 8. INIT
+            // ------------------------------------------------------------
+            function init() {
+                loadPreviewImages();
+                window._isMobile = window.innerWidth <= 768;
+
+                if (window.innerWidth > 768) {
+                    initDesktopInteractions();
+                } else {
+                    initMobileInteractions();
+                }
+
+                window.addEventListener('resize', handleResize);
+
+                rows.forEach((row) => {
+                    row.addEventListener('click', function(e) {
+                        if (e.target.closest('.project-row__preview')) {
+                            return;
+                        }
+                        if (window.innerWidth > 768) {
+                            const link = row.dataset.link || PROJECT_LINKS[row.dataset.project];
+                            if (link) {
+                                window.location.href = link;
+                            }
+                        }
+                    });
+                });
+
+                previews.forEach((preview) => {
+                    preview.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const row = this.closest('.project-row');
+                        if (row) {
+                            const link = row.dataset.link || PROJECT_LINKS[row.dataset.project];
+                            if (link) {
+                                window.location.href = link;
+                            }
+                        }
+                    });
+                });
+
+                console.log('Portfolio home initialized.');
+                console.log('→ Replace PREVIEW_IMAGES with real image paths.');
+                console.log('→ Update PROJECT_LINKS with actual page URLs.');
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+
+        })();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,3244 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>03 — Online Corporate Account Opening</title>
+
+<style>
+
+:root {
+    --bg: #f3f2ee;
+    --paper: #faf9f5;
+    --ink: #171717;
+    --muted: #77736b;
+    --line: #d5d1c8;
+    --accent: #a45139;
+    --slash-gray: #999999;
+}
+
+* {
+    box-sizing: border-box
+}
+
+html {
+    scroll-behavior: smooth
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 14px/1.4 Arial, Helvetica, sans-serif;
+    transition: padding-right 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.wrap {
+    max-width: 1280px;
+    margin: auto;
+    padding: 0 42px;
+    transition: max-width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+body.flow-panel-open .wrap {
+    max-width: calc(1280px - 30vw);
+}
+
+.nav {
+    height: 78px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase
+}
+
+.nav a {
+    color: var(--muted);
+    text-decoration: none;
+}
+
+
+/* ============================================================
+   HERO
+   ============================================================ */
+
+.hero {
+    display: flex;
+    flex-direction: column;
+    padding: 90px 0 75px;
+    border-bottom: 1px solid var(--line)
+}
+
+.hero .kicker {
+    order: 1;
+    margin-bottom: 25px;
+}
+
+.hero h1 {
+    order: 2;
+    margin: 0;
+}
+
+.heroGrid {
+    order: 3;
+    display: flex;
+    gap: 70px;
+    align-items: stretch;
+    margin-top: 0;          /* 去掉原来的 -25px 负边距 */
+    padding-top: 20px;      /* 额外增加上边距 */
+}
+
+.heroGrid > div:first-child {
+    flex: 1.7;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.heroGrid > div:first-child .lead-group {
+    margin: auto 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.heroGrid > div:first-child .lead-group .lead {
+    margin: 0;
+}
+
+.heroGrid > div:first-child .small {
+    margin-top: auto;
+}
+
+.heroGrid .meta {
+    flex: 0.8;
+    border-left: 1px solid var(--line);
+    padding-left: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.meta div {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line)
+}
+
+.meta div:last-child {
+    border-bottom: none;
+}
+
+.meta b {
+    display: block;
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 400
+}
+
+.kicker,
+.label {
+    font-size: 10px;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    color: var(--muted)
+}
+
+
+/* ============================================================
+   MAIN TITLE — 与附件2完全一致，段后距加大到130px确保安全
+   ============================================================ */
+
+h1 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: clamp(70px, 10vw, 132px);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -.06em;
+    max-width: 1050px;
+    margin-bottom: 130px;   /* 足够间距，彻底解决重叠 */
+    color: #171717;
+}
+
+
+/* ============================================================
+   SECTION TITLE
+   ============================================================ */
+
+.section-title {
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -.04em;
+    margin: 0;
+    color: var(--ink);
+    line-height: 1.2;
+}
+
+.section-title .before {
+    font-size: 36px;
+    color: var(--ink);
+    display: inline;
+    vertical-align: bottom;
+}
+
+.section-title .after {
+    font-size: 30px;
+    color: var(--slash-gray);
+    display: inline;
+    vertical-align: bottom;
+}
+
+
+/* ============================================================
+   SUBSECTION TITLE
+   ============================================================ */
+
+.subsection-title {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -.03em;
+    margin: 60px 0 28px 0;
+    color: var(--muted);
+    line-height: 1.3;
+}
+
+.subsection-title .before {
+    font-size: 24px;
+    color: var(--muted);
+    display: inline;
+    vertical-align: bottom;
+}
+
+.subsection-title .after {
+    font-size: 20px;
+    color: var(--slash-gray);
+    display: inline;
+    vertical-align: bottom;
+}
+
+.subsection-title .dot {
+    font-size: 24px;
+    color: var(--muted);
+    display: inline;
+    vertical-align: bottom;
+}
+
+
+/* ============================================================
+   CARDS
+   ============================================================ */
+
+.card-title {
+    font-size: 17px;
+    font-weight: 700;
+    margin: 0 0 13px;
+    color: var(--ink);
+}
+
+.lead {
+    font-size: 22px;
+    line-height: 1.35;
+    max-width: 760px
+}
+
+section {
+    padding: 82px 0;
+    border-bottom: 1px solid var(--line)
+}
+
+.head {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    margin-bottom: 45px
+}
+
+p {
+    color: #343434;
+    line-height: 1.4;
+}
+
+.small {
+    font-size: 12px;
+    color: var(--muted)
+}
+
+.grid2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    background: var(--line)
+}
+
+.card {
+    background: var(--paper);
+    padding: 34px;
+    min-height: 220px
+}
+
+.card ul,
+.list {
+    padding: 0;
+    margin: 0;
+    list-style: none
+}
+
+.card li,
+.list li {
+    padding: 9px 0;
+    border-bottom: 1px solid #e2ded6
+}
+
+.card li:last-child,
+.list li:last-child {
+    border-bottom: none;
+}
+
+
+/* ============================================================
+   FLOW STEPS
+   ============================================================ */
+
+.flow {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line)
+}
+
+.flow>div {
+    padding: 10px 12px;
+    min-height: 100px;
+    border-right: 1px solid var(--line);
+    font-size: 13px;
+    line-height: 1.2;
+    color: var(--muted);
+}
+
+.flow>div:last-child {
+    border: 0
+}
+
+.flow strong {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 2px;
+    color: var(--muted);
+}
+
+
+/* ============================================================
+   DATA
+   ============================================================ */
+
+.data {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.data>div {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    padding: 30px;
+    min-height: 255px
+}
+
+.data>div+div {
+    border-left: 0
+}
+
+
+/* ============================================================
+   CDD
+   ============================================================ */
+
+.cdd-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2px;
+    background: var(--line);
+    margin-bottom: 0;
+}
+
+.cdd-grid .cdd-card {
+    background: var(--paper);
+    padding: 30px;
+    min-height: 200px;
+}
+
+.cdd-grid .cdd-card .label {
+    font-size: 10px;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+}
+
+.cdd-grid .cdd-card h4 {
+    font-size: 17px;
+    font-weight: 700;
+    margin: 0 0 13px;
+    color: var(--ink);
+}
+
+.cdd-grid .cdd-card ul,
+.cdd-grid .cdd-card .list {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.cdd-grid .cdd-card li {
+    padding: 9px 0;
+    border-bottom: 1px solid #e2ded6;
+}
+
+.cdd-grid .cdd-card li:last-child {
+    border-bottom: none;
+}
+
+.cdd-grid .cdd-card.span-2 {
+    grid-column: span 2;
+}
+
+.cdd-grid .cdd-card.span-1 {
+    grid-column: span 1;
+}
+
+
+/* ============================================================
+   ROADMAP
+   ============================================================ */
+
+.roadmap {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    background: var(--line);
+}
+
+.roadmap .step {
+    flex: 1;
+    background: var(--paper);
+    padding: 28px 24px;
+    min-height: 160px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.roadmap .step + .step {
+    border-left: 2px solid var(--line);
+}
+
+.roadmap .step .step-label {
+    font-size: 10px;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+}
+
+.roadmap .step-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    font-size: 48px;
+    color: var(--muted);
+    background: var(--line);
+    min-width: 70px;
+    flex: 0 0 70px;
+    line-height: 1;
+}
+
+.roadmap .step h4 {
+    font-size: 17px;
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: var(--ink);
+}
+
+.roadmap .step p {
+    font-size: 14px;
+    line-height: 1.4;
+    color: #343434;
+    margin: 0;
+}
+
+
+/* ============================================================
+   DARK BLOCK
+   ============================================================ */
+
+.dark {
+    margin-top: 25px;
+    background: #171717;
+    color: #f4f1e9;
+    padding: 35px
+}
+
+.darkGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: #444
+}
+
+.darkGrid>div {
+    background: #171717;
+    padding: 25px;
+    min-height: 145px
+}
+
+.dark .label {
+    color: #aaa
+}
+
+.dark strong {
+    display: block;
+    font-size: 18px;
+    font-weight: 500;
+    margin: 12px 0 8px
+}
+
+
+/* ============================================================
+   RISK
+   ============================================================ */
+
+.risk {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px
+}
+
+.risk div {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    padding: 22px;
+    min-height: 110px
+}
+
+.risk span {
+    display: block;
+    color: var(--muted);
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    margin-bottom: 13px
+}
+
+
+/* ============================================================
+   OUTCOME
+   ============================================================ */
+
+.outcome {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    background: var(--line)
+}
+
+.metric {
+    background: var(--paper);
+    padding: 45px
+}
+
+.metric strong {
+    display: block;
+    font-size: 78px;
+    line-height: 1;
+    letter-spacing: -.06em;
+    font-weight: 500;
+    margin-bottom: 15px
+}
+
+.quote {
+    font-size: 27px;
+    line-height: 1.25;
+    border-left: 2px solid var(--accent);
+    padding-left: 24px
+}
+
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+
+.footer {
+    padding: 55px 0 90px;
+    display: flex;
+    justify-content: space-between;
+    color: var(--muted);
+    font-size: 11px
+}
+
+
+/* ============================================================
+   LAST SECTION
+   ============================================================ */
+
+section:last-of-type .grid2 {
+    display: flex;
+    align-items: stretch;
+    background: var(--line);
+    gap: 2px;
+}
+
+section:last-of-type .grid2 .card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: var(--paper);
+    padding: 34px;
+    min-height: 220px
+}
+
+
+/* ============================================================
+   REVEAL ANIMATION
+   ============================================================ */
+
+.reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+/* ============================================================
+   SIDEBAR
+   END-TO-END CLOSED-LOOP PROCESS
+   ============================================================ */
+
+.flow-panel {
+    --bg: #F7F7F4;
+    --text: #181818;
+    --muted: #777777;
+    --line: #D8D8D3;
+    --accent: #8A4035;
+    --soft-accent: rgba(138,64,53,0.08);
+
+    position: fixed;
+
+    top: 0;
+    right: -32vw;
+
+    width: 30vw;
+    max-width: 520px;
+    min-width: 390px;
+
+    height: 100vh;
+
+    z-index: 10000;
+
+    background: rgba(247,247,244,0.94);
+
+    backdrop-filter: blur(6px);
+
+    box-shadow: -8px 0 35px rgba(0,0,0,0.08);
+
+    transition:
+        right 0.45s cubic-bezier(0.22,1,0.36,1);
+
+    display: flex;
+    flex-direction: column;
+
+    border-left: 1px solid rgba(216,216,211,0.55);
+
+    overflow: hidden;
+
+    color: var(--text);
+}
+
+.flow-panel.open {
+    right: 0;
+}
+
+
+/* ============================================================
+   SIDEBAR TRIGGER
+   ============================================================ */
+
+.flow-trigger {
+    position: fixed;
+
+    right: 0;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    z-index: 9999;
+
+    background: rgba(138,64,53,0.5);
+
+    color: #fff;
+
+    width: 40px;
+    height: 64px;
+
+    border: none;
+
+    border-radius: 8px 0 0 8px;
+
+    cursor: pointer;
+
+    font-size: 28px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    transition: all 0.3s ease;
+
+    box-shadow: -2px 0 10px rgba(0,0,0,0.08);
+
+    font-family: Arial,Helvetica,sans-serif;
+
+    line-height: 1;
+
+    padding: 0;
+}
+
+.flow-trigger:hover {
+    background: rgba(138,64,53,0.75);
+
+    width: 46px;
+
+    box-shadow: -4px 0 16px rgba(0,0,0,0.15);
+}
+
+.flow-trigger .arrow-icon {
+    font-size: 32px;
+
+    font-weight: 300;
+
+    line-height: 1;
+}
+
+
+/* ============================================================
+   SIDEBAR HEADER
+   ============================================================ */
+
+.flow-panel-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-start;
+
+    padding: 20px 22px 16px;
+
+    border-bottom:
+        1px solid rgba(216,216,211,0.65);
+
+    flex-shrink: 0;
+}
+
+.flow-panel-header h2 {
+    font-size: 14px;
+
+    font-weight: 600;
+
+    margin: 0;
+
+    letter-spacing: -0.02em;
+
+    line-height: 1.3;
+
+    color: var(--text);
+}
+
+.flow-panel-header h2 span {
+    font-weight: 400;
+
+    font-size: 10px;
+
+    letter-spacing: 0.05em;
+
+    display: block;
+
+    margin-top: 4px;
+
+    color: var(--muted);
+}
+
+.flow-close-btn {
+    background: none;
+
+    border: none;
+
+    font-size: 19px;
+
+    color: var(--muted);
+
+    cursor: pointer;
+
+    padding: 2px 6px;
+
+    border-radius: 4px;
+
+    transition:
+        background 0.2s,
+        color 0.2s;
+
+    line-height: 1;
+}
+
+.flow-close-btn:hover {
+    background:
+        rgba(216,216,211,0.35);
+
+    color: var(--text);
+}
+
+
+/* ============================================================
+   SIDEBAR SCROLL
+   ============================================================ */
+
+.flow-scroll {
+    flex: 1;
+
+    overflow-y: auto;
+
+    padding: 22px 22px 30px;
+
+    background: transparent;
+}
+
+.flow-scroll::-webkit-scrollbar {
+    width: 4px;
+}
+
+.flow-scroll::-webkit-scrollbar-thumb {
+    background:
+        rgba(138,64,53,0.22);
+
+    border-radius: 4px;
+}
+
+
+/* ============================================================
+   FLOW CONTAINER
+   ============================================================ */
+
+.gov-flow {
+    width: 100%;
+
+    max-width: 470px;
+
+    margin: 0 auto;
+}
+
+
+/* ============================================================
+   FLOW INTRO
+   ============================================================ */
+
+.flow-intro {
+    margin-bottom: 20px;
+}
+
+.flow-intro .eyebrow {
+    font-size: 8px;
+
+    letter-spacing: 0.14em;
+
+    text-transform: uppercase;
+
+    color: var(--muted);
+
+    margin-bottom: 5px;
+}
+
+.flow-intro h3 {
+    font-size: 18px;
+
+    line-height: 1.15;
+
+    letter-spacing: -0.04em;
+
+    margin: 0;
+
+    font-weight: 700;
+}
+
+.flow-intro p {
+    font-size: 8px;
+
+    line-height: 1.45;
+
+    color: var(--muted);
+
+    margin: 6px 0 0;
+}
+
+
+/* ============================================================
+   SECTION LABEL
+   ============================================================ */
+
+.gov-section {
+    margin: 15px 0 7px;
+
+    font-size: 8px;
+
+    font-weight: 500;
+
+    letter-spacing: 0.12em;
+
+    text-transform: uppercase;
+
+    color: var(--muted);
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+}
+
+.gov-section::after {
+    content: "";
+
+    height: 1px;
+
+    flex: 1;
+
+    background:
+        rgba(216,216,211,0.55);
+}
+
+
+/* ============================================================
+   FLOW NODE
+   ============================================================ */
+
+.gov-node {
+    position: relative;
+
+    background:
+        rgba(255,255,255,0.58);
+
+    border:
+        1px solid rgba(216,216,211,0.8);
+
+    border-radius: 4px;
+
+    padding: 12px 13px 11px;
+
+    box-shadow:
+        0 1px 3px rgba(0,0,0,0.025);
+
+    transition:
+        transform 0.25s ease,
+        background 0.25s ease,
+        border-color 0.25s ease;
+}
+
+.gov-node:hover {
+    transform: translateX(-2px);
+
+    background:
+        rgba(255,255,255,0.82);
+
+    border-color:
+        rgba(138,64,53,0.25);
+}
+
+.gov-node.accent {
+    border-left:
+        3px solid var(--accent);
+}
+
+.gov-node.dark-accent {
+    background:
+        rgba(23,23,23,0.94);
+
+    border-color:
+        #171717;
+}
+
+.gov-node.dark-accent .gov-node-title {
+    color: #f4f1e9;
+}
+
+.gov-node.dark-accent .gov-node-desc {
+    color: #bdbdbd;
+}
+
+.gov-node-number {
+    position: absolute;
+
+    top: 8px;
+    right: 10px;
+
+    font-size: 7px;
+
+    letter-spacing: 0.08em;
+
+    color: var(--muted);
+}
+
+.gov-node-title {
+    font-size: 10px;
+
+    font-weight: 700;
+
+    line-height: 1.25;
+
+    color: var(--text);
+
+    letter-spacing: 0.01em;
+}
+
+.gov-node-desc {
+    font-size: 7.5px;
+
+    line-height: 1.4;
+
+    color: var(--muted);
+
+    margin-top: 5px;
+}
+
+.gov-node-desc ul {
+    list-style: none;
+
+    padding: 0;
+
+    margin: 0;
+}
+
+.gov-node-desc ul li {
+    font-size: 7px;
+
+    line-height: 1.4;
+
+    padding: 1.5px 0;
+
+    color: var(--muted);
+}
+
+.gov-node-desc strong {
+    color: var(--text);
+
+    font-weight: 600;
+}
+
+
+/* ============================================================
+   CONNECTOR
+   ============================================================ */
+
+.gov-connector {
+    height: 25px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+}
+
+.gov-connector .vline {
+    width: 1px;
+
+    height: 15px;
+
+    background:
+        rgba(180,180,175,0.8);
+}
+
+.gov-connector .arrow {
+    font-size: 9px;
+
+    line-height: 1;
+
+    color: var(--muted);
+
+    margin-top: -1px;
+}
+
+
+/* ============================================================
+   DECISION NODE
+   ============================================================ */
+
+.decision-wrapper {
+    position: relative;
+
+    margin: 2px 0;
+}
+
+.decision-node {
+    position: relative;
+
+    background:
+        rgba(138,64,53,0.055);
+
+    border:
+        1px solid rgba(138,64,53,0.32);
+
+    border-radius: 4px;
+
+    padding: 13px;
+
+    text-align: center;
+}
+
+.decision-node .decision-label {
+    font-size: 7px;
+
+    letter-spacing: 0.13em;
+
+    text-transform: uppercase;
+
+    color: var(--accent);
+
+    margin-bottom: 5px;
+}
+
+.decision-node .decision-title {
+    font-size: 10px;
+
+    font-weight: 700;
+
+    color: var(--text);
+
+    line-height: 1.25;
+}
+
+.decision-node .decision-desc {
+    font-size: 7px;
+
+    line-height: 1.4;
+
+    color: var(--muted);
+
+    margin-top: 4px;
+}
+
+
+/* ============================================================
+   DECISION BRANCHES
+   ============================================================ */
+
+.decision-branches {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 2px;
+
+    margin-top: 2px;
+
+    background: var(--line);
+}
+
+.decision-branch {
+    background:
+        rgba(255,255,255,0.55);
+
+    padding: 10px 11px;
+
+    min-height: 72px;
+}
+
+.decision-branch .branch-label {
+    font-size: 7px;
+
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
+
+    color: var(--muted);
+
+    margin-bottom: 5px;
+}
+
+.decision-branch strong {
+    display: block;
+
+    font-size: 8px;
+
+    color: var(--text);
+
+    margin-bottom: 3px;
+}
+
+.decision-branch span {
+    font-size: 6.8px;
+
+    line-height: 1.35;
+
+    color: var(--muted);
+}
+
+.decision-branch.enhanced {
+    border-top:
+        2px solid var(--accent);
+}
+
+.decision-branch.simplified {
+    border-top:
+        2px solid #aaa;
+}
+
+
+/* ============================================================
+   CONTINUOUS GOVERNANCE LOOP
+   ============================================================ */
+
+.loop-zone {
+    margin-top: 5px;
+
+    border:
+        1px solid rgba(138,64,53,0.22);
+
+    background:
+        rgba(138,64,53,0.035);
+
+    padding: 11px;
+
+    border-radius: 4px;
+}
+
+.loop-zone-title {
+    text-align: center;
+
+    font-size: 7px;
+
+    letter-spacing: 0.13em;
+
+    text-transform: uppercase;
+
+    color: var(--accent);
+
+    margin-bottom: 8px;
+}
+
+.loop-chain {
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        auto
+        1fr
+        auto
+        1fr;
+
+    align-items: center;
+
+    gap: 5px;
+}
+
+.loop-step {
+    min-height: 48px;
+
+    border:
+        1px solid rgba(216,216,211,0.9);
+
+    background:
+        rgba(255,255,255,0.65);
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    padding: 7px;
+
+    text-align: center;
+
+    border-radius: 3px;
+}
+
+.loop-step strong {
+    font-size: 7.5px;
+
+    line-height: 1.2;
+
+    color: var(--text);
+}
+
+.loop-step span {
+    font-size: 6.3px;
+
+    line-height: 1.25;
+
+    color: var(--muted);
+
+    margin-top: 3px;
+}
+
+.loop-arrow {
+    font-size: 10px;
+
+    color: var(--muted);
+}
+
+
+/* ============================================================
+   RETURN LOOP
+   ============================================================ */
+
+.return-loop {
+    position: relative;
+
+    height: 38px;
+
+    margin-top: 2px;
+}
+
+.return-loop::before {
+    content: "";
+
+    position: absolute;
+
+    left: 18%;
+    right: 18%;
+
+    top: 13px;
+
+    height: 17px;
+
+    border-left:
+        1px solid rgba(138,64,53,0.55);
+
+    border-bottom:
+        1px solid rgba(138,64,53,0.55);
+
+    border-right:
+        1px solid rgba(138,64,53,0.55);
+
+    border-radius:
+        0 0 12px 12px;
+}
+
+.return-loop::after {
+    content: "▲";
+
+    position: absolute;
+
+    left: 50%;
+
+    top: 24px;
+
+    transform:
+        translateX(-50%);
+
+    font-size: 8px;
+
+    color: var(--accent);
+
+    background:
+        var(--bg);
+
+    padding: 0 4px;
+}
+
+.return-loop-label {
+    position: absolute;
+
+    left: 50%;
+
+    top: 3px;
+
+    transform:
+        translateX(-50%);
+
+    white-space: nowrap;
+
+    font-size: 6.5px;
+
+    color: var(--accent);
+
+    letter-spacing: 0.05em;
+
+    background:
+        var(--bg);
+
+    padding: 0 5px;
+
+    z-index: 2;
+}
+
+
+/* ============================================================
+   END STATE
+   ============================================================ */
+
+.gov-footer {
+    margin-top: 13px;
+
+    padding: 12px 10px;
+
+    background:
+        rgba(23,23,23,0.95);
+
+    color: #f4f1e9;
+
+    border-radius: 3px;
+
+    text-align: center;
+}
+
+.gov-footer strong {
+    display: block;
+
+    font-size: 8px;
+
+    font-weight: 600;
+
+    letter-spacing: 0.05em;
+}
+
+.gov-footer span {
+    display: block;
+
+    font-size: 6.8px;
+
+    color: #bdbdbd;
+
+    margin-top: 4px;
+}
+
+
+/* ============================================================
+   BODY SHIFT
+   ============================================================ */
+
+body.flow-panel-open {
+    padding-right: 30vw;
+}
+
+
+/* ============================================================
+   SIDEBAR MOBILE
+   ============================================================ */
+
+@media (max-width: 1024px) {
+
+    .flow-panel {
+        right: -100vw;
+
+        width: 100vw;
+
+        max-width: 100vw;
+
+        min-width: 0;
+
+        background:
+            rgba(247,247,244,0.96);
+    }
+
+    .flow-panel.open {
+        right: 0;
+    }
+
+    body.flow-panel-open {
+        padding-right: 0;
+    }
+
+    body.flow-panel-open .wrap {
+        max-width: 100%;
+    }
+
+    .flow-trigger {
+        width: 32px;
+        height: 48px;
+    }
+
+    .flow-trigger .arrow-icon {
+        font-size: 24px;
+    }
+
+    .flow-scroll {
+        padding: 16px 16px 24px;
+    }
+}
+
+@media (max-width: 640px) {
+
+    .flow-scroll {
+        padding: 12px 12px 20px;
+    }
+
+    .gov-node {
+        padding: 8px 10px;
+    }
+
+    .gov-node-title {
+        font-size: 9px;
+    }
+
+    .gov-node-desc {
+        font-size: 6.5px;
+    }
+
+    .gov-node-desc ul li {
+        font-size: 6px;
+    }
+
+    .decision-branches {
+        grid-template-columns: 1fr;
+    }
+
+    .loop-chain {
+        grid-template-columns: 1fr;
+        gap: 2px;
+    }
+
+    .loop-arrow {
+        transform: rotate(90deg);
+    }
+
+    .gov-footer strong {
+        font-size: 7px;
+    }
+
+    .gov-footer span {
+        font-size: 6px;
+    }
+}
+
+
+/* ============================================================
+   MAIN PAGE MOBILE
+   ============================================================ */
+
+@media(max-width:800px) {
+
+    .wrap {
+        padding: 0 20px
+    }
+
+    .heroGrid,
+    .grid2,
+    .data,
+    .outcome,
+    .cdd-grid {
+        grid-template-columns: 1fr
+    }
+
+    .flow {
+        grid-template-columns: 1fr
+    }
+
+    .flow>div {
+        border-right: 0;
+
+        border-bottom:
+            1px solid var(--line)
+    }
+
+    .data>div+div {
+        border-left:
+            1px solid var(--line);
+
+        border-top: 0
+    }
+
+    .risk,
+    .darkGrid {
+        grid-template-columns: 1fr
+    }
+
+    .head {
+        grid-template-columns: 1fr
+    }
+
+    .section-title {
+        font-size: 28px;
+    }
+
+    .section-title .before {
+        font-size: 28px;
+    }
+
+    .section-title .after {
+        font-size: 23px;
+    }
+
+    .subsection-title {
+        font-size: 20px;
+    }
+
+    .subsection-title .before {
+        font-size: 20px;
+    }
+
+    .subsection-title .after {
+        font-size: 17px;
+    }
+
+    .subsection-title .dot {
+        font-size: 20px;
+    }
+
+    .lead {
+        font-size: 19px
+    }
+
+    .meta {
+        border-left: 0;
+
+        padding-left: 0
+    }
+
+    .heroGrid {
+        flex-direction: column;
+
+        gap: 20px;
+
+        margin-top: 0;
+    }
+
+    .hero h1 {
+        margin-top: 15px;
+    }
+
+    section:last-of-type .grid2 {
+        flex-direction: column;
+    }
+
+    .roadmap {
+        flex-direction: column;
+    }
+
+    .roadmap .step + .step {
+        border-left: 0;
+
+        border-top:
+            2px solid var(--line);
+    }
+
+    .roadmap .step .step-arrow {
+        display: none;
+    }
+
+    .cdd-grid .cdd-card.span-2,
+    .cdd-grid .cdd-card.span-1 {
+        grid-column: span 1;
+    }
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="wrap">
+
+<nav class="nav">
+    <b>JiaXin Xing / Project —— Online Corporate Account Opening</b>
+    <a href="../JiaXin%20Xing%20%E2%80%94%20Research%20%C2%B7%20Systems%20%C2%B7%20Design.html">← All Projects</a>
+</nav>
+
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+
+<header class="hero reveal">
+
+    <div class="kicker">
+        Digital Transformation · System Implementation · Process Optimization
+    </div>
+
+    <h1>
+        Online Corporate<br>
+        Account Opening
+    </h1>
+
+    <div class="heroGrid">
+
+        <div>
+
+            <div class="lead-group">
+
+                <p class="lead">
+                    Deployment of the online corporate account opening system
+                    across 19 outlets in Dalian (including Jinzhou and Yingkou)
+                    under CMB’s digital transformation initiative.
+                </p>
+
+                <p class="lead">
+                    Comprehensive objectives include document management,
+                    system upgrades, data quality improvement,
+                    customer experience enhancement,
+                    risk-control integration,
+                    and closed-loop digitalisation.
+                </p>
+
+            </div>
+
+            <p class="small">
+                China Merchants Bank · Dalian Branch
+                (incl. Jinzhou & Yingkou) · 19 outlets
+            </p>
+
+        </div>
+
+
+        <div class="meta">
+
+            <div>
+                <b>Role</b>
+                Project Lead / Business Department
+            </div>
+
+            <div>
+                <b>Period</b>
+                2020 — Q1 completion
+            </div>
+
+            <div>
+                <b>Scope</b>
+                19 outlets · all corporate account onboarding
+            </div>
+
+            <div>
+                <b>Core logic</b>
+                Digitalisation → Standardisation → Pilot → Rollout
+            </div>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- ============================================================
+     SECTION 1
+     ============================================================ -->
+
+<section class="reveal">
+
+    <div class="head">
+
+        <h2 class="section-title">
+            <span class="before">
+                Context /&nbsp;
+            </span>
+
+            <span class="after">
+                Digital transformation background and rollout scope
+            </span>
+        </h2>
+
+    </div>
+
+
+    <div class="grid2">
+
+        <div class="card">
+
+            <div class="label">
+                Digital transformation / CMB context
+            </div>
+
+            <h4 class="card-title">
+                Head-office system build and branch-level deployment.
+            </h4>
+
+            <p>
+                In 2020, CMB’s head office accelerated the digitalisation
+                of high-frequency corporate services. By April, system
+                construction, platform setup and process re-engineering
+                were completed, and the “new account journey” project was
+                fully rolled out, enabling end-to-end online processing.
+                Leveraging the head office’s established capabilities in
+                document management, system upgrades, data quality,
+                customer experience and risk-control integration,
+                the Dalian branch carried out the system rollout across
+                its 19 outlets, addressing system-to-branch process
+                adaptation, frontline staff training, and local
+                implementation of tiered risk-control standards.
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="label">
+                Regional scope / rollout coverage
+            </div>
+
+            <h4 class="card-title">
+                Covering 19 outlets in Dalian (incl. Jinzhou & Yingkou).
+            </h4>
+
+            <p>
+                As the project lead, the business department set up
+                a dedicated working group, defined responsibilities
+                across units, conducted full-scale operational training,
+                and piloted the system in batches before rolling it out
+                to all outlets in the region.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ============================================================
+     SECTION 2
+     ============================================================ -->
+
+<section class="reveal">
+
+    <div class="head">
+
+        <h2 class="section-title">
+
+            <span class="before">
+                Governance architecture /&nbsp;
+            </span>
+
+            <span class="after">
+                Organisational structure and tiered standards
+            </span>
+
+        </h2>
+
+    </div>
+
+
+    <div class="flow">
+
+        <div>
+            <strong>
+                Corporate Banking HQ
+            </strong>
+
+            Client manager training ·
+            Business process & risk management
+        </div>
+
+
+        <div>
+            <strong>
+                Operations Management
+            </strong>
+
+            Operations staff training ·
+            Information review procedures
+        </div>
+
+
+        <div>
+            <strong>
+                Legal & Compliance
+            </strong>
+
+            AML · Telecom fraud control ·
+            Beneficial ownership identification
+        </div>
+
+
+        <div>
+            <strong>
+                Tiered CDD
+            </strong>
+
+            Low / Medium / High risk classification
+        </div>
+
+
+        <div>
+            <strong>
+                Differentiated review
+            </strong>
+
+            Simplify medium-low ·
+            Enhance high-risk
+        </div>
+
+    </div>
+
+
+    <div class="sub-section">
+
+        <h3 class="subsection-title">
+
+            <span class="dot">
+                ○
+            </span>
+
+            <span class="before">
+                Organisational structure and responsibilities /&nbsp;
+            </span>
+
+            <span class="after">
+                Middle-office operations and back-office compliance collaboration
+            </span>
+
+        </h3>
+
+
+        <div class="data">
+
+            <div>
+
+                <div class="label">
+                    Middle office / Corporate Banking HQ
+                </div>
+
+                <ul class="list">
+
+                    <li>
+                        System training for corporate client managers
+                    </li>
+
+                    <li>
+                        Clarification of business processes
+                        and risk-management requirements
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+            <div>
+
+                <div class="label">
+                    Middle office / Operations Management
+                </div>
+
+                <ul class="list">
+
+                    <li>
+                        System training for operations data-entry staff
+                    </li>
+
+                    <li>
+                        Definition of information review procedures
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+            <div>
+
+                <div class="label">
+                    Back office / Legal & Compliance
+                </div>
+
+                <ul class="list">
+
+                    <li>
+                        AML and telecom-fraud risk control
+                    </li>
+
+                    <li>
+                        Beneficial ownership (BO) identification standards
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="sub-section">
+
+        <h3 class="subsection-title">
+
+            <span class="dot">
+                ○
+            </span>
+
+            <span class="before">
+                Tiered Customer Due Diligence (CDD) framework /&nbsp;
+            </span>
+
+            <span class="after">
+                Tag-based classification and differentiated review
+            </span>
+
+        </h3>
+
+
+        <div class="cdd-grid">
+
+
+            <div class="cdd-card">
+
+                <div class="label">
+                    Low-risk tags
+                </div>
+
+                <h4>
+                    Trusted and related customers
+                </h4>
+
+                <ul>
+
+                    <li>
+                        Trusted customers: credit customers,
+                        SOEs, joint-stock, listed, and multinational
+                        corporations
+                    </li>
+
+                    <li>
+                        Related customers: same legal representative,
+                        BO, payment contact, or online-banking administrator
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+            <div class="cdd-card">
+
+                <div class="label">
+                    Medium-risk customers
+                </div>
+
+                <h4>
+                    Requiring supplementary verification
+                </h4>
+
+                <ul>
+
+                    <li>
+                        Annual reports and financial statements
+                    </li>
+
+                    <li>
+                        Registered / paid-in capital of a certain scale
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+            <div class="cdd-card">
+
+                <div class="label">
+                    High-risk customers
+                </div>
+
+                <h4>
+                    Requiring enhanced measures
+                </h4>
+
+                <ul>
+
+                    <li>
+                        Individual businesses (sole proprietorships)
+                    </li>
+
+                    <li>
+                        Non-operating entities
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+            <div class="cdd-card span-2">
+
+                <div class="label">
+                    Medium-low risk / simplified review
+                </div>
+
+                <h4>
+                    Reducing pre-opening verification standards
+                    for medium-low risk customers
+                </h4>
+
+                <p style="margin:0;">
+                    Appropriately streamline verification items
+                    to optimise the account-opening process and
+                    improve customer experience.
+                </p>
+
+            </div>
+
+
+            <div class="cdd-card span-1">
+
+                <div class="label">
+                    High-risk / enhanced review
+                </div>
+
+                <h4>
+                    Raising verification requirements during
+                    account opening for high-risk customers
+                </h4>
+
+                <ul>
+
+                    <li>
+                        On-site CDD visits
+                    </li>
+
+                    <li>
+                        Business background checks
+                        (invoices, contracts, etc.)
+                    </li>
+
+                    <li>
+                        Telephone verification of key corporate personnel
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ============================================================
+     SECTION 3
+     ============================================================ -->
+
+<section class="reveal">
+
+    <div class="head">
+
+        <h2 class="section-title">
+
+            <span class="before">
+                Implementation /&nbsp;
+            </span>
+
+            <span class="after">
+                Roadmap
+            </span>
+
+        </h2>
+
+    </div>
+
+
+    <div class="roadmap">
+
+        <div class="step">
+
+            <div class="step-label">
+                Step 01
+            </div>
+
+            <h4>
+                Full-scale operational training
+            </h4>
+
+            <p>
+                Comprehensive training on system operation,
+                business processes and risk-control requirements
+                for corporate client managers, operations staff,
+                and all relevant personnel, ensuring full proficiency
+                in the online account-opening workflow.
+            </p>
+
+        </div>
+
+
+        <div class="step-arrow">
+            ➜
+        </div>
+
+
+        <div class="step">
+
+            <div class="step-label">
+                Step 02
+            </div>
+
+            <h4>
+                Phased online pilot
+            </h4>
+
+            <p>
+                Select outlets for initial pilot to validate system
+                workflows, verification standards and risk-control
+                mechanisms; collect feedback and optimise before
+                gradually expanding the pilot scope.
+            </p>
+
+        </div>
+
+
+        <div class="step-arrow">
+            ➜
+        </div>
+
+
+        <div class="step">
+
+            <div class="step-label">
+                Step 03
+            </div>
+
+            <h4>
+                Full rollout across the region
+            </h4>
+
+            <p>
+                Based on pilot results, complete the full rollout
+                of the online corporate account-opening system
+                across all 19 outlets in Dalian
+                (including Jinzhou and Yingkou).
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ============================================================
+     SECTION 4
+     ============================================================ -->
+
+<section class="reveal">
+
+    <div class="head">
+
+        <h2 class="section-title">
+
+            <span class="before">
+                Outcome /&nbsp;
+            </span>
+
+            <span class="after">
+                Project results
+            </span>
+
+        </h2>
+
+    </div>
+
+
+    <div class="outcome">
+
+        <div class="metric">
+
+            <strong>
+                1
+            </strong>
+
+            quarter to complete full online rollout
+
+        </div>
+
+
+        <div class="metric">
+
+            <strong>
+                ↑
+            </strong>
+
+            Significant improvement in account-opening efficiency,
+            with complex offline processes greatly simplified
+
+        </div>
+
+    </div>
+
+
+    <div class="grid2" style="margin-top:2px;">
+
+        <div class="card">
+
+            <div class="label">
+                Data integrity
+            </div>
+
+            <h4 class="card-title">
+                Advancing information completeness
+            </h4>
+
+            <p>
+                Further improved the completeness of corporate
+                account information within the system, providing
+                a more reliable foundation for data governance
+                and compliance management.
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="label">
+                Scalability
+            </div>
+
+            <h4 class="card-title">
+                Establishing a foundation for programmatic rollout
+            </h4>
+
+            <p>
+                Laid a reusable programmatic rollout foundation
+                for subsequent online settlement services such as
+                account information changes, enabling further
+                digitalisation at the Dalian branch.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <p class="small">
+        Outcome figures are based on the project information supplied
+        for this portfolio; no additional performance metrics have
+        been added.
+    </p>
+
+</section>
+
+
+<!-- ============================================================
+     SECTION 5
+     ============================================================ -->
+
+<section class="reveal">
+
+    <div class="head">
+
+        <h2 class="section-title">
+
+            <span class="before">
+                Project lens /&nbsp;
+            </span>
+
+            <span class="after">
+                Why this matters for governance
+            </span>
+
+        </h2>
+
+    </div>
+
+
+    <div class="grid2">
+
+        <div class="card quote">
+
+            This project not only completed the system rollout
+            for online corporate account opening, but also built
+            a replicable and scalable digital-transformation
+            methodology through organisational collaboration,
+            a tiered CDD framework, and differentiated
+            verification strategies.
+
+        </div>
+
+
+        <div class="card">
+
+            <p>
+                <b>Digital Transformation</b><br>
+
+                Driving closed-loop digitalisation across
+                front-line operations and back-office risk control
+                through system deployment.
+            </p>
+
+
+            <p>
+                <b>Risk & Compliance</b><br>
+
+                Embedding AML, telecom-fraud controls and BO
+                identification into the account-opening process
+                for proactive risk management.
+            </p>
+
+
+            <p>
+                <b>Process Optimization</b><br>
+
+                Balancing risk requirements and customer experience
+                through tiered verification standards,
+                improving operational efficiency.
+            </p>
+
+
+            <p>
+                <b>Scalable Governance</b><br>
+
+                Establishing reusable training, pilot and rollout
+                mechanisms to support future digitalisation
+                of additional services.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<footer class="footer">
+
+    <span>
+        JiaXin Xing — Selected Project
+    </span>
+
+    <span>
+        Digital · Risk · Process · Governance
+    </span>
+
+</footer>
+
+</div>
+
+
+<!-- ================================================================
+     SIDEBAR
+     END-TO-END CLOSED-LOOP PROCESS
+     ================================================================ -->
+
+<button
+    class="flow-trigger"
+    id="flowTrigger"
+    aria-label="Toggle process flow">
+
+    <span class="arrow-icon">
+        ▶
+    </span>
+
+</button>
+
+
+<div
+    class="flow-panel"
+    id="flowPanel">
+
+
+    <!-- ============================================================
+         SIDEBAR HEADER
+         ============================================================ -->
+
+    <div class="flow-panel-header">
+
+        <h2>
+
+            ACCOUNT OPENING FLOW
+
+            <span>
+                Online Corporate · End-to-End Governance
+            </span>
+
+        </h2>
+
+
+        <button
+            class="flow-close-btn"
+            id="flowCloseBtn"
+            aria-label="Close">
+
+            ✕
+
+        </button>
+
+    </div>
+
+
+    <!-- ============================================================
+         SCROLL
+         ============================================================ -->
+
+    <div class="flow-scroll">
+
+
+        <div class="gov-flow">
+
+
+            <!-- =====================================================
+                 INTRO
+                 ===================================================== -->
+
+            <div class="flow-intro">
+
+                <div class="eyebrow">
+                    PROJECT LOGIC
+                </div>
+
+                <h3>
+                    From Digital Framework<br>
+                    to Closed-Loop Governance
+                </h3>
+
+                <p>
+                    A regional implementation model linking
+                    process design, frontline execution,
+                    risk control, customer onboarding,
+                    data feedback and continuous optimisation.
+                </p>
+
+            </div>
+
+
+            <!-- =====================================================
+                 01 — FRAMEWORK
+                 ===================================================== -->
+
+            <div class="gov-section">
+                01 / Framework
+            </div>
+
+
+            <div class="gov-node dark-accent">
+
+                <div class="gov-node-number">
+                    01
+                </div>
+
+                <div class="gov-node-title">
+                    HEAD OFFICE FRAMEWORK
+                </div>
+
+                <div class="gov-node-desc">
+
+                    <ul>
+
+                        <li>
+                            <strong>System</strong>
+                            — Online account-opening platform
+                        </li>
+
+                        <li>
+                            <strong>Process</strong>
+                            — Standardised onboarding journey
+                        </li>
+
+                        <li>
+                            <strong>Governance</strong>
+                            — Risk-control and compliance requirements
+                        </li>
+
+                        <li>
+                            <strong>Deployment</strong>
+                            — Dalian Branch → 19 outlets
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+
+            <div class="gov-connector">
+
+                <div class="vline"></div>
+
+                <div class="arrow">
+                    ▼
+                </div>
+
+            </div>
+
+
+            <!-- =====================================================
+                 02 — PROCESS SETUP
+                 ===================================================== -->
+
+            <div class="gov-section">
+                02 / Process Setup
+            </div>
+
+
+            <div class="gov-node">
+
+                <div class="gov-node-number">
+                    02
+                </div>
+
+                <div class="gov-node-title">
+                    BUSINESS PROCESS &amp; ORGANISATIONAL SETUP
+                </div>
+
+                <div class="gov-node-desc">
+
+                    <ul>
+
+                        <li>
+                            <strong>Corporate Banking</strong>
+                            — Business process &amp; risk requirements
+                        </li>
+
+                        <li>
+                            <strong>Operations</strong>
+                            — Information review &amp; data-entry procedures
+                        </li>
+
+                        <li>
+                            <strong>Legal / Compliance</strong>
+                            — AML · Telecom Fraud · BO identification
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+
+            <div class="gov-connector">
+
+                <div class="vline"></div>
+
+                <div class="arrow">
+                    ▼
+                </div>
+
+            </div>
+
+
+            <!-- =====================================================
+                 03 — IMPLEMENTATION
+                 ===================================================== -->
+
+            <div class="gov-section">
+                03 / Implementation
+            </div>
+
+
+            <div class="gov-node">
+
+                <div class="gov-node-number">
+                    03
+                </div>
+
+                <div class="gov-node-title">
+                    TRAINING → PILOT → REGIONAL ROLLOUT
+                </div>
+
+                <div class="gov-node-desc">
+
+                    <ul>
+
+                        <li>
+                            <strong>Training</strong>
+                            — Client managers · Operations · Relevant staff
+                        </li>
+
+                        <li>
+                            <strong>Pilot</strong>
+                            — Validate workflow, verification and controls
+                        </li>
+
+                        <li>
+                            <strong>Optimisation</strong>
+                            — Collect frontline feedback and refine
+                        </li>
+
+                        <li>
+                            <strong>Rollout</strong>
+                            — Expand to all 19 outlets
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+
+            <div class="gov-connector">
+
+                <div class="vline"></div>
+
+                <div class="arrow">
+                    ▼
+                </div>
+
+            </div>
+
+
+            <!-- =====================================================
+                 04 — CUSTOMER JOURNEY
+                 ===================================================== -->
+
+            <div class="gov-section">
+                04 / Customer Journey
+            </div>
+
+
+            <div class="gov-node">
+
+                <div class="gov-node-number">
+                    04
+                </div>
+
+                <div class="gov-node-title">
+                    CUSTOMER ONLINE ACCOUNT OPENING
+                </div>
+
+                <div class="gov-node-desc">
+
+                    <ul>
+
+                        <li>
+                            <strong>Customer</strong>
+                            — Information collection · Document upload
+                        </li>
+
+                        <li>
+                            <strong>Client Manager</strong>
+                            — Business guidance · Process support
+                        </li>
+
+                        <li>
+                            <strong>Operations</strong>
+                            — Data entry · Information review
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+
+            <div class="gov-connector">
+
+                <div class="vline"></div>
+
+                <div class="arrow">
+                    ▼
+                </div>
+
+            </div>
+
+
+            <!-- =====================================================
+                 05 — RISK DECISION
+                 ===================================================== -->
+
+            <div class="gov-section">
+                05 / Risk Decision
+            </div>
+
+
+            <div class="decision-wrapper">
+
+
+                <div class="decision-node">
+
+                    <div class="decision-label">
+                        Decision Gate
+                    </div>
+
+                    <div class="decision-title">
+                        CUSTOMER RISK CLASSIFICATION
+                    </div>
+
+                    <div class="decision-desc">
+                        Risk-based CDD determines the appropriate
+                        verification intensity before approval.
+                    </div>
+
+                </div>
+
+
+                <div class="decision-branches">
+
+
+                    <div class="decision-branch simplified">
+
+                        <div class="branch-label">
+                            Medium-Low / Standard
+                        </div>
+
+                        <strong>
+                            Simplified CDD
+                        </strong>
+
+                        <span>
+                            Streamlined verification
+                            for appropriate lower-risk cases.
+                        </span>
+
+                    </div>
+
+
+                    <div class="decision-branch enhanced">
+
+                        <div class="branch-label">
+                            High Risk / Enhanced
+                        </div>
+
+                        <strong>
+                            Enhanced CDD
+                        </strong>
+
+                        <span>
+                            On-site verification,
+                            background checks and
+                            key-person verification.
+                        </span>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+            <div class="gov-connector">
+
+                <div class="vline"></div>
+
+                <div class="arrow">
+                    ▼
+                </div>
+
+            </div>
+
+
+            <!-- =====================================================
+                 06 — REVIEW
+                 ===================================================== -->
+
+            <div class="gov-section">
+                06 / Review &amp; Approval
+            </div>
+
+
+            <div class="gov-node">
+
+                <div class="gov-node-number">
+                    06
+                </div>
+
+                <div class="gov-node-title">
+                    VERIFICATION → REVIEW → APPROVAL
+                </div>
+
+                <div class="gov-node-desc">
+
+                    <ul>
+
+                        <li>
+                            <strong>Risk Screening</strong>
+                            — AML · Telecom fraud · BO
+                        </li>
+
+                        <li>
+                            <strong>Information Verification</strong>
+                            — Business and customer information
+                        </li>
+
+                        <li>
+                            <strong>Approval</strong>
+                            — Complete account-opening decision
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+
+            <div class="gov-connector">
+
+                <div class="vline"></div>
+
+                <div class="arrow">
+                    ▼
+                </div>
+
+            </div>
+
+
+            <!-- =====================================================
+                 07 — COMPLETION
+                 ===================================================== -->
+
+            <div class="gov-section">
+                07 / Completion
+            </div>
+
+
+            <div class="gov-node accent">
+
+                <div class="gov-node-number">
+                    07
+                </div>
+
+                <div class="gov-node-title">
+                    ACCOUNT OPENING COMPLETED
+                </div>
+
+                <div class="gov-node-desc">
+
+                    <ul>
+
+                        <li>
+                            — Account successfully opened
+                        </li>
+
+                        <li>
+                            — Customer information archived
+                        </li>
+
+                        <li>
+                            — Process data retained for governance
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+
+            <!-- =====================================================
+                 CONTINUOUS GOVERNANCE LOOP
+                 ===================================================== -->
+
+            <div class="loop-zone">
+
+
+                <div class="loop-zone-title">
+                    Continuous Governance Loop
+                </div>
+
+
+                <div class="loop-chain">
+
+
+                    <div class="loop-step">
+
+                        <strong>
+                            DATA
+                        </strong>
+
+                        <span>
+                            Account &amp; process records
+                        </span>
+
+                    </div>
+
+
+                    <div class="loop-arrow">
+                        →
+                    </div>
+
+
+                    <div class="loop-step">
+
+                        <strong>
+                            FEEDBACK
+                        </strong>
+
+                        <span>
+                            Frontline &amp; customer signals
+                        </span>
+
+                    </div>
+
+
+                    <div class="loop-arrow">
+                        →
+                    </div>
+
+
+                    <div class="loop-step">
+
+                        <strong>
+                            OPTIMISE
+                        </strong>
+
+                        <span>
+                            Process &amp; system refinement
+                        </span>
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="return-loop">
+
+                    <div class="return-loop-label">
+                        FEEDBACK → PROCESS / SYSTEM OPTIMISATION
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- =====================================================
+                 CLOSED LOOP END
+                 ===================================================== -->
+
+            <div class="gov-footer">
+
+                <strong>
+                    END-TO-END CLOSED-LOOP GOVERNANCE
+                </strong>
+
+                <span>
+                    Framework → Process → Training → Customer
+                    → Risk Decision → Approval → Data
+                    → Feedback → Optimisation → Framework
+                </span>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================================================================
+     JAVASCRIPT
+     ================================================================ -->
+
+
+<script>
+
+
+/* ============================================================
+   1. SCROLL REVEAL
+   ============================================================ */
+
+(function() {
+
+    'use strict';
+
+
+    const revealElements =
+        document.querySelectorAll('.reveal');
+
+
+    const revealObserver =
+        new IntersectionObserver(
+
+            function(entries) {
+
+                entries.forEach(function(entry) {
+
+                    if (entry.isIntersecting) {
+
+                        entry.target.classList.add('visible');
+
+                    }
+
+                });
+
+            },
+
+            {
+
+                threshold: 0.08,
+
+                rootMargin:
+                    '0px 0px -20px 0px'
+
+            }
+
+        );
+
+
+    revealElements.forEach(function(el) {
+
+        revealObserver.observe(el);
+
+    });
+
+
+    setTimeout(function() {
+
+        revealElements.forEach(function(el) {
+
+            const rect =
+                el.getBoundingClientRect();
+
+
+            const winHeight =
+                window.innerHeight ||
+                document.documentElement.clientHeight;
+
+
+            if (rect.top < winHeight - 60) {
+
+                el.classList.add('visible');
+
+            }
+
+        });
+
+    }, 120);
+
+
+})();
+
+
+
+/* ============================================================
+   2. SIDEBAR TOGGLE
+   ============================================================ */
+
+(function() {
+
+
+    const trigger =
+        document.getElementById('flowTrigger');
+
+
+    const panel =
+        document.getElementById('flowPanel');
+
+
+    const closeBtn =
+        document.getElementById('flowCloseBtn');
+
+
+    let isOpen = false;
+
+
+    function togglePanel(open) {
+
+
+        isOpen =
+            (open !== undefined)
+                ? open
+                : !isOpen;
+
+
+        if (isOpen) {
+
+
+            panel.classList.add('open');
+
+
+            document.body.classList.add(
+                'flow-panel-open'
+            );
+
+
+            trigger
+                .querySelector('.arrow-icon')
+                .textContent = '◀';
+
+
+        } else {
+
+
+            panel.classList.remove('open');
+
+
+            document.body.classList.remove(
+                'flow-panel-open'
+            );
+
+
+            trigger
+                .querySelector('.arrow-icon')
+                .textContent = '▶';
+
+
+        }
+
+    }
+
+
+    trigger.addEventListener(
+        'click',
+        function(e) {
+
+            e.stopPropagation();
+
+            togglePanel();
+
+        }
+    );
+
+
+    closeBtn.addEventListener(
+        'click',
+        function(e) {
+
+            e.stopPropagation();
+
+            if (isOpen) {
+
+                togglePanel(false);
+
+            }
+
+        }
+    );
+
+
+    document.addEventListener(
+        'keydown',
+        function(e) {
+
+            if (
+                e.key === 'Escape' &&
+                isOpen
+            ) {
+
+                togglePanel(false);
+
+            }
+
+        }
+    );
+
+
+})();
+
+
+</script>
+
+
+</body>
+</html>

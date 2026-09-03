@@ -1,0 +1,2353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Risk-Based Client Tiering & Fee Compliance</title>
+
+<style>
+/* =========================================================
+   VISUAL LANGUAGE — 对齐 04 Audit Recurrence Control Framework
+   但 .darkGrid 在特定部分恢复 4 列
+   ========================================================= */
+
+:root {
+    --bg: #f3f2ee;
+    --paper: #faf9f5;
+    --ink: #171717;
+    --muted: #77736b;
+    --line: #d5d1c8;
+    --accent: #a45139;
+    --slash-gray: #999999;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 14px/1.4 Arial, Helvetica, sans-serif;
+    transition: padding-right 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* 面板展开时，仅增加右侧内边距，不改变 wrap 宽度 */
+body.flow-panel-open {
+    padding-right: 30vw;
+}
+
+.wrap {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 42px;
+    transition: max-width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+body.flow-panel-open .wrap {
+    max-width: calc(1280px - 30vw);
+}
+
+/* =========================================================
+   NAV
+   ========================================================= */
+
+.nav {
+    height: 78px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+
+.nav a {
+    color: var(--muted);
+    text-decoration: none;
+}
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.hero {
+    display: flex;
+    flex-direction: column;
+    padding: 90px 0 75px;
+    border-bottom: 1px solid var(--line);
+}
+
+.hero .kicker {
+    order: 1;
+    margin-bottom: 25px;
+}
+
+.hero h1 {
+    order: 2;
+    margin: 0;
+    margin-bottom: 30px;  /* 新增：主标题段后距，解决重叠 */
+}
+
+.heroGrid {
+    order: 3;
+    display: flex;
+    gap: 70px;
+    align-items: stretch;
+    margin-top: 0;         /* 移除负边距，解决重叠 */
+    padding-top: 10px;     /* 额外增加上边距，确保不重叠 */
+}
+
+.heroGrid > div:first-child {
+    flex: 1.7;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.lead-group {
+    margin: auto 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.lead-group .lead {
+    margin: 0;
+}
+
+.heroGrid > div:first-child .small {
+    margin-top: auto;
+}
+
+.heroGrid .meta {
+    flex: 0.8;
+    border-left: 1px solid var(--line);
+    padding-left: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.meta div {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.meta div:last-child {
+    border-bottom: none;
+}
+
+.meta b {
+    display: block;
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 400;
+}
+
+.kicker,
+.label {
+    font-size: 10px;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+/* =========================================================
+   TYPOGRAPHY — 标题层级完全对齐 04
+   ========================================================= */
+
+h1 {
+    font-size: clamp(70px, 10vw, 132px);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -.06em;
+    max-width: 1050px;
+    color: var(--ink);
+}
+
+.section-title {
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -.04em;
+    margin: 0;
+    color: var(--ink);
+    line-height: 1.2;
+}
+
+.section-title .before {
+    font-size: 36px;
+    color: var(--ink);
+    display: inline;
+    vertical-align: bottom;
+}
+
+.section-title .after {
+    font-size: 30px;
+    color: var(--slash-gray);
+    display: inline;
+    vertical-align: bottom;
+}
+
+.subsection-title {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -.03em;
+    margin: 60px 0 28px 0;
+    color: var(--muted);
+    line-height: 1.3;
+}
+
+.subsection-title .before {
+    font-size: 24px;
+    color: var(--muted);
+    display: inline;
+    vertical-align: bottom;
+}
+
+.subsection-title .after {
+    font-size: 20px;
+    color: var(--slash-gray);
+    display: inline;
+    vertical-align: bottom;
+}
+
+.subsection-title .dot {
+    font-size: 24px;
+    color: var(--muted);
+    display: inline;
+    vertical-align: bottom;
+}
+
+.card-title {
+    font-size: 17px;
+    font-weight: 700;
+    margin: 0 0 13px;
+    color: var(--ink);
+}
+
+.lead {
+    font-size: 22px;
+    line-height: 1.35;
+    max-width: 760px;
+}
+
+p {
+    color: #343434;
+    line-height: 1.4;
+}
+
+.small {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+/* =========================================================
+   SECTION & GRID
+   ========================================================= */
+
+section {
+    padding: 82px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.head {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    margin-bottom: 45px;
+}
+
+.grid2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    background: var(--line);
+}
+
+.card {
+    background: var(--paper);
+    padding: 34px;
+    min-height: 220px;
+}
+
+.card ul,
+.list {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.card li,
+.list li {
+    padding: 9px 0;
+    border-bottom: 1px solid #e2ded6;
+}
+
+.card li:last-child,
+.list li:last-child {
+    border-bottom: none;
+}
+
+/* =========================================================
+   FLOW
+   ========================================================= */
+
+.flow {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+}
+
+.flow > div {
+    padding: 20px 18px;
+    min-height: 126px;
+    border-right: 1px solid var(--line);
+    font-size: 13px;
+    line-height: 1.2;
+    color: var(--muted);
+}
+
+.flow > div:last-child {
+    border: 0;
+}
+
+.flow strong {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 2px;
+    color: var(--muted);
+}
+
+/* =========================================================
+   DATA / MATRIX
+   ========================================================= */
+
+.data {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr 1fr;
+}
+
+.data > div {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    padding: 30px;
+    min-height: 255px;
+}
+
+.data > div + div {
+    border-left: 0;
+}
+
+.matrix {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr 1.2fr;
+    gap: 2px;
+    background: var(--line);
+    margin: 0 0 2px 0;
+}
+
+.matrix .cell {
+    background: var(--paper);
+    padding: 24px 28px;
+    min-height: 120px;
+}
+
+.matrix .cell .label {
+    font-size: 10px;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+}
+
+.matrix .cell strong {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+    display: block;
+    margin-bottom: 6px;
+}
+
+.matrix .cell ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.matrix .cell li {
+    padding: 4px 0;
+    font-size: 13px;
+    color: #343434;
+    border-bottom: 1px solid #e2ded6;
+}
+
+.matrix .cell li:last-child {
+    border-bottom: none;
+}
+
+/* =========================================================
+   DARK BLOCK
+   全局默认 3 列（与 04 对齐），但特定部分覆盖为 4 列
+   ========================================================= */
+
+.dark {
+    margin-top: 25px;
+    background: #171717;
+    color: #f4f1e9;
+    padding: 35px;
+}
+
+/* 默认 3 列 */
+.darkGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: #444;
+}
+
+.darkGrid > div {
+    background: #171717;
+    padding: 25px;
+    min-height: 145px;
+}
+
+.darkGrid > div:nth-child(3n) {
+    /* 3列布局不需要特别处理，gap 已处理边框 */
+}
+
+/* ---- 针对特定部分的 4 列覆盖（恢复原始布局） ---- */
+.darkGrid.grid-4col {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.darkGrid.grid-4col > div:nth-child(4n) {
+    /* 保持无额外边框，由 gap 处理 */
+}
+
+.dark .label {
+    color: #aaa;
+}
+
+.dark strong {
+    display: block;
+    font-size: 18px;
+    font-weight: 500;
+    margin: 12px 0 8px;
+}
+
+/* =========================================================
+   DECISION FLOW
+   ========================================================= */
+
+.decision-flow {
+    border: 1px solid var(--line);
+    background: var(--paper);
+}
+
+.decision-row {
+    display: grid;
+    grid-template-columns: 1.1fr 0.15fr 1.1fr 0.15fr 1.25fr;
+    align-items: stretch;
+    min-height: 112px;
+    border-bottom: 1px solid var(--line);
+}
+
+.decision-row:last-child {
+    border-bottom: none;
+}
+
+.decision-node {
+    padding: 23px 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.decision-node.main {
+    background: #efefec;
+}
+
+.decision-node h4 {
+    margin: 6px 0 5px;
+    font-size: 15px;
+    line-height: 1.35;
+    font-weight: 500;
+}
+
+.decision-node p {
+    margin: 0;
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--muted);
+}
+
+.arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    color: var(--accent);
+}
+
+/* =========================================================
+   CLASSIFICATION
+   ========================================================= */
+
+.classification {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+}
+
+.classification > div {
+    padding: 28px;
+    min-height: 180px;
+    border-right: 1px solid var(--line);
+}
+
+.classification > div:last-child {
+    border-right: none;
+}
+
+.classification h4 {
+    margin: 9px 0 10px;
+    font-size: 17px;
+    font-weight: 500;
+}
+
+.classification p {
+    margin: 0;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+/* =========================================================
+   TIMELINE
+   ========================================================= */
+
+.timeline {
+    position: relative;
+    border-left: 1px solid var(--line);
+    margin-left: 8px;
+}
+
+.timeline-item {
+    position: relative;
+    padding: 0 0 35px 35px;
+}
+
+.timeline-item:last-child {
+    padding-bottom: 0;
+}
+
+.timeline-item:before {
+    content: "";
+    position: absolute;
+    left: -5px;
+    top: 7px;
+    width: 9px;
+    height: 9px;
+    border: 1px solid var(--accent);
+    background: var(--bg);
+    border-radius: 50%;
+}
+
+.timeline-item h4 {
+    margin: 0 0 6px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.timeline-item p {
+    margin: 0;
+    max-width: 780px;
+    font-size: 12px;
+}
+
+/* =========================================================
+   OUTCOME
+   ========================================================= */
+
+.outcome {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+}
+
+.metric {
+    padding: 34px 30px;
+    border-right: 1px solid var(--line);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.metric:last-child {
+    border-right: none;
+}
+
+.metric strong {
+    display: block;
+    margin-bottom: 9px;
+    font-size: 42px;
+    line-height: 1;
+    font-weight: 450;
+    letter-spacing: -.04em;
+}
+
+/* =========================================================
+   PROJECT LENS
+   ========================================================= */
+
+.quote {
+    font-size: 17px;
+    line-height: 1.55;
+}
+
+.project-lens p {
+    margin: 0 0 18px;
+}
+
+.project-lens p:last-child {
+    margin-bottom: 0;
+}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.footer {
+    padding: 55px 0 90px;
+    display: flex;
+    justify-content: space-between;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+/* =========================================================
+   CUSTOM: ANNOTATION TOOLTIP — 已删除，保留样式以防残留
+   ========================================================= */
+
+/* =========================================================
+   ===== 触发器按钮 =====
+   ========================================================= */
+.flow-trigger {
+    position: fixed;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 9999;
+    background: rgba(164, 81, 57, 0.5);
+    color: #fff;
+    width: 40px;
+    height: 64px;
+    border: none;
+    border-radius: 8px 0 0 8px;
+    cursor: pointer;
+    font-size: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.08);
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1;
+    padding: 0;
+}
+.flow-trigger:hover {
+    background: rgba(164, 81, 57, 0.75);
+    width: 46px;
+    box-shadow: -4px 0 16px rgba(0, 0, 0, 0.15);
+}
+.flow-trigger .arrow-icon {
+    font-size: 32px;
+    writing-mode: horizontal-tb;
+    display: block;
+    font-weight: 300;
+    line-height: 1;
+}
+
+/* =========================================================
+   ===== 流程图面板 =====
+   ========================================================= */
+.flow-panel {
+    position: fixed;
+    top: 0;
+    right: -32vw;
+    width: 30vw;
+    max-width: 480px;
+    height: 100vh;
+    z-index: 10000;
+    background: rgba(250, 249, 245, 0.6);
+    box-shadow: -6px 0 30px rgba(0, 0, 0, 0.08);
+    transition: right 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid rgba(213, 209, 200, 0.4);
+    overflow: hidden;
+    backdrop-filter: blur(4px);
+    color: rgba(23, 23, 23, 0.35);
+}
+.flow-panel.open {
+    right: 0;
+}
+
+.flow-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px 8px 16px;
+    border-bottom: 1px solid rgba(213, 209, 200, 0.3);
+    flex-shrink: 0;
+    background: transparent;
+}
+.flow-panel-header h2 {
+    font-size: 11px;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -.02em;
+    line-height: 1.2;
+    color: rgba(23, 23, 23, 0.5);
+}
+.flow-panel-header h2 span {
+    font-weight: 400;
+    font-size: 9px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    display: block;
+    margin-top: 1px;
+    color: rgba(23, 23, 23, 0.35);
+}
+.flow-close-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: rgba(23, 23, 23, 0.35);
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: background 0.2s, color 0.2s;
+    line-height: 1;
+}
+.flow-close-btn:hover {
+    background: rgba(213, 209, 200, 0.3);
+    color: rgba(23, 23, 23, 0.6);
+}
+
+.flow-scroll {
+    flex: 1;
+    overflow: hidden;
+    padding: 8px 16px 12px 16px;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ===== 流程图节点（间距全部固定） ===== */
+.fl {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    flex-shrink: 0;
+}
+
+.fl-node {
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(2px);
+    border: 1px solid rgba(213, 209, 200, 0.35);
+    border-radius: 3px;
+    padding: 4px 10px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+    flex-shrink: 0;
+}
+.fl-node .fl-title {
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.15;
+    color: rgba(23, 23, 23, 0.5);
+}
+.fl-node .fl-title strong {
+    font-weight: 800;
+    color: rgba(23, 23, 23, 0.6);
+}
+.fl-node .fl-sub {
+    font-size: 9px;
+    margin-top: 1px;
+    line-height: 1.15;
+    color: rgba(23, 23, 23, 0.3);
+}
+.fl-node .fl-sub strong {
+    color: rgba(23, 23, 23, 0.45);
+    font-weight: 700;
+}
+.fl-node .fl-tag {
+    display: inline-block;
+    font-size: 8px;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    background: rgba(243, 242, 238, 0.4);
+    padding: 1px 8px;
+    border-radius: 8px;
+    margin-top: 2px;
+    border: 1px solid rgba(213, 209, 200, 0.25);
+    color: rgba(23, 23, 23, 0.3);
+}
+
+.fl-connector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1px 0;
+    font-size: 12px;
+    line-height: 1;
+    user-select: none;
+    color: rgba(23, 23, 23, 0.25);
+    flex-shrink: 0;
+}
+.fl-connector .line {
+    width: 2px;
+    height: 6px;
+    background: rgba(213, 209, 200, 0.4);
+    flex-shrink: 0;
+}
+.fl-connector .arrow {
+    font-size: 12px;
+    color: rgba(23, 23, 23, 0.25);
+    margin-top: -1px;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.fl-branch {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    position: relative;
+    padding-top: 2px;
+    flex-shrink: 0;
+}
+.fl-branch::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 6px;
+    background: rgba(213, 209, 200, 0.4);
+}
+.fl-branch > .fl-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 0;
+}
+.fl-branch .fl-col .fl-node {
+    max-width: 100%;
+}
+.fl-branch .fl-col .fl-connector .line {
+    height: 5px;
+}
+
+.fl-merge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding-top: 1px;
+    flex-shrink: 0;
+}
+.fl-merge .line-v {
+    width: 2px;
+    height: 6px;
+    background: rgba(213, 209, 200, 0.4);
+    flex-shrink: 0;
+}
+.fl-merge .line-h-wrap {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 0;
+    padding: 0;
+}
+.fl-merge .line-h-wrap .line-h {
+    flex: 1;
+    height: 2px;
+    background: rgba(213, 209, 200, 0.35);
+}
+.fl-merge .line-h-wrap .line-v-center {
+    width: 2px;
+    height: 8px;
+    background: rgba(213, 209, 200, 0.4);
+    flex-shrink: 0;
+}
+
+.fl-node.highlight {
+    border-left: 3px solid rgba(164, 81, 57, 0.6);
+}
+.fl-node.highlight .fl-title {
+    color: rgba(23, 23, 23, 0.55);
+}
+
+.fl-footer {
+    text-align: center;
+    font-size: 8px;
+    padding-top: 2px;
+    letter-spacing: .05em;
+    border-top: 1px solid rgba(213, 209, 200, 0.3);
+    margin-top: 4px;
+    padding-top: 6px;
+    width: 100%;
+    color: rgba(23, 23, 23, 0.3);
+    flex-shrink: 0;
+}
+.fl-footer strong {
+    font-weight: 700;
+    color: rgba(23, 23, 23, 0.45);
+}
+
+/* =========================================================
+   ===== 新增：滚动进入动画（与 04 完全一致） =====
+   ========================================================= */
+.reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media(max-width:800px) {
+    .wrap {
+        padding: 0 20px;
+    }
+    body.flow-panel-open {
+        padding-right: 0;
+    }
+    body.flow-panel-open .wrap {
+        max-width: 100%;
+    }
+    .heroGrid,
+    .grid2,
+    .data,
+    .outcome,
+    .matrix,
+    .classification {
+        grid-template-columns: 1fr;
+    }
+    .flow {
+        grid-template-columns: 1fr;
+    }
+    .flow > div {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+        min-height: auto;
+    }
+    .flow > div:last-child {
+        border-bottom: none;
+    }
+    .data > div + div {
+        border-left: 1px solid var(--line);
+        border-top: 0;
+    }
+    .classification > div,
+    .metric {
+        border-right: none;
+        border-bottom: 1px solid var(--line);
+    }
+    .classification > div:last-child,
+    .metric:last-child {
+        border-bottom: none;
+    }
+    .darkGrid,
+    .darkGrid.grid-4col {
+        grid-template-columns: 1fr;
+    }
+    .darkGrid > div,
+    .darkGrid.grid-4col > div {
+        border-right: none;
+    }
+    .decision-row {
+        grid-template-columns: 1fr;
+    }
+    .arrow {
+        min-height: 35px;
+        transform: rotate(90deg);
+    }
+    .decision-node {
+        min-height: 100px;
+    }
+    .head {
+        grid-template-columns: 1fr;
+    }
+    .section-title {
+        font-size: 28px;
+    }
+    .section-title .before {
+        font-size: 28px;
+    }
+    .section-title .after {
+        font-size: 23px;
+    }
+    .subsection-title {
+        font-size: 20px;
+    }
+    .subsection-title .before {
+        font-size: 20px;
+    }
+    .subsection-title .after {
+        font-size: 17px;
+    }
+    .subsection-title .dot {
+        font-size: 20px;
+    }
+    .lead {
+        font-size: 19px;
+    }
+    .meta {
+        border-left: 0;
+        padding-left: 0;
+    }
+    .heroGrid {
+        flex-direction: column;
+        gap: 20px;
+        margin-top: 0;
+    }
+    .hero h1 {
+        margin-top: 15px;
+    }
+    section:last-of-type .grid2 {
+        flex-direction: column;
+    }
+    .outcome {
+        grid-template-columns: 1fr;
+    }
+    .metric strong {
+        font-size: 56px;
+    }
+    .matrix .cell {
+        min-height: auto;
+    }
+    .footer {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    /* 移动端触发器与面板 */
+    .flow-trigger {
+        width: 32px;
+        height: 48px;
+        font-size: 20px;
+    }
+    .flow-trigger .arrow-icon {
+        font-size: 24px;
+    }
+    .flow-panel {
+        right: -100vw;
+        width: 100vw;
+        max-width: 100vw;
+        background: rgba(250, 249, 245, 0.85);
+    }
+    .flow-panel.open {
+        right: 0;
+    }
+    .flow-panel-header {
+        padding: 8px 12px 6px 12px;
+    }
+    .flow-panel-header h2 {
+        font-size: 10px;
+    }
+    .flow-panel-header h2 span {
+        font-size: 8px;
+    }
+    .flow-scroll {
+        overflow-y: auto;
+        padding: 8px 12px;
+        align-items: flex-start;
+    }
+    .fl-node {
+        padding: 4px 8px;
+    }
+    .fl-node .fl-title {
+        font-size: 10px;
+    }
+    .fl-node .fl-sub {
+        font-size: 8px;
+    }
+    .fl-branch {
+        flex-direction: column;
+        gap: 2px;
+    }
+    .fl-branch::before {
+        display: none;
+    }
+    .fl-branch > .fl-col {
+        width: 100%;
+    }
+    .fl-merge .line-h-wrap .line-h {
+        display: none;
+    }
+    .fl-merge .line-h-wrap .line-v-center {
+        height: 6px;
+    }
+    .fl-connector .line {
+        height: 4px;
+    }
+    .fl-connector .arrow {
+        font-size: 10px;
+    }
+    .fl-footer {
+        font-size: 7px;
+    }
+}
+
+/* 中等屏幕：4列降为2列 */
+@media(min-width:601px) and (max-width:900px) {
+    .darkGrid.grid-4col {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+    <!-- ======================================================
+    NAV
+    ====================================================== -->
+
+    <nav class="nav">
+        <b>JiaXin Xing / Project —— Risk-Based Client Tiering & Fee Compliance</b>
+        <a href="../JiaXin%20Xing%20%E2%80%94%20Research%20%C2%B7%20Systems%20%C2%B7%20Design.html">← All Projects</a>
+    </nav>
+
+    <!-- ======================================================
+    HERO
+    ====================================================== -->
+
+    <header class="hero reveal">
+
+        <div class="kicker">
+            Corporate Classification · Fee Compliance · Risk-Based Decision
+        </div>
+
+        <h1>
+            Risk-Based Client Tiering<br>
+            & Fee Compliance
+        </h1>
+
+        <div class="heroGrid">
+
+            <div>
+
+                <div class="lead-group">
+                    <p class="lead">
+                        Reconstructing historical client classifications and
+                        <span style="font-weight:400; color:var(--muted);">,</span>
+                        complete customer remediation, and strengthen the link between
+                        regulatory requirements and frontline transaction systems.
+                    </p>
+
+                    <p class="lead">
+                        The project combined customer data maintenance,
+                        historical transaction review, rule-based classification,
+                        refund remediation and process-level optimisation.
+                    </p>
+                </div>
+
+                <p class="small">
+                    China Merchants Bank · Dalian Branch · Corporate Banking
+                </p>
+
+            </div>
+
+            <div class="meta">
+
+                <div>
+                    <b>Role</b>
+                    Risk & Compliance · Client Classification
+                </div>
+
+                <div>
+                    <b>Period</b>
+                    2022
+                </div>
+
+                <div>
+                    <b>Scope</b>
+                    Approx. 2,000 credit customers
+                </div>
+
+                <div>
+                    <b>Review</b>
+                    Historical fee transactions
+                </div>
+
+                <div>
+                    <b>Core logic</b>
+                    Classify → Reconstruct → Test → Refund → Prevent
+                </div>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- ======================================================
+    CONTEXT
+    ====================================================== -->
+
+    <section class="reveal">
+
+        <div class="head">
+
+            <h2 class="section-title">
+                <span class="before">Context /&nbsp;</span>
+                <span class="after">
+                    From static customer classification to historical compliance review
+                </span>
+            </h2>
+
+        </div>
+
+        <div class="grid2">
+
+            <div class="card">
+
+                <div class="label">
+                    Regulatory requirement
+                </div>
+
+                <h4 class="card-title">
+                    Client classification affects the application of fee exemptions.
+                </h4>
+
+                <p>
+                    Regulatory requirements for small and micro enterprises
+                    made accurate enterprise classification relevant not only
+                    to customer management, but also to the legitimacy of
+                    applicable service charges.
+                </p>
+
+            </div>
+
+            <div class="card">
+
+                <div class="label">
+                    Operational gap
+                </div>
+
+                <h4 class="card-title">
+                    Historical classifications did not always remain aligned with current information.
+                </h4>
+
+                <p>
+                    Customer attributes, annual-report information and
+                    classification records could change over time, while
+                    lower-risk fee transactions were not always connected
+                    to the latest customer classification information.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="sub-section">
+
+            <h3 class="subsection-title">
+
+                <span class="dot">○ </span>
+
+                <span class="before">
+                    Project objective /&nbsp;
+                </span>
+
+                <span class="after">
+                    Reconstruct the decision at the time the transaction occurred
+                </span>
+
+            </h3>
+
+            <!-- ===== 此处恢复为 4 列 ===== -->
+            <div class="dark">
+
+                <div class="darkGrid grid-4col">
+
+                    <div>
+                        <div class="label">Customer</div>
+                        <strong>Who was the client?</strong>
+                        Corporate identity, ownership and operating information.
+                    </div>
+
+                    <div>
+                        <div class="label">Classification</div>
+                        <strong>What type of enterprise?</strong>
+                        Reconstruct the applicable enterprise category at the relevant point in time.
+                    </div>
+
+                    <div>
+                        <div class="label">Transaction</div>
+                        <strong>What was charged?</strong>
+                        Match historical non-interest income transactions and service fees.
+                    </div>
+
+                    <div>
+                        <div class="label">Decision</div>
+                        <strong>Was the charge compliant?</strong>
+                        Compare historical customer status with the applicable classification rules.
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+    DATA RECONSTRUCTION
+    ====================================================== -->
+
+    <section class="reveal">
+
+        <div class="head">
+
+            <h2 class="section-title">
+
+                <span class="before">
+                    Data reconstruction /&nbsp;
+                </span>
+
+                <span class="after">
+                    Building a reliable historical decision base
+                </span>
+
+            </h2>
+
+        </div>
+
+        <div class="grid2">
+
+            <div class="card">
+
+                <div class="label">
+                    Customer information
+                </div>
+
+                <h4 class="card-title">
+                    Reconstruct the customer profile at the relevant time.
+                </h4>
+
+                <p>
+                    Reviewed industry, operating revenue, annual-report
+                    information and other classification-related attributes.
+                    Missing information was identified and supplemented
+                    through customer contact and internal records.
+                </p>
+
+            </div>
+
+            <div class="card">
+
+                <div class="label">
+                    Historical transactions
+                </div>
+
+                <h4 class="card-title">
+                    Connect customer status with actual fee events.
+                </h4>
+
+                <p>
+                    Reviewed historical non-interest income transactions,
+                    identified relevant service-fee records and linked
+                    each transaction to the customer information available
+                    at the corresponding point in time.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="sub-section">
+
+            <h3 class="subsection-title">
+
+                <span class="dot">○ </span>
+
+                <span class="before">
+                    Information recovery /&nbsp;
+                </span>
+
+                <span class="after">
+                    Filling the gaps before making a compliance judgement
+                </span>
+
+            </h3>
+
+            <div class="timeline">
+
+                <div class="timeline-item">
+
+                    <h4>
+                        01 — Identify
+                    </h4>
+
+                    <p>
+                        Inventory customer classification fields,
+                        historical fee records and missing annual-report
+                        information.
+                    </p>
+
+                </div>
+
+                <div class="timeline-item">
+
+                    <h4>
+                        02 — Contact
+                    </h4>
+
+                    <p>
+                        Contact relevant customers and request missing
+                        information required to reconstruct their historical
+                        classification status.
+                    </p>
+
+                </div>
+
+                <div class="timeline-item">
+
+                    <h4>
+                        03 — Cross-check
+                    </h4>
+
+                    <p>
+                        Match customer-provided information with internal
+                        business records and historical system data.
+                    </p>
+
+                </div>
+
+                <div class="timeline-item">
+
+                    <h4>
+                        04 — Reconstruct
+                    </h4>
+
+                    <p>
+                        Establish a time-specific customer information set
+                        before evaluating whether the historical fee decision
+                        was compliant.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+    DECISION LOGIC
+    ====================================================== -->
+
+    <section class="reveal">
+
+        <div class="head">
+
+            <h2 class="section-title">
+
+                <span class="before">
+                    Decision logic /&nbsp;
+                </span>
+
+                <span class="after">
+                    From customer attributes to fee-compliance judgement
+                </span>
+
+            </h2>
+
+        </div>
+
+        <div class="decision-flow">
+
+            <div class="decision-row">
+
+                <div class="decision-node main">
+
+                    <div class="label">
+                        Input
+                    </div>
+
+                    <h4>
+                        Historical customer information
+                    </h4>
+
+                    <p>
+                        Industry · revenue · ownership · annual-report data
+                    </p>
+
+                </div>
+
+                <div class="arrow">→</div>
+
+                <div class="decision-node">
+
+                    <div class="label">
+                        Rule
+                    </div>
+
+                    <h4>
+                        Enterprise classification criteria
+                    </h4>
+
+                    <p>
+                        Apply the applicable classification requirements
+                        for the relevant historical period.
+                    </p>
+
+                </div>
+
+                <div class="arrow">→</div>
+
+                <div class="decision-node main">
+
+                    <div class="label">
+                        Output
+                    </div>
+
+                    <h4>
+                        Client category at transaction date
+                    </h4>
+
+                    <p>
+                        Small / micro enterprise or non-qualifying enterprise
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="decision-row">
+
+                <div class="decision-node">
+
+                    <div class="label">
+                        Transaction
+                    </div>
+
+                    <h4>
+                        Historical service fee
+                    </h4>
+
+                    <p>
+                        Match transaction date, product and fee amount.
+                    </p>
+
+                </div>
+
+                <div class="arrow">→</div>
+
+                <div class="decision-node main">
+
+                    <div class="label">
+                        Comparison
+                    </div>
+
+                    <h4>
+                        Classification × fee treatment
+                    </h4>
+
+                    <p>
+                        Test whether the fee treatment was consistent
+                        with the applicable requirements.
+                    </p>
+
+                </div>
+
+                <div class="arrow">→</div>
+
+                <div class="decision-node">
+
+                    <div class="label">
+                        Decision
+                    </div>
+
+                    <h4>
+                        Compliant / inappropriate charge
+                    </h4>
+
+                    <p>
+                        Determine whether remediation is required.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="sub-section">
+
+            <h3 class="subsection-title">
+
+                <span class="dot">○ </span>
+
+                <span class="before">
+                    Classification output /&nbsp;
+                </span>
+
+                <span class="after">
+                    Turning a regulatory rule into an operational decision
+                </span>
+
+            </h3>
+
+            <div class="classification">
+
+                <div>
+
+                    <div class="label">
+                        Qualifying
+                    </div>
+
+                    <h4>
+                        Small / Micro
+                    </h4>
+
+                    <p>
+                        Historical classification meets the applicable
+                        regulatory criteria → review fee treatment →
+                        identify inappropriate charges where applicable.
+                    </p>
+
+                </div>
+
+                <div>
+
+                    <div class="label">
+                        Non-qualifying
+                    </div>
+
+                    <h4>
+                        Other enterprise
+                    </h4>
+
+                    <p>
+                        Historical classification does not meet the
+                        applicable criteria → fee treatment remains
+                        subject to normal charging rules.
+                    </p>
+
+                </div>
+
+                <div>
+
+                    <div class="label">
+                        Insufficient
+                    </div>
+
+                    <h4>
+                        Information gap
+                    </h4>
+
+                    <p>
+                        Missing evidence → customer contact / internal
+                        reconstruction → re-enter the decision process.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+    REMEDIATION
+    ====================================================== -->
+
+    <section class="reveal">
+
+        <div class="head">
+
+            <h2 class="section-title">
+
+                <span class="before">
+                    Remediation /&nbsp;
+                </span>
+
+                <span class="after">
+                    From identified inappropriate charges to customer refund
+                </span>
+
+            </h2>
+
+        </div>
+
+        <!-- ===== 此处恢复为 4 列 ===== -->
+        <div class="dark">
+
+            <div class="darkGrid grid-4col">
+
+                <div>
+
+                    <div class="label">
+                        01 / Inventory
+                    </div>
+
+                    <strong>
+                        Full-period review
+                    </strong>
+
+                    Review customers and relevant fee transactions
+                    from the effective period of the applicable requirements.
+
+                </div>
+
+                <div>
+
+                    <div class="label">
+                        02 / Validate
+                    </div>
+
+                    <strong>
+                        Evidence confirmation
+                    </strong>
+
+                    Confirm customer classification and historical
+                    transaction conditions.
+
+                </div>
+
+                <div>
+
+                    <div class="label">
+                        03 / Approve
+                    </div>
+
+                    <strong>
+                        Refund list
+                    </strong>
+
+                    Consolidate confirmed inappropriate charges and
+                    complete internal approval.
+
+                </div>
+
+                <div>
+
+                    <div class="label">
+                        04 / Refund
+                    </div>
+
+                    <strong>
+                        Customer remediation
+                    </strong>
+
+                    Refund eligible customers and retain customer
+                    acknowledgement records.
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="sub-section">
+
+            <div class="grid2">
+
+                <div class="card">
+
+                    <div class="label">
+                        Existing customers
+                    </div>
+
+                    <h4 class="card-title">
+                        Refund through the original account where possible.
+                    </h4>
+
+                    <p>
+                        For active customers, approved refunds were returned
+                        through the relevant existing account and the
+                        remediation record was retained.
+                    </p>
+
+                </div>
+
+                <div class="card">
+
+                    <div class="label">
+                        Closed accounts
+                    </div>
+
+                    <h4 class="card-title">
+                        Establish a traceable refund path.
+                    </h4>
+
+                    <p>
+                        For customers whose original accounts had been closed,
+                        customer confirmation and account information were
+                        obtained before completing the refund and retaining
+                        the relevant acknowledgement.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+    LONG-TERM PROCESS IMPROVEMENT
+    ====================================================== -->
+
+    <section class="reveal">
+
+        <div class="head">
+
+            <h2 class="section-title">
+
+                <span class="before">
+                    Process improvement /&nbsp;
+                </span>
+
+                <span class="after">
+                    Moving from historical correction to continuous classification
+                </span>
+
+            </h2>
+
+        </div>
+
+        <div class="grid2">
+
+            <div class="card">
+
+                <div class="label">
+                    01 / Dynamic information
+                </div>
+
+                <h4 class="card-title">
+                    Keep customer classification current.
+                </h4>
+
+                <p>
+                    Establish a time-bound update mechanism for credit
+                    customers after annual or periodic reporting information
+                    becomes available, reducing the gap between customer
+                    status and the information maintained by the bank.
+                </p>
+
+            </div>
+
+            <div class="card">
+
+                <div class="label">
+                    02 / System connection
+                </div>
+
+                <h4 class="card-title">
+                    Connect classification data with fee decisions.
+                </h4>
+
+                <p>
+                    Because lower-risk fee transactions did not always trigger
+                    customer classification checks, work with technical teams
+                    to improve data connections between customer classification
+                    systems and business platforms.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="sub-section">
+
+            <h3 class="subsection-title">
+
+                <span class="dot">○ </span>
+
+                <span class="before">
+                    Continuous control loop /&nbsp;
+                </span>
+
+                <span class="after">
+                    Information update → classification → transaction decision → review
+                </span>
+
+            </h3>
+
+            <div class="flow">
+
+                <div>
+
+                    <strong>
+                        Customer information
+                    </strong>
+
+                    Annual / periodic reporting
+                    and business information.
+
+                </div>
+
+                <div>
+
+                    <strong>
+                        Classification
+                    </strong>
+
+                    Dynamic enterprise
+                    classification.
+
+                </div>
+
+                <div>
+
+                    <strong>
+                        Transaction
+                    </strong>
+
+                    Fee-generating
+                    business event.
+
+                </div>
+
+                <div>
+
+                    <strong>
+                        Decision
+                    </strong>
+
+                    Apply appropriate
+                    charging treatment.
+
+                </div>
+
+                <div>
+
+                    <strong>
+                        Review
+                    </strong>
+
+                    Exception detection
+                    and remediation feedback.
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+    OUTCOME
+    ====================================================== -->
+
+    <section class="reveal">
+
+        <div class="head">
+
+            <h2 class="section-title">
+
+                <span class="before">
+                    Outcome /&nbsp;
+                </span>
+
+                <span class="after">
+                    From historical remediation to a more reliable classification mechanism
+                </span>
+
+            </h2>
+
+        </div>
+
+        <div class="outcome">
+
+            <div class="metric">
+
+                <strong>
+                    ~2K
+                </strong>
+
+                Credit customers continuously included
+                in dynamic classification and information management.
+
+            </div>
+
+            <div class="metric">
+
+                <strong>
+                    ~170
+                </strong>
+
+                Historical inappropriate-charge cases
+                identified and refunded in batches based on
+                customer acknowledgement.
+
+            </div>
+
+        </div>
+
+        <p class="small" style="margin-top:16px;">
+            Outcome figures are based on the project information supplied
+            for this portfolio; no additional performance metrics have been added.
+        </p>
+
+    </section>
+
+
+    <!-- ======================================================
+    PROJECT LENS
+    ====================================================== -->
+
+    <section class="reveal">
+
+        <div class="head">
+
+            <h2 class="section-title">
+
+                <span class="before">
+                    Project lens /&nbsp;
+                </span>
+
+                <span class="after">
+                    Why this matters for risk, data and decision systems
+                </span>
+
+            </h2>
+
+        </div>
+
+        <div class="grid2">
+
+            <div class="card quote">
+
+                The project was not simply a historical fee-refund exercise.
+                It connected regulatory requirements, customer information,
+                historical transactions and operational decision rules,
+                while using identified exceptions to improve the underlying
+                process.
+
+            </div>
+
+            <div class="card project-lens">
+
+                <p>
+                    <b>Risk & Compliance</b><br>
+                    Translate regulatory requirements into
+                    reviewable operational decisions.
+                </p>
+
+                <p>
+                    <b>Data Governance</b><br>
+                    Reconstruct incomplete customer information
+                    before applying compliance judgement.
+                </p>
+
+                <p>
+                    <b>Decision Systems</b><br>
+                    Connect customer attributes, classification rules
+                    and transaction-level decisions.
+                </p>
+
+                <p>
+                    <b>Process Design</b><br>
+                    Use historical exceptions to improve the
+                    mechanisms that prevent recurrence.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="sub-section">
+
+            <div class="card">
+
+                <p class="lead" style="font-size:16px; margin:0;">
+
+                    <b>
+                        A compliance review becomes more valuable when
+                        the exception does not end with remediation, but
+                        feeds back into the system that produced the decision.
+                    </b>
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+    FOOTER
+    ====================================================== -->
+
+    <footer class="footer">
+
+        <span>
+            JiaXin Xing — Selected Project
+        </span>
+
+        <span>
+            Risk · Compliance · Data · Decision Systems
+        </span>
+
+    </footer>
+
+</div>
+
+<!-- ============================================================ -->
+<!-- ===== 右侧流程图触发器与面板 ===== -->
+<!-- ============================================================ -->
+
+<!-- 触发器按钮 -->
+<button class="flow-trigger" id="flowTrigger" aria-label="Toggle process flow diagram">
+    <span class="arrow-icon">▶</span>
+</button>
+
+<!-- 流程图面板 -->
+<div class="flow-panel" id="flowPanel">
+    <div class="flow-panel-header">
+        <h2>PROCESS FLOW <span>Regulatory Logic & Fee Compliance</span></h2>
+        <button class="flow-close-btn" id="flowCloseBtn">✕</button>
+    </div>
+    <div class="flow-scroll">
+        <div class="fl">
+
+            <!-- 1. REGULATORY RULES -->
+            <div class="fl-node highlight">
+                <div class="fl-title"><strong>REGULATORY RULES</strong></div>
+                <div class="fl-tag">CBIRC [2020] No. 18 · PBOC [2021] No. 169</div>
+            </div>
+            <div class="fl-connector"><div class="line"></div><div class="arrow">▼</div></div>
+
+            <!-- 2. CUSTOMER CLASSIFIER -->
+            <div class="fl-node">
+                <div class="fl-title"><strong>CUSTOMER CLASSIFIER</strong></div>
+                <div class="fl-sub"><strong>Industry</strong> · <strong>Revenue</strong> · <strong>Employees</strong> · <strong>Assets</strong> · Historical status</div>
+            </div>
+            <div class="fl-connector"><div class="line"></div><div class="arrow">▼</div></div>
+
+            <!-- 3. HISTORICAL SNAPSHOT -->
+            <div class="fl-node">
+                <div class="fl-title"><strong>HISTORICAL SNAPSHOT</strong></div>
+                <div class="fl-sub">"What was the customer status at that time?"</div>
+            </div>
+            <div class="fl-connector"><div class="line"></div><div class="arrow">▼</div></div>
+
+            <!-- 4. TRANSACTION MATCHING (分支合并) -->
+            <div class="fl-node">
+                <div class="fl-title"><strong>TRANSACTION MATCHING</strong></div>
+                <div class="fl-sub"><strong>Customer ID</strong> · <strong>Fee Code</strong> · <strong>Date / Channel</strong></div>
+            </div>
+            <div class="fl-connector"><div class="line"></div><div class="arrow">▼</div></div>
+
+            <!-- 合并分支 (模拟分支合并效果) -->
+            <div class="fl-branch" style="padding-top:0;">
+                <div class="fl-col">
+                    <div class="fl-node" style="max-width:80%;">
+                        <div class="fl-title"><strong>Customer ID</strong></div>
+                    </div>
+                </div>
+                <div class="fl-col">
+                    <div class="fl-node" style="max-width:80%;">
+                        <div class="fl-title"><strong>Fee Code</strong></div>
+                    </div>
+                </div>
+                <div class="fl-col">
+                    <div class="fl-node" style="max-width:80%;">
+                        <div class="fl-title"><strong>Date / Channel</strong></div>
+                    </div>
+                </div>
+            </div>
+            <div class="fl-merge">
+                <div class="line-h-wrap">
+                    <div class="line-h"></div>
+                    <div class="line-v-center"></div>
+                    <div class="line-h"></div>
+                </div>
+                <div class="line-v"></div>
+                <div class="arrow" style="font-size:12px;color:rgba(23,23,23,0.25);">▼</div>
+            </div>
+
+            <!-- 5. RULE ENGINE -->
+            <div class="fl-node">
+                <div class="fl-title"><strong>RULE ENGINE</strong></div>
+                <div class="fl-sub">Eligible / Not eligible</div>
+            </div>
+            <div class="fl-connector"><div class="line"></div><div class="arrow">▼</div></div>
+
+            <!-- 6. FEE COMPLIANCE (分支) -->
+            <div class="fl-node">
+                <div class="fl-title"><strong>FEE COMPLIANCE</strong></div>
+                <div class="fl-sub">Compliant · Potentially non-compliant</div>
+            </div>
+            <div class="fl-connector"><div class="line"></div><div class="arrow">▼</div></div>
+
+            <div class="fl-branch">
+                <div class="fl-col">
+                    <div class="fl-node">
+                        <div class="fl-title"><strong>COMPLIANT</strong></div>
+                        <div class="fl-sub">No action required</div>
+                    </div>
+                    <div class="fl-connector"><div class="line"></div><div class="arrow">▼</div></div>
+                    <div class="fl-node">
+                        <div class="fl-title"><strong>CONTINUOUS MONITORING</strong></div>
+                        <div class="fl-sub">Ongoing surveillance · Model update</div>
+                    </div>
+                </div>
+                <div class="fl-col">
+                    <div class="fl-node">
+                        <div class="fl-title"><strong>POTENTIALLY NON-COMPLIANT</strong></div>
+                        <div class="fl-sub">Exception identified</div>
+                    </div>
+                    <div class="fl-connector"><div class="line"></div><div class="arrow">▼</div></div>
+                    <div class="fl-node">
+                        <div class="fl-title"><strong>REVIEW & EVIDENCE</strong></div>
+                        <div class="fl-sub">Validate classification · Transaction details</div>
+                    </div>
+                    <div class="fl-connector"><div class="line"></div><div class="arrow">▼</div></div>
+                    <div class="fl-node">
+                        <div class="fl-title"><strong>REFUND / CORRECTION</strong></div>
+                        <div class="fl-sub">Customer remediation · Process fix</div>
+                    </div>
+                    <div class="fl-connector"><div class="line"></div><div class="arrow">▼</div></div>
+                    <div class="fl-node">
+                        <div class="fl-title"><strong>SYSTEM OPTIMISATION</strong></div>
+                        <div class="fl-sub">Rule update · Control enhancement</div>
+                    </div>
+                    <div class="fl-connector"><div class="line"></div><div class="arrow">▼</div></div>
+                    <div class="fl-node">
+                        <div class="fl-title"><strong>CONTINUOUS MONITORING</strong></div>
+                        <div class="fl-sub">Ongoing surveillance · Model update</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="fl-footer">
+                <strong>CLOSED‑LOOP GOVERNANCE</strong> · Continuous Improvement Cycle
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- ===== JavaScript 交互 ===== -->
+<!-- ============================================================ -->
+<script>
+    (function() {
+        const trigger = document.getElementById('flowTrigger');
+        const panel = document.getElementById('flowPanel');
+        const closeBtn = document.getElementById('flowCloseBtn');
+        let isOpen = false;
+
+        function togglePanel(open) {
+            isOpen = (open !== undefined) ? open : !isOpen;
+            if (isOpen) {
+                panel.classList.add('open');
+                document.body.classList.add('flow-panel-open');
+                trigger.querySelector('.arrow-icon').textContent = '◀';
+            } else {
+                panel.classList.remove('open');
+                document.body.classList.remove('flow-panel-open');
+                trigger.querySelector('.arrow-icon').textContent = '▶';
+            }
+        }
+
+        trigger.addEventListener('click', function(e) {
+            e.stopPropagation();
+            togglePanel();
+        });
+
+        closeBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (isOpen) togglePanel(false);
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && isOpen) {
+                togglePanel(false);
+            }
+        });
+    })();
+
+    /* ===== 新增：滚动进入动画（与 04 完全一致） ===== */
+    (function() {
+        'use strict';
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver(
+            function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            },
+            {
+                threshold: 0.08,
+                rootMargin: '0px 0px -20px 0px'
+            }
+        );
+        revealElements.forEach(function(el) {
+            revealObserver.observe(el);
+        });
+        setTimeout(function() {
+            revealElements.forEach(function(el) {
+                const rect = el.getBoundingClientRect();
+                const winHeight = window.innerHeight || document.documentElement.clientHeight;
+                if (rect.top < winHeight - 60) {
+                    el.classList.add('visible');
+                }
+            });
+        }, 120);
+    })();
+</script>
+
+</body>
+</html>

@@ -1061,6 +1061,35 @@
             }
 
             // ------------------------------------------------------------
+            // 8b. DISABLE NON-PROJECT LINKS ON HOMEPAGE
+            // ------------------------------------------------------------
+            function disableNonProjectLinks(isHomepage) {
+                if (!isHomepage) return;
+                const anchors = document.querySelectorAll('a');
+                anchors.forEach((a) => {
+                    // keep clickable only project sub links
+                    if (a.classList && a.classList.contains('project-row__sub')) {
+                        a.removeAttribute('aria-disabled');
+                        a.style.pointerEvents = '';
+                        a.style.cursor = '';
+                        return;
+                    }
+                    // allow mailto and anchors without href
+                    const href = a.getAttribute('href') || '';
+                    if (href.startsWith('mailto:') || href.startsWith('#')) return;
+
+                    a.setAttribute('aria-disabled', 'true');
+                    a.style.pointerEvents = 'none';
+                    a.style.cursor = 'default';
+                    // ensure any click handlers won't navigate
+                    a.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    });
+                });
+            }
+
+            // ------------------------------------------------------------
             // 8. INIT
             // ------------------------------------------------------------
             function init() {
@@ -1074,6 +1103,9 @@
                 }
 
                 window.addEventListener('resize', handleResize);
+
+                const isHomepage = document.body.classList.contains('homepage');
+                disableNonProjectLinks(isHomepage);
 
                 const isHomepage = document.body.classList.contains('homepage');
                 rows.forEach((row) => {

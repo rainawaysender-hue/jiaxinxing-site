@@ -907,31 +907,46 @@
             function initDesktopInteractions() {
                 if (window.innerWidth <= 768) return;
 
+                const isHomepage = document.body.classList.contains('homepage');
+
                 rows.forEach((row) => {
                     const preview = row.querySelector('.project-row__preview');
                     if (!preview) return;
 
                     row.addEventListener('mouseenter', function(e) {
                         preview.classList.add('is-visible');
-                        updatePreviewPosition(e, preview);
-                    });
-
-                    row.addEventListener('mousemove', function(e) {
-                        if (preview.classList.contains('is-visible')) {
-                            updatePreviewPosition(e, preview);
+                        // Only update position dynamically when not in homepage mode
+                        if (!isHomepage) updatePreviewPosition(e, preview);
+                        else {
+                            // place preview at a fixed offset (no mouse-follow)
+                            preview.style.left = (window.innerWidth - (preview.offsetWidth || 240) - 20) + 'px';
+                            preview.style.top = '120px';
+                            preview.style.transform = 'none';
                         }
                     });
+
+                    // disable mouse-follow behavior on homepage to remove right-side animation
+                    if (!isHomepage) {
+                        row.addEventListener('mousemove', function(e) {
+                            if (preview.classList.contains('is-visible')) {
+                                updatePreviewPosition(e, preview);
+                            }
+                        });
+                    }
 
                     row.addEventListener('mouseleave', function() {
                         preview.classList.remove('is-visible');
                     });
 
-                    row.addEventListener('click', function(e) {
-                        const link = row.dataset.link || PROJECT_LINKS[row.dataset.project];
-                        if (link) {
-                            window.location.href = link;
-                        }
-                    });
+                    // only enable row-level navigation when not on the homepage
+                    if (!isHomepage) {
+                        row.addEventListener('click', function(e) {
+                            const link = row.dataset.link || PROJECT_LINKS[row.dataset.project];
+                            if (link) {
+                                window.location.href = link;
+                            }
+                        });
+                    }
                 });
             }
 
@@ -1060,18 +1075,22 @@
 
                 window.addEventListener('resize', handleResize);
 
+                const isHomepage = document.body.classList.contains('homepage');
                 rows.forEach((row) => {
-                    row.addEventListener('click', function(e) {
-                        if (e.target.closest('.project-row__preview')) {
-                            return;
-                        }
-                        if (window.innerWidth > 768) {
-                            const link = row.dataset.link || PROJECT_LINKS[row.dataset.project];
-                            if (link) {
-                                window.location.href = link;
+                    // skip row-level navigation on homepage to keep only project-name links active
+                    if (!isHomepage) {
+                        row.addEventListener('click', function(e) {
+                            if (e.target.closest('.project-row__preview')) {
+                                return;
                             }
-                        }
-                    });
+                            if (window.innerWidth > 768) {
+                                const link = row.dataset.link || PROJECT_LINKS[row.dataset.project];
+                                if (link) {
+                                    window.location.href = link;
+                                }
+                            }
+                        });
+                    }
                 });
 
                 previews.forEach((preview) => {

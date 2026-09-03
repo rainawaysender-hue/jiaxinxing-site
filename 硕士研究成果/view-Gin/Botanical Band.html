@@ -184,12 +184,16 @@ mask-image:linear-gradient(to bottom,#000 0%,#000 45%,transparent 100%);
  .cover{min-height:100svh;display:flex;flex-direction:column;justify-content:space-between}
  .cover-left{padding:0}
  .cover-right{margin-top:50px;height:300px}
- .stack{width:100%;height:270px}
- .stack-card{width:95px;height:158px}
- .card-1{transform:translate(-250px,-50%)} .card-2{transform:translate(-150px,-50%)} .card-3{transform:translate(-50px,-50%)}
- .card-4{transform:translate(50px,-50%)} .card-5{transform:translate(150px,-50%)} .card-6{transform:translate(250px,-50%)}
- .stack:hover .card-1{transform:translate(-270px,-50%) scale(1.01)} .stack:hover .card-2{transform:translate(-162px,-50%) scale(1.01)} .stack:hover .card-3{transform:translate(-54px,-50%) scale(1.01)}
- .stack:hover .card-4{transform:translate(54px,-50%) scale(1.01)} .stack:hover .card-5{transform:translate(162px,-50%) scale(1.01)} .stack:hover .card-6{transform:translate(270px,-50%) scale(1.01)}
+  /* Mobile: convert stacked cards into a responsive fluid grid/list
+    - disable absolute positioning and heavy transforms
+    - make images scale to available width and maintain aspect ratio
+  */
+  .stack{width:100%;height:auto;position:static;left:0;display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between}
+  .stack-card{position:relative;left:auto;top:auto;width:48%;height:auto;transform:none;padding:0}
+  .stack-card .stack-img{height:auto;aspect-ratio:3/5;overflow:hidden}
+  .stack-card img{width:100%;height:100%;object-fit:cover}
+  .card-1,.card-2,.card-3,.card-4,.card-5,.card-6{transform:none}
+  .stack:hover .stack-card{transform:none}
  .cover-note{display:none}
  .origin .statement{padding:10vh 0}
  .northeast{min-height:100svh}
@@ -345,27 +349,39 @@ const observer=new IntersectionObserver(entries=>{
 },{threshold:.12});
 document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
 
-// Six-image horizontal stack: subtle automatic breathing, with no rotation.
-const stack=document.querySelector('.stack');
-let t=0;
-const baseX=[-325,-195,-65,65,195,325];
-function breathe(){
-  t+=0.012;
-  const cards=[...document.querySelectorAll('.stack-card')];
-  if(!stack.matches(':hover')) cards.forEach((c,i)=>{
-    const x=baseX[i]+Math.sin(t*.55+i*.58)*2.5;
-    const y=Math.sin(t*.85+i*.72)*3.5;
-    c.style.transform=`translate(${x}px,calc(-50% + ${y}px))`;
-  });
-  requestAnimationFrame(breathe);
+// Six-image horizontal stack: subtle automatic breathing on wide screens only.
+const stack = document.querySelector('.stack');
+if (stack) {
+  const isWide = window.innerWidth > 800;
+  if (isWide) {
+    let t = 0;
+    const baseX = [-325, -195, -65, 65, 195, 325];
+    function breathe(){
+      t += 0.012;
+      const cards = [...document.querySelectorAll('.stack-card')];
+      if (!stack.matches(':hover')) cards.forEach((c,i)=>{
+        const x = baseX[i] + Math.sin(t*.55 + i*.58)*2.5;
+        const y = Math.sin(t*.85 + i*.72)*3.5;
+        c.style.transform = `translate(${x}px,calc(-50% + ${y}px))`;
+      });
+      requestAnimationFrame(breathe);
+    }
+    stack.addEventListener('mouseenter', ()=>{
+      document.querySelectorAll('.stack-card').forEach(c=>c.style.transform='');
+    });
+    stack.addEventListener('mouseleave', ()=>{
+      document.querySelectorAll('.stack-card').forEach(c=>c.style.transform='');
+    });
+    breathe();
+  } else {
+    // mobile / small-screen: ensure cards are static and no transforms remain
+    document.querySelectorAll('.stack-card').forEach(c=>{
+      c.style.transform = 'none';
+      c.style.left = 'auto';
+      c.style.top = 'auto';
+    });
+  }
 }
-stack.addEventListener('mouseenter',()=>{
-  document.querySelectorAll('.stack-card').forEach(c=>c.style.transform='');
-});
-stack.addEventListener('mouseleave',()=>{
-  document.querySelectorAll('.stack-card').forEach(c=>c.style.transform='');
-});
-breathe();
 </script>
 </body>
 </html>

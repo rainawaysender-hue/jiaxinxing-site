@@ -91,6 +91,19 @@
             text-decoration: none;
         }
 
+        /* Temporarily disable all links site-wide except project names */
+        body.homepage a {
+            pointer-events: none;
+            cursor: default;
+            opacity: 0.95;
+        }
+
+        /* Keep project name links clickable (eight items) */
+        body.homepage a.project-row__sub {
+            pointer-events: auto;
+            cursor: pointer;
+        }
+
         /* ============================================================
                    CONTAINER & GRID
                    ============================================================ */
@@ -696,7 +709,7 @@
     </style>
 </head>
 
-<body>
+<body class="homepage">
     <!-- ============================================================
     CONTAINER
     ============================================================ -->

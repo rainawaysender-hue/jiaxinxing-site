@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Presentation Board</title>
+    <!-- Google Fonts: JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'board-bg': '#0C0C0E',
+                        'board-card': '#141417',
+                        'board-border': '#26262B',
+                        'accent-line': '#3F3F46'
+                    },
+                    fontFamily: {
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0C0C0E;
+            color: #E4E4E7;
+            font-family: 'JetBrains Mono', monospace;
+            -webkit-font-smoothing: antialiased;
+        }
+        .grid-cross {
+            position: relative;
+        }
+        .grid-cross::before {
+            content: '+';
+            position: absolute;
+            top: -10px;
+            left: -6px;
+            font-size: 12px;
+            color: #52525B;
+        }
+        .image-frame {
+            border: 1px solid #26262B;
+            background-color: #141417;
+            transition: border-color 0.3s ease;
+        }
+        .image-frame:hover {
+            border-color: #52525B;
+        }
+    </style>
+</head>
+<body class="p-6 md:p-12 max-w-[1600px] mx-auto selection:bg-white selection:text-black">
+
+    <!-- TOP CONTROL BAR / PURE METRICS -->
+    <header class="flex justify-between items-center pb-6 mb-12 border-b border-board-border text-xs text-zinc-500">
+        <div class="flex items-center gap-6">
+            <span class="text-white font-medium">DRAWING PRESENTATION</span>
+            <span>/</span>
+            <span>N45°12' E126°38'</span>
+        </div>
+        <div class="flex items-center gap-4">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
+            <span>6/6 DRAWINGS LOADED</span>
+        </div>
+    </header>
+
+    <!-- SECTION 01: SITE ANALYTICAL MAP -->
+    <section class="mb-16">
+        <div class="flex justify-between items-end mb-4 grid-cross">
+            <span class="text-xs text-zinc-500">01 // SITE PLAN & SAMPLING NETWORK</span>
+            <span class="text-[10px] text-zinc-600">MAP.PNG — SCALE 1:500</span>
+        </div>
+        <div class="image-frame p-2">
+            <img src="map.png" alt="Site Map" class="w-full h-auto object-cover filter contrast-105">
+        </div>
+    </section>
+
+    <!-- SECTION 02: 4-SEASON PHENOLOGY & COLOR MATRIX -->
+    <section class="mb-16">
+        <div class="flex justify-between items-end mb-4 grid-cross">
+            <span class="text-xs text-zinc-500">02 // SEASONAL COLOR MATRIX (SPRING → WINTER)</span>
+            <span class="text-[10px] text-zinc-600">4-PHASE PHENOLOGY</span>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            
+            <!-- SPRING -->
+            <div class="image-frame p-2 flex flex-col justify-between">
+                <div>
+                    <div class="overflow-hidden mb-3">
+                        <img src="spring.png" alt="Spring" class="w-full h-64 object-cover hover:scale-105 transition-transform duration-500">
+                    </div>
+                </div>
+                <div>
+                    <div class="flex justify-between items-center text-[10px] text-zinc-500 mb-2">
+                        <span>PHASE 01</span>
+                        <span>SPRING</span>
+                    </div>
+                    <!-- Color Swatches Bar -->
+                    <div class="grid grid-cols-5 gap-1 h-3">
+                        <div class="bg-[#A3C293]"></div>
+                        <div class="bg-[#E2EE9D]"></div>
+                        <div class="bg-[#5A7D45]"></div>
+                        <div class="bg-[#8BB174]"></div>
+                        <div class="bg-[#C5DA9B]"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUMMER -->
+            <div class="image-frame p-2 flex flex-col justify-between">
+                <div>
+                    <div class="overflow-hidden mb-3">
+                        <img src="summer.jpeg" alt="Summer" class="w-full h-64 object-cover hover:scale-105 transition-transform duration-500">
+                    </div>
+                </div>
+                <div>
+                    <div class="flex justify-between items-center text-[10px] text-zinc-500 mb-2">
+                        <span>PHASE 02</span>
+                        <span>SUMMER</span>
+                    </div>
+                    <!-- Color Swatches Bar -->
+                    <div class="grid grid-cols-5 gap-1 h-3">
+                        <div class="bg-[#2D472B]"></div>
+                        <div class="bg-[#4A5842]"></div>
+                        <div class="bg-[#7A8D6E]"></div>
+                        <div class="bg-[#1F331D]"></div>
+                        <div class="bg-[#5C7050]"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AUTUMN -->
+            <div class="image-frame p-2 flex flex-col justify-between">
+                <div>
+                    <div class="overflow-hidden mb-3">
+                        <img src="autumn.jpeg" alt="Autumn" class="w-full h-64 object-cover hover:scale-105 transition-transform duration-500">
+                    </div>
+                </div>
+                <div>
+                    <div class="flex justify-between items-center text-[10px] text-zinc-500 mb-2">
+                        <span>PHASE 03</span>
+                        <span>AUTUMN</span>
+                    </div>
+                    <!-- Color Swatches Bar -->
+                    <div class="grid grid-cols-5 gap-1 h-3">
+                        <div class="bg-[#C85A32]"></div>
+                        <div class="bg-[#E89D35]"></div>
+                        <div class="bg-[#6B3B22]"></div>
+                        <div class="bg-[#D47A2A]"></div>
+                        <div class="bg-[#8C3A1D]"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WINTER -->
+            <div class="image-frame p-2 flex flex-col justify-between">
+                <div>
+                    <div class="overflow-hidden mb-3">
+                        <img src="winter.jpeg" alt="Winter" class="w-full h-64 object-cover hover:scale-105 transition-transform duration-500">
+                    </div>
+                </div>
+                <div>
+                    <div class="flex justify-between items-center text-[10px] text-zinc-500 mb-2">
+                        <span>PHASE 04</span>
+                        <span>WINTER</span>
+                    </div>
+                    <!-- Color Swatches Bar -->
+                    <div class="grid grid-cols-5 gap-1 h-3">
+                        <div class="bg-[#4B5340]"></div>
+                        <div class="bg-[#8C867A]"></div>
+                        <div class="bg-[#D4CEBF]"></div>
+                        <div class="bg-[#2C3026]"></div>
+                        <div class="bg-[#A8A295]"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION 03: MASTER AXONOMETRIC DESIGN BOARD -->
+    <section class="mb-12">
+        <div class="flex justify-between items-end mb-4 grid-cross">
+            <span class="text-xs text-zinc-500">03 // AXONOMETRIC MASTER PROPOSAL</span>
+            <span class="text-[10px] text-zinc-600">DESIGN4.JPG — FINAL COMPREHENSIVE BOARD</span>
+        </div>
+        <div class="image-frame p-3">
+            <img src="design4.jpg" alt="Master Design Proposal" class="w-full h-auto object-cover">
+        </div>
+    </section>
+
+    <!-- BOTTOM FRAME MARKERS -->
+    <footer class="pt-6 border-t border-board-border flex justify-between items-center text-[10px] text-zinc-600">
+        <div>END OF BOARD</div>
+        <div class="flex gap-4">
+            <span>FIG_01</span>
+            <span>FIG_02</span>
+            <span>FIG_03</span>
+            <span>FIG_04</span>
+            <span>FIG_05</span>
+            <span>FIG_06</span>
+        </div>
+    </footer>
+
+</body>
+</html>

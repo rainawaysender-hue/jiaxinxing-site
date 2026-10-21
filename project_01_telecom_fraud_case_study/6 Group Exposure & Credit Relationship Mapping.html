@@ -1,0 +1,4475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Group Exposure & Credit Relationship Mapping</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet" />
+
+    <style>
+
+        /* ============================================================
+           CSS VARIABLES
+           ============================================================ */
+
+        :root {
+            --bg: #F7F7F4;
+            --text: #181818;
+            --muted: #777777;
+            --line: #D8D8D3;
+            --accent: #8A4035;
+
+            --max-width: 1400px;
+            --body-width: 700px;
+
+            --font:
+                'Inter',
+                'Helvetica Neue',
+                Helvetica,
+                Arial,
+                sans-serif;
+
+            --section-pad: 90px;
+            --section-pad-large: 110px;
+        }
+
+
+        /* ============================================================
+           RESET
+           ============================================================ */
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            transition: padding-right 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 42px;
+            transition: max-width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        body.flow-panel-open .container {
+            max-width: calc(1280px - 30vw);
+        }
+
+
+        /* ============================================================
+           HEADER
+           ============================================================ */
+
+        .site-header {
+            height: 78px;
+            border-bottom: 1px solid var(--line);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+        }
+
+
+        .site-header .project-label {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+
+        .site-header .project-meta a {
+            color: var(--muted);
+            text-decoration: none;
+            font-weight: 400;
+        }
+
+
+        .site-header .project-meta a:hover {
+            color: var(--text);
+        }
+
+
+        /* ============================================================
+           HERO
+           ============================================================ */
+
+        .hero {
+            padding: 70px 0 56px;
+            border-bottom: 1px solid var(--line);
+        }
+
+
+        .hero .kicker {
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            color: var(--muted);
+            margin-bottom: 24px;
+        }
+
+
+        .hero h1 {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: clamp(70px, 10vw, 132px);
+            font-weight: 700;
+            line-height: 0.95;
+            letter-spacing: -.06em;
+            max-width: 1050px;
+            margin-bottom: 30px;
+            color: #171717;
+        }
+
+
+        .heroGrid {
+            display: flex;
+            gap: 70px;
+            align-items: stretch;
+            margin-top: 0;
+            padding-top: 10px;
+        }
+
+
+        .heroGrid > div:first-child {
+            flex: 1.7;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+
+        .heroGrid > div:first-child .lead {
+            margin: auto 0;
+        }
+
+
+        .heroGrid > div:first-child .small {
+            margin-top: auto;
+        }
+
+
+        .heroGrid .meta {
+            flex: 0.8;
+            border-left: 1px solid var(--line);
+            padding-left: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+
+        .meta div {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--line);
+        }
+
+
+        .meta div:last-child {
+            border-bottom: none;
+        }
+
+
+        .meta b {
+            display: block;
+            font-size: 10px;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--muted);
+            font-weight: 400;
+        }
+
+
+        .kicker,
+        .label {
+            font-size: 10px;
+            letter-spacing: .13em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+
+        .lead {
+            font-size: clamp(18px, 1.4vw, 22px);
+            line-height: 1.45;
+            color: var(--muted);
+            max-width: 680px;
+            font-weight: 400;
+        }
+
+
+        .small {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+
+        /* ============================================================
+           EDITORIAL
+           ============================================================ */
+
+        .section-editorial {
+            padding: var(--section-pad) 0;
+            border-bottom: 1px solid var(--line);
+        }
+
+
+        .section-editorial:last-of-type {
+            border-bottom: none;
+        }
+
+
+        .editorial-grid {
+            display: grid;
+
+            grid-template-columns: 180px 1fr;
+
+            gap: 48px 60px;
+
+            align-items: start;
+        }
+
+
+        .editorial-grid .label {
+            font-size: 18px;
+            font-weight: 500;
+
+            letter-spacing: 0.04em;
+            color: var(--text);
+
+            padding-top: 2px;
+        }
+
+
+        .editorial-grid .content {
+            max-width: var(--body-width);
+        }
+
+
+        .editorial-grid .content p {
+            margin-bottom: 20px;
+
+            font-size: 16px;
+            line-height: 1.7;
+        }
+
+
+        .editorial-grid .content p:last-child {
+            margin-bottom: 0;
+        }
+
+
+        /* ============================================================
+           PROBLEM MATRIX
+           ============================================================ */
+
+        .problem-matrix {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 32px 48px;
+
+            margin: 28px 0 8px;
+        }
+
+
+        .problem-matrix .matrix-item {
+            border-top: 1px solid var(--line);
+
+            padding-top: 16px;
+        }
+
+
+        .problem-matrix .matrix-item h4 {
+            font-size: 13px;
+            font-weight: 600;
+
+            letter-spacing: 0.06em;
+
+            color: var(--muted);
+
+            margin-bottom: 8px;
+
+            text-transform: uppercase;
+        }
+
+
+        .problem-matrix .matrix-item ul {
+            list-style: none;
+        }
+
+
+        .problem-matrix .matrix-item ul li {
+            font-size: 15px;
+            line-height: 1.6;
+
+            padding: 2px 0;
+
+            color: var(--text);
+
+            border-bottom:
+                1px solid rgba(216, 216, 211, 0.4);
+        }
+
+
+        .problem-matrix .matrix-item ul li:last-child {
+            border-bottom: none;
+        }
+
+
+        /* ============================================================
+           FULL SECTION
+           ============================================================ */
+
+        .section-full {
+            padding: var(--section-pad) 0;
+
+            border-bottom: 1px solid var(--line);
+        }
+
+
+        .section-full:last-of-type {
+            border-bottom: none;
+        }
+
+
+        .section-full .section-label {
+            font-size: 18px;
+            font-weight: 500;
+
+            letter-spacing: 0.04em;
+
+            margin-bottom: 20px;
+        }
+
+
+        .section-full .section-sub {
+            font-size: 18px;
+            font-weight: 400;
+
+            color: var(--muted);
+
+            margin-bottom: 20px;
+
+            max-width: 700px;
+        }
+
+
+        .section-full .section-body {
+            max-width: var(--body-width);
+        }
+
+
+        .section-full .section-body p {
+            font-size: 16px;
+            line-height: 1.7;
+
+            margin-bottom: 20px;
+        }
+
+
+        .section-full .section-body p:last-child {
+            margin-bottom: 0;
+        }
+
+
+        /* ============================================================
+           RELATIONSHIP STRENGTH
+           ============================================================ */
+
+        .strength-spectrum {
+            display: flex;
+            flex-direction: column;
+
+            margin: 32px 0 16px;
+
+            border: 1px solid var(--line);
+
+            overflow: hidden;
+        }
+
+
+        .strength-spectrum .tier {
+            padding: 28px 32px;
+
+            border-bottom: 1px solid var(--line);
+
+            transition:
+                background 0.2s;
+        }
+
+
+        .strength-spectrum .tier:last-child {
+            border-bottom: none;
+        }
+
+
+        .strength-spectrum .tier:hover {
+            background:
+                rgba(138, 64, 53, 0.03);
+        }
+
+
+        .strength-spectrum .tier-header {
+            display: flex;
+
+            align-items: baseline;
+
+            gap: 16px;
+
+            flex-wrap: wrap;
+
+            margin-bottom: 6px;
+        }
+
+
+        .strength-spectrum .tier-label {
+            font-size: 13px;
+            font-weight: 600;
+
+            letter-spacing: 0.08em;
+
+            text-transform: uppercase;
+
+            color: var(--muted);
+
+            min-width: 100px;
+        }
+
+
+        .strength-spectrum .tier-label.strong {
+            color: var(--accent);
+        }
+
+
+        .strength-spectrum .tier-items {
+            font-size: 15px;
+
+            color: var(--text);
+
+            line-height: 1.5;
+        }
+
+
+        .strength-spectrum .tier-desc {
+            font-size: 14px;
+
+            color: var(--muted);
+
+            margin-top: 6px;
+
+            line-height: 1.5;
+
+            max-width: 600px;
+        }
+
+
+        .strength-spectrum .tier-rule {
+            height: 2px;
+
+            background: var(--line);
+
+            width: 60px;
+
+            margin-top: 8px;
+        }
+
+
+        .strength-spectrum .tier-rule.strong-rule {
+            background: var(--accent);
+
+            width: 80px;
+        }
+
+
+        /* ============================================================
+           PRINCIPLE
+           ============================================================ */
+
+        .principle-block {
+            margin: 40px 0 20px;
+
+            max-width: 680px;
+        }
+
+
+        .principle-block .principle-line {
+            font-size: 18px;
+
+            font-weight: 500;
+
+            letter-spacing: 0.02em;
+
+            color: var(--text);
+
+            margin-bottom: 6px;
+        }
+
+
+        .principle-block .principle-line .neq {
+            font-weight: 300;
+
+            color: var(--muted);
+
+            padding: 0 6px;
+        }
+
+
+        .principle-block .principle-sub {
+            font-size: 16px;
+
+            line-height: 1.7;
+
+            color: var(--muted);
+
+            max-width: 600px;
+        }
+
+
+        /* ============================================================
+           FLOW ICON SYSTEM
+           ============================================================ */
+
+        .flow-icon {
+            width: 28px;
+            height: 28px;
+
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            margin-bottom: 10px;
+
+            color: var(--muted);
+        }
+
+
+        .flow-icon svg {
+            width: 25px;
+            height: 25px;
+
+            stroke: currentColor;
+
+            stroke-width: 1.4;
+
+            fill: none;
+
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+
+        .flow-icon.accent {
+            color: var(--accent);
+        }
+
+
+        /* ============================================================
+           DYNAMIC BUSINESS TRIGGERS
+           ============================================================ */
+
+        .trigger-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, minmax(0, 1fr));
+
+            gap: 0;
+
+            margin: 32px 0 8px;
+
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+        }
+
+
+        .trigger-item {
+            min-width: 0;
+
+            padding: 24px 20px 26px;
+
+            border-right:
+                1px solid var(--line);
+
+            transition:
+                background 0.25s,
+                transform 0.2s;
+        }
+
+
+        .trigger-item:first-child {
+            padding-left: 0;
+        }
+
+
+        .trigger-item:last-child {
+            border-right: none;
+        }
+
+
+        .trigger-item:hover {
+            background:
+                rgba(138, 64, 53, 0.035);
+
+            transform:
+                translateY(-2px);
+        }
+
+
+        .trigger-number {
+            font-size: 11px;
+
+            font-weight: 600;
+
+            letter-spacing: 0.1em;
+
+            color: var(--muted);
+
+            margin-bottom: 14px;
+        }
+
+
+        .trigger-title {
+            font-size: 14px;
+
+            font-weight: 500;
+
+            letter-spacing: 0.02em;
+
+            margin-bottom: 8px;
+        }
+
+
+        .trigger-desc {
+            font-size: 13px;
+
+            line-height: 1.55;
+
+            color: var(--muted);
+
+            max-width: 190px;
+        }
+
+
+        /* ============================================================
+           MATCHING TO DECISION
+           ============================================================ */
+
+        .decision-system {
+            position: relative;
+
+            max-width: 820px;
+
+            margin: 44px 0 10px;
+
+            min-height: 570px;
+        }
+
+
+        .decision-center {
+            position: absolute;
+
+            left: 50%;
+            top: 50%;
+
+            transform:
+                translate(-50%, -50%);
+
+            width: 170px;
+            height: 170px;
+
+            border:
+                1px solid var(--accent);
+
+            border-radius: 50%;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+            justify-content: center;
+
+            text-align: center;
+
+            background: var(--bg);
+
+            z-index: 3;
+
+            transition:
+                background 0.25s;
+        }
+
+
+        .decision-center:hover {
+            background:
+                rgba(138, 64, 53, 0.04);
+        }
+
+
+        .decision-center .center-small {
+            font-size: 10px;
+
+            font-weight: 600;
+
+            letter-spacing: 0.1em;
+
+            color: var(--accent);
+
+            text-transform: uppercase;
+
+            margin-bottom: 6px;
+        }
+
+
+        .decision-center .center-main {
+            font-size: 17px;
+
+            font-weight: 500;
+
+            line-height: 1.25;
+        }
+
+
+        .decision-center .center-sub {
+            font-size: 11px;
+
+            color: var(--muted);
+
+            margin-top: 6px;
+        }
+
+
+        /* ============================================================
+           ORBIT
+           ============================================================ */
+
+        .decision-orbit {
+            position: absolute;
+
+            left: 50%;
+            top: 50%;
+
+            width: 430px;
+            height: 430px;
+
+            transform:
+                translate(-50%, -50%);
+
+            border:
+                1px solid var(--line);
+
+            border-radius: 50%;
+        }
+
+
+        .decision-orbit::before {
+            content: '';
+
+            position: absolute;
+
+            inset: 28px;
+
+            border:
+                1px dashed
+                rgba(216, 216, 211, 0.8);
+
+            border-radius: 50%;
+        }
+
+
+        /* ============================================================
+           DECISION NODES
+           ============================================================ */
+
+        .decision-node {
+            position: absolute;
+
+            width: 190px;
+
+            min-height: 84px;
+
+            padding: 14px 16px;
+
+            border:
+                1px solid var(--line);
+
+            background: var(--bg);
+
+            z-index: 4;
+
+            transition:
+                border-color 0.25s,
+                transform 0.2s,
+                background 0.25s;
+        }
+
+
+        .decision-node:hover {
+            border-color: var(--accent);
+
+            background:
+                rgba(138, 64, 53, 0.035);
+        }
+
+
+        .decision-node .dn-role {
+            font-size: 10px;
+
+            font-weight: 600;
+
+            letter-spacing: 0.07em;
+
+            color: var(--muted);
+
+            text-transform: uppercase;
+
+            margin-bottom: 4px;
+        }
+
+
+        .decision-node .dn-title {
+            font-size: 14px;
+
+            font-weight: 500;
+
+            line-height: 1.3;
+
+            margin-bottom: 4px;
+        }
+
+
+        .decision-node .dn-desc {
+            font-size: 11px;
+
+            line-height: 1.45;
+
+            color: var(--muted);
+        }
+
+
+        .decision-node.customer {
+            top: 0;
+            left: 50%;
+
+            transform:
+                translateX(-50%);
+        }
+
+
+        .decision-node.review {
+            right: 0;
+            top: 50%;
+
+            transform:
+                translateY(-50%);
+        }
+
+
+        .decision-node.approval {
+            bottom: 0;
+            left: 50%;
+
+            transform:
+                translateX(-50%);
+        }
+
+
+        .decision-node.relationship {
+            left: 0;
+            top: 50%;
+
+            transform:
+                translateY(-50%);
+        }
+
+
+        /* ============================================================
+           ORBIT CONNECTORS
+           ============================================================ */
+
+        .orbit-arrow {
+            position: absolute;
+
+            width: 0;
+            height: 0;
+
+            z-index: 2;
+        }
+
+
+        .orbit-arrow svg {
+            width: 24px;
+            height: 24px;
+
+            stroke: var(--line);
+
+            fill: var(--bg);
+
+            stroke-width: 1.2;
+        }
+
+
+        .orbit-arrow.a1 {
+            top: 92px;
+            right: 78px;
+
+            transform: rotate(45deg);
+        }
+
+
+        .orbit-arrow.a2 {
+            bottom: 92px;
+            right: 78px;
+
+            transform: rotate(135deg);
+        }
+
+
+        .orbit-arrow.a3 {
+            bottom: 92px;
+            left: 78px;
+
+            transform: rotate(225deg);
+        }
+
+
+        .orbit-arrow.a4 {
+            top: 92px;
+            left: 78px;
+
+            transform: rotate(315deg);
+        }
+
+
+        /* ============================================================
+           CONTINUOUS LOOP LABEL
+           ============================================================ */
+
+        .loop-caption {
+            position: absolute;
+
+            left: 50%;
+            bottom: 2px;
+
+            transform:
+                translateX(-50%);
+
+            font-size: 12px;
+
+            color: var(--muted);
+
+            letter-spacing: 0.04em;
+
+            white-space: nowrap;
+
+            padding:
+                0 12px;
+
+            background: var(--bg);
+        }
+
+
+        .loop-caption span {
+            color: var(--accent);
+        }
+
+
+        /* ============================================================
+           CREDIT PROCESS
+           ============================================================ */
+
+        .credit-flowchart {
+            max-width: 820px;
+
+            margin: 28px 0 8px;
+        }
+
+
+        .cf-two-col {
+            display: flex;
+
+            gap: 40px 48px;
+
+            align-items: stretch;
+        }
+
+
+        .cf-left {
+            flex: 2;
+
+            display: flex;
+
+            flex-direction: column;
+
+            position: relative;
+
+            padding-left: 20px;
+
+            border-left:
+                3px solid var(--line);
+
+            min-width: 0;
+        }
+
+
+        .cf-left .cf-group-inner {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 0;
+        }
+
+
+        .cf-node-wrapper {
+            margin-bottom: 0;
+        }
+
+
+        .cf-node-box {
+            border:
+                1px solid var(--line);
+
+            padding: 14px 18px;
+
+            background: transparent;
+
+            transition:
+                border-color 0.25s,
+                background 0.25s,
+                transform 0.2s;
+        }
+
+
+        .cf-node-box:hover {
+            border-color: var(--accent);
+
+            background:
+                rgba(138, 64, 53, 0.03);
+
+            transform:
+                translateY(-1px);
+        }
+
+
+        .cf-role {
+            font-size: 10px;
+
+            font-weight: 600;
+
+            letter-spacing: 0.05em;
+
+            text-transform: uppercase;
+
+            color: var(--muted);
+
+            display: block;
+
+            margin-bottom: 2px;
+        }
+
+
+        .cf-title {
+            font-size: 14px;
+
+            font-weight: 500;
+
+            letter-spacing: -0.01em;
+
+            display: block;
+
+            margin: 2px 0 0;
+        }
+
+
+        .cf-desc {
+            font-size: 6px;
+
+            line-height: 1.5;
+
+            color: var(--muted);
+
+            margin:
+                6px 0 0 0;
+
+            padding-left: 2px;
+
+            max-width: 95%;
+
+            letter-spacing: 0.03em;
+        }
+
+
+        .cf-arrow {
+            text-align: center;
+
+            padding: 4px 0;
+
+            color: var(--line);
+
+            font-size: 14px;
+
+            line-height: 1;
+
+            user-select: none;
+        }
+
+
+        .cf-arrow svg {
+            display: block;
+
+            margin: 0 auto;
+
+            width: 18px;
+            height: 14px;
+
+            fill: none;
+
+            stroke: var(--line);
+
+            stroke-width: 1.5;
+
+            stroke-linecap: round;
+        }
+
+
+        .cf-right {
+            flex: 1.2;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding-left: 8px;
+
+            min-width: 0;
+        }
+
+
+        .cf-right .cf-node-wrapper {
+            width: 100%;
+
+            max-width: 320px;
+        }
+
+
+        .cf-right .cf-node-box {
+            border-color: var(--line);
+        }
+
+
+        .cf-right .cf-node-box:hover {
+            border-color: var(--accent);
+        }
+
+
+        /* ============================================================
+           OPERATING MODEL
+           ============================================================ */
+
+        .operating-wrapper {
+            max-width: 920px;
+
+            margin: 36px 0 16px;
+        }
+
+
+        .operating-layout {
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 60px;
+        }
+
+
+        .operating-side {
+            border-top:
+                1px solid var(--line);
+
+            padding-top: 20px;
+        }
+
+
+        .operating-side-title {
+            font-size: 13px;
+
+            font-weight: 600;
+
+            letter-spacing: 0.08em;
+
+            color: var(--muted);
+
+            text-transform: uppercase;
+
+            margin-bottom: 18px;
+        }
+
+
+        .operating-step {
+            display: flex;
+
+            gap: 14px;
+
+            padding: 13px 0;
+
+            border-bottom:
+                1px solid
+                rgba(216, 216, 211, 0.55);
+        }
+
+
+        .operating-step:last-child {
+            border-bottom: none;
+        }
+
+
+        .os-number {
+            font-size: 11px;
+
+            color: var(--accent);
+
+            min-width: 20px;
+        }
+
+
+        .os-main {
+            font-size: 14px;
+
+            font-weight: 450;
+        }
+
+
+        .os-sub {
+            font-size: 12px;
+
+            color: var(--muted);
+
+            line-height: 1.5;
+
+            margin-top: 3px;
+        }
+
+
+        /* ============================================================
+           IMPLEMENTATION
+           ============================================================ */
+
+        .impl-stats {
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit, minmax(200px, 1fr));
+
+            gap: 40px 48px;
+
+            margin: 32px 0 8px;
+
+            max-width: 900px;
+        }
+
+
+        .impl-stats .stat {
+            border-top:
+                1px solid var(--line);
+
+            padding-top: 18px;
+        }
+
+
+        .impl-stats .stat .number {
+            font-size:
+                clamp(40px, 4.5vw, 64px);
+
+            font-weight: 450;
+
+            letter-spacing: -0.03em;
+
+            line-height: 1.1;
+
+            color: var(--text);
+        }
+
+
+        .impl-stats .stat .number .accent {
+            color: var(--accent);
+        }
+
+
+        .impl-stats .stat .desc {
+            font-size: 15px;
+
+            color: var(--muted);
+
+            line-height: 1.5;
+
+            margin-top: 6px;
+
+            max-width: 260px;
+        }
+
+
+        /* ============================================================
+           IMPACT
+           ============================================================ */
+
+        .impact-grid {
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 48px 56px;
+
+            margin: 28px 0 8px;
+
+            max-width: 820px;
+        }
+
+
+        .impact-grid .side {
+            border-top:
+                1px solid var(--line);
+
+            padding-top: 20px;
+        }
+
+
+        .impact-grid .side .side-label {
+            font-size: 13px;
+
+            font-weight: 600;
+
+            letter-spacing: 0.08em;
+
+            text-transform: uppercase;
+
+            color: var(--muted);
+
+            margin-bottom: 14px;
+        }
+
+
+        .impact-grid .side .side-label.after {
+            color: var(--accent);
+        }
+
+
+        .impact-grid .side ul {
+            list-style: none;
+        }
+
+
+        .impact-grid .side ul li {
+            font-size: 15px;
+
+            line-height: 1.6;
+
+            padding: 6px 0;
+
+            border-bottom:
+                1px solid
+                rgba(216, 216, 211, 0.4);
+
+            display: flex;
+
+            align-items: baseline;
+
+            gap: 8px;
+        }
+
+
+        .impact-grid .side ul li:last-child {
+            border-bottom: none;
+        }
+
+
+        .impact-grid .side ul li .dot {
+            display: inline-block;
+
+            width: 4px;
+            height: 4px;
+
+            border-radius: 50%;
+
+            background: var(--line);
+
+            flex-shrink: 0;
+
+            margin-right: 4px;
+        }
+
+
+        .impact-grid .side ul li .dot.accent-dot {
+            background: var(--accent);
+        }
+
+
+        .impact-grid .side .flow-lines {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 2px;
+
+            padding: 6px 0;
+        }
+
+
+        .impact-grid .side .flow-lines .fl-item {
+            font-size: 15px;
+
+            line-height: 1.5;
+
+            padding:
+                4px 0 4px 16px;
+
+            border-left:
+                1px solid var(--line);
+
+            position: relative;
+        }
+
+
+        .impact-grid .side .flow-lines .fl-item::before {
+            content: '';
+
+            position: absolute;
+
+            left: -1px;
+            top: 50%;
+
+            width: 8px;
+            height: 1px;
+
+            background: var(--line);
+        }
+
+
+        /* ============================================================
+           GROUP APPLICATION
+           ============================================================ */
+
+        .group-app-text {
+            max-width: var(--body-width);
+        }
+
+
+        .group-app-text p {
+            font-size: 16px;
+
+            line-height: 1.7;
+
+            margin-bottom: 20px;
+        }
+
+
+        /* ============================================================
+           KEY CONTRIBUTION
+           ============================================================ */
+
+        .key-contrib {
+            max-width: 720px;
+        }
+
+
+        .key-contrib .kc-headline {
+            font-size:
+                clamp(32px, 3.6vw, 52px);
+
+            font-weight: 450;
+
+            letter-spacing: -0.025em;
+
+            line-height: 1.15;
+
+            margin-bottom: 16px;
+        }
+
+
+        .key-contrib .kc-body {
+            font-size: 16px;
+
+            line-height: 1.7;
+
+            color: var(--muted);
+
+            max-width: 600px;
+
+            margin-bottom: 28px;
+        }
+
+
+        .key-contrib .kc-chain {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            align-items: center;
+
+            gap: 4px 8px;
+
+            padding-top: 16px;
+
+            border-top:
+                1px solid var(--line);
+        }
+
+
+        .key-contrib .kc-chain .kc-item {
+            font-size: 15px;
+
+            font-weight: 450;
+
+            letter-spacing: 0.03em;
+
+            color: var(--text);
+
+            padding: 4px 12px;
+
+            border: 1px solid transparent;
+
+            transition:
+                border-color 0.2s;
+        }
+
+
+        .key-contrib .kc-chain .kc-item:hover {
+            border-color: var(--line);
+        }
+
+
+        .key-contrib .kc-chain .kc-arrow {
+            font-size: 14px;
+
+            color: var(--line);
+
+            font-weight: 300;
+        }
+
+
+        /* ============================================================
+           PROJECT TRACE
+           ============================================================ */
+
+        .trace-horizontal {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 20px 8px;
+
+            margin: 32px 0 8px;
+
+            padding: 8px 0;
+
+            max-width: 1000px;
+        }
+
+
+        .trace-horizontal .trace-node {
+            flex: 1 0 160px;
+
+            min-width: 140px;
+
+            border-top:
+                2px solid var(--line);
+
+            padding-top: 16px;
+
+            transition:
+                border-color 0.25s;
+        }
+
+
+        .trace-horizontal .trace-node:hover {
+            border-color: var(--accent);
+        }
+
+
+        .trace-horizontal .trace-node .tn-label {
+            font-size: 13px;
+
+            font-weight: 600;
+
+            letter-spacing: 0.06em;
+
+            text-transform: uppercase;
+
+            color: var(--text);
+
+            margin-bottom: 4px;
+        }
+
+
+        .trace-horizontal .trace-node .tn-desc {
+            font-size: 14px;
+
+            color: var(--muted);
+
+            line-height: 1.5;
+
+            max-width: 220px;
+        }
+
+
+        .trace-horizontal .trace-arrow {
+            font-size: 18px;
+
+            color: var(--line);
+
+            align-self: flex-start;
+
+            padding-top: 16px;
+        }
+
+
+        /* ============================================================
+           FOOTER
+           ============================================================ */
+
+        .site-footer {
+            padding:
+                var(--section-pad)
+                0
+                64px;
+
+            border-top:
+                1px solid var(--line);
+
+            margin-top: 12px;
+        }
+
+
+        .site-footer .closing {
+            max-width: 640px;
+        }
+
+
+        .site-footer .closing .closing-line {
+            font-size:
+                clamp(24px, 2.6vw, 38px);
+
+            font-weight: 450;
+
+            letter-spacing: -0.025em;
+
+            line-height: 1.2;
+
+            margin-bottom: 20px;
+        }
+
+
+        .site-footer .closing .closing-meta {
+            font-size: 14px;
+
+            color: var(--muted);
+
+            letter-spacing: 0.03em;
+
+            line-height: 1.6;
+        }
+
+
+        /* ============================================================
+           REVEAL
+           ============================================================ */
+
+        .reveal {
+            opacity: 0;
+
+            transform:
+                translateY(18px);
+
+            transition:
+                opacity 0.7s ease,
+                transform 0.7s ease;
+        }
+
+
+        .reveal.visible {
+            opacity: 1;
+
+            transform:
+                translateY(0);
+        }
+
+
+        /* ============================================================
+           TABLET
+           ============================================================ */
+
+        @media (max-width: 1024px) {
+
+            .container {
+                padding: 0 20px;
+            }
+
+
+            .editorial-grid {
+                grid-template-columns: 1fr;
+
+                gap: 16px 0;
+            }
+
+
+            .editorial-grid .content {
+                max-width: 100%;
+            }
+
+
+            .site-header {
+                height: auto;
+                padding: 20px 0 16px;
+                flex-wrap: wrap;
+                gap: 8px 16px;
+            }
+
+
+            .problem-matrix {
+                grid-template-columns:
+                    1fr 1fr;
+
+                gap: 24px 32px;
+            }
+
+
+            .trigger-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+
+            .trigger-item:nth-child(2) {
+                border-right: none;
+            }
+
+
+            .trigger-item:nth-child(-n+2) {
+                border-bottom:
+                    1px solid var(--line);
+            }
+
+
+            .trigger-item:first-child {
+                padding-left: 20px;
+            }
+
+
+            .decision-system {
+                max-width: 700px;
+            }
+
+
+            .cf-two-col {
+                flex-direction: column;
+
+                gap: 24px;
+            }
+
+
+            .cf-left {
+                padding-left: 16px;
+
+                border-left-width: 2px;
+            }
+
+
+            .cf-right {
+                padding-left: 0;
+
+                align-items: flex-start;
+
+                justify-content: flex-start;
+
+                border-top:
+                    1px solid var(--line);
+
+                padding-top: 12px;
+            }
+
+
+            .operating-layout {
+                grid-template-columns: 1fr;
+
+                gap: 40px;
+            }
+
+
+            .impact-grid {
+                grid-template-columns: 1fr;
+
+                gap: 32px;
+
+                max-width: 100%;
+            }
+        }
+
+
+        /* ============================================================
+           MOBILE
+           ============================================================ */
+
+        @media (max-width: 640px) {
+
+            .container {
+                padding: 0 16px;
+            }
+
+
+            .hero {
+                padding: 44px 0 36px;
+            }
+
+
+            .hero h1 {
+                font-size:
+                    clamp(32px, 8vw, 44px);
+            }
+
+
+            .hero .hero-sub {
+                font-size: 17px;
+            }
+
+
+            .section-editorial,
+            .section-full {
+                padding: 56px 0;
+            }
+
+
+            .editorial-grid {
+                gap: 12px 0;
+            }
+
+
+            .editorial-grid .label {
+                font-size: 17px;
+            }
+
+
+            .problem-matrix {
+                grid-template-columns: 1fr;
+
+                gap: 20px;
+            }
+
+
+            .trigger-grid {
+                grid-template-columns: 1fr;
+            }
+
+
+            .trigger-item {
+                border-right: none;
+
+                border-bottom:
+                    1px solid var(--line);
+            }
+
+
+            .trigger-item:last-child {
+                border-bottom: none;
+            }
+
+
+            .trigger-item:first-child {
+                padding-left: 20px;
+            }
+
+
+            .decision-system {
+                min-height: 720px;
+
+                max-width: 100%;
+            }
+
+
+            .decision-orbit {
+                width: 310px;
+                height: 310px;
+            }
+
+
+            .decision-center {
+                width: 130px;
+                height: 130px;
+            }
+
+
+            .decision-center .center-main {
+                font-size: 14px;
+            }
+
+
+            .decision-node {
+                width: 145px;
+
+                min-height: 76px;
+
+                padding: 11px 12px;
+            }
+
+
+            .decision-node .dn-title {
+                font-size: 12px;
+            }
+
+
+            .decision-node .dn-desc {
+                font-size: 9px;
+            }
+
+
+            .decision-node.customer {
+                top: 15px;
+            }
+
+
+            .decision-node.review {
+                right: 0;
+
+                top: 50%;
+            }
+
+
+            .decision-node.approval {
+                bottom: 15px;
+            }
+
+
+            .decision-node.relationship {
+                left: 0;
+
+                top: 50%;
+            }
+
+
+            .orbit-arrow.a1 {
+                top: 105px;
+
+                right: 44px;
+            }
+
+
+            .orbit-arrow.a2 {
+                bottom: 105px;
+
+                right: 44px;
+            }
+
+
+            .orbit-arrow.a3 {
+                bottom: 105px;
+
+                left: 44px;
+            }
+
+
+            .orbit-arrow.a4 {
+                top: 105px;
+
+                left: 44px;
+            }
+
+
+            .loop-caption {
+                bottom: 10px;
+
+                white-space: normal;
+
+                text-align: center;
+
+                width: 100%;
+            }
+
+
+            .strength-spectrum .tier {
+                padding: 18px 16px;
+            }
+
+
+            .strength-spectrum .tier-items {
+                font-size: 14px;
+            }
+
+
+            .principle-block .principle-line {
+                font-size: 17px;
+            }
+
+
+            .principle-block .principle-sub {
+                font-size: 15px;
+            }
+
+
+            .cf-node-box {
+                padding: 12px 14px;
+            }
+
+
+            .cf-title {
+                font-size: 13px;
+            }
+
+
+            .cf-desc {
+                font-size: 5px;
+
+                line-height: 1.4;
+            }
+
+
+            .cf-role {
+                font-size: 9px;
+            }
+
+
+            .impl-stats {
+                grid-template-columns: 1fr;
+
+                gap: 24px;
+            }
+
+
+            .impl-stats .stat .number {
+                font-size:
+                    clamp(36px, 10vw, 50px);
+            }
+
+
+            .key-contrib .kc-headline {
+                font-size:
+                    clamp(26px, 7vw, 36px);
+            }
+
+
+            .key-contrib .kc-chain {
+                gap: 2px 4px;
+            }
+
+
+            .key-contrib .kc-chain .kc-item {
+                font-size: 13px;
+
+                padding: 2px 8px;
+            }
+
+
+            .trace-horizontal {
+                flex-direction: column;
+
+                gap: 16px;
+            }
+
+
+            .trace-horizontal .trace-node {
+                flex: 1 1 auto;
+
+                min-width: unset;
+
+                border-top-width: 1px;
+
+                padding-top: 12px;
+            }
+
+
+            .trace-horizontal .trace-node .tn-desc {
+                max-width: 100%;
+            }
+
+
+            .site-footer {
+                padding:
+                    56px
+                    0
+                    44px;
+            }
+
+
+            .site-footer .closing .closing-line {
+                font-size:
+                    clamp(20px, 5vw, 28px);
+            }
+        }
+
+
+        /* ============================================================
+           SIDEBAR FLOW — 字号调大 + 行距拉大 + 换行处理
+           ============================================================ */
+
+        /* 触发器按钮 */
+        .flow-trigger {
+            position: fixed;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 9999;
+            background: rgba(138, 64, 53, 0.5);
+            color: #fff;
+            width: 40px;
+            height: 64px;
+            border: none;
+            border-radius: 8px 0 0 8px;
+            cursor: pointer;
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.08);
+            font-family: var(--font);
+            line-height: 1;
+            padding: 0;
+        }
+        .flow-trigger:hover {
+            background: rgba(138, 64, 53, 0.75);
+            width: 46px;
+            box-shadow: -4px 0 16px rgba(0, 0, 0, 0.15);
+        }
+        .flow-trigger .arrow-icon {
+            font-size: 32px;
+            writing-mode: horizontal-tb;
+            display: block;
+            font-weight: 300;
+            line-height: 1;
+        }
+
+        /* 面板容器 */
+        .flow-panel {
+            position: fixed;
+            top: 0;
+            right: -32vw;
+            width: 30vw;
+            max-width: 480px;
+            height: 100vh;
+            z-index: 10000;
+            background: rgba(247, 247, 244, 0.92);
+            backdrop-filter: blur(4px);
+            box-shadow: -6px 0 30px rgba(0, 0, 0, 0.08);
+            transition: right 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid rgba(216, 216, 211, 0.4);
+            overflow: hidden;
+            color: var(--text);
+        }
+        .flow-panel.open {
+            right: 0;
+        }
+
+        /* 面板头部 */
+        .flow-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 14px 18px 10px 18px;
+            border-bottom: 1px solid rgba(216, 216, 211, 0.3);
+            flex-shrink: 0;
+            background: transparent;
+        }
+        .flow-panel-header h2 {
+            font-size: 13px;
+            font-weight: 600;
+            margin: 0;
+            letter-spacing: -0.02em;
+            line-height: 1.3;
+            color: var(--text);
+        }
+        .flow-panel-header h2 span {
+            font-weight: 400;
+            font-size: 10px;
+            letter-spacing: 0.04em;
+            display: block;
+            margin-top: 2px;
+            color: var(--muted);
+        }
+        .flow-close-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--muted);
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 4px;
+            transition: background 0.2s, color 0.2s;
+            line-height: 1;
+            margin-top: -2px;
+        }
+        .flow-close-btn:hover {
+            background: rgba(216, 216, 211, 0.3);
+            color: var(--text);
+        }
+
+        /* 滚动区域 */
+        .flow-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px 18px 20px 18px;
+            background: transparent;
+        }
+
+        /* ============================================================
+           核心调整：字号调大 + 行间距拉大 + 换行处理
+           ============================================================ */
+        .fl {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+            flex-shrink: 0;
+        }
+
+        .fl-node {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(2px);
+            border: 1px solid rgba(216, 216, 211, 0.5);
+            border-radius: 3px;
+            padding: 6px 10px; /* padding 略微增加 */
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+            flex-shrink: 0;
+        }
+        .fl-node .fl-title {
+            font-size: 12px; /* 从9px → 12px */
+            font-weight: 700;
+            line-height: 1.5; /* 行距拉大 */
+            color: var(--text);
+            word-wrap: break-word;
+            white-space: normal;
+        }
+        .fl-node .fl-title strong {
+            font-weight: 800;
+            color: var(--text);
+        }
+        .fl-node .fl-sub {
+            font-size: 9px; /* 从6.5px → 9px */
+            margin-top: 3px;
+            line-height: 1.6; /* 行距拉大 */
+            color: var(--muted);
+            word-wrap: break-word;
+            white-space: normal;
+        }
+        .fl-node .fl-sub strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+        .fl-node .fl-tag {
+            display: inline-block;
+            font-size: 8px; /* 从6px → 8px */
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            background: rgba(247, 247, 244, 0.6);
+            padding: 2px 8px;
+            border-radius: 8px;
+            margin-top: 3px;
+            border: 1px solid rgba(216, 216, 211, 0.3);
+            color: var(--muted);
+            word-wrap: break-word;
+            white-space: normal;
+        }
+
+        /* 列表项样式 (用于步骤) */
+        .fl-step-list {
+            width: 100%;
+            text-align: left;
+            border: 1px solid rgba(216, 216, 211, 0.3);
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.4);
+            padding: 6px 10px;
+        }
+        .fl-step-list .step-item {
+            font-size: 9.5px; /* 从7px → 9.5px */
+            line-height: 1.6; /* 行距拉大 */
+            padding: 3px 0;
+            border-bottom: 1px solid rgba(216, 216, 211, 0.12);
+            color: var(--text);
+            word-wrap: break-word;
+            white-space: normal;
+        }
+        .fl-step-list .step-item:last-child {
+            border-bottom: none;
+        }
+        .fl-step-list .step-item strong {
+            font-weight: 700;
+            color: var(--text);
+        }
+        .fl-step-list .step-item .step-desc {
+            color: var(--muted);
+            display: block;
+            padding-left: 12px;
+            font-size: 8.5px; /* 从6px → 8.5px */
+            line-height: 1.5;
+            word-wrap: break-word;
+            white-space: normal;
+        }
+
+        .fl-connector {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2px 0;
+            font-size: 11px;
+            line-height: 1;
+            user-select: none;
+            color: var(--muted);
+            flex-shrink: 0;
+        }
+        .fl-connector .line {
+            width: 2px;
+            height: 6px;
+            background: rgba(216, 216, 211, 0.6);
+            flex-shrink: 0;
+        }
+        .fl-connector .arrow {
+            font-size: 10px;
+            color: var(--muted);
+            margin-top: -1px;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+
+        .fl-branch {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            gap: 6px; /* 间距略微增大 */
+            width: 100%;
+            position: relative;
+            padding-top: 2px;
+            flex-shrink: 0;
+        }
+        .fl-branch::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 4px;
+            background: rgba(216, 216, 211, 0.6);
+        }
+        .fl-branch > .fl-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 0;
+        }
+        .fl-branch .fl-col .fl-node {
+            max-width: 100%;
+        }
+        .fl-branch .fl-col .fl-connector .line {
+            height: 4px;
+        }
+
+        .fl-merge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            padding-top: 1px;
+            flex-shrink: 0;
+        }
+        .fl-merge .line-v {
+            width: 2px;
+            height: 6px;
+            background: rgba(216, 216, 211, 0.6);
+            flex-shrink: 0;
+        }
+        .fl-merge .line-h-wrap {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            gap: 0;
+            padding: 0;
+        }
+        .fl-merge .line-h-wrap .line-h {
+            flex: 1;
+            height: 2px;
+            background: rgba(216, 216, 211, 0.4);
+        }
+        .fl-merge .line-h-wrap .line-v-center {
+            width: 2px;
+            height: 6px;
+            background: rgba(216, 216, 211, 0.6);
+            flex-shrink: 0;
+        }
+
+        .fl-node.highlight {
+            border-left: 3px solid var(--accent);
+        }
+        .fl-node.highlight .fl-title {
+            color: var(--text);
+        }
+
+        /* 分隔标题 */
+        .fl-section-label {
+            width: 100%;
+            text-align: center;
+            font-size: 9px; /* 从6.5px → 9px */
+            letter-spacing: 0.06em;
+            color: var(--muted);
+            padding: 4px 0 4px 0;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(216,216,211,0.2);
+            margin-bottom: 4px;
+            word-wrap: break-word;
+            white-space: normal;
+            line-height: 1.5;
+        }
+        .fl-section-label.accent {
+            color: var(--accent);
+            border-top: 1px solid rgba(216,216,211,0.2);
+            margin-top: 6px;
+            padding-top: 6px;
+        }
+
+        .fl-footer {
+            text-align: center;
+            font-size: 8.5px; /* 从6px → 8.5px */
+            padding-top: 6px;
+            letter-spacing: 0.04em;
+            border-top: 1px solid rgba(216, 216, 211, 0.3);
+            margin-top: 6px;
+            padding-top: 8px;
+            width: 100%;
+            color: var(--muted);
+            flex-shrink: 0;
+            word-wrap: break-word;
+            white-space: normal;
+            line-height: 1.5;
+        }
+        .fl-footer strong {
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 800px) {
+            .flow-trigger {
+                width: 32px;
+                height: 48px;
+                font-size: 20px;
+            }
+            .flow-trigger .arrow-icon {
+                font-size: 24px;
+            }
+            .flow-panel {
+                right: -100vw;
+                width: 100vw;
+                max-width: 100vw;
+                background: rgba(247, 247, 244, 0.95);
+            }
+            .flow-panel.open {
+                right: 0;
+            }
+            .flow-panel-header {
+                padding: 10px 14px 8px 14px;
+            }
+            .flow-panel-header h2 {
+                font-size: 12px;
+            }
+            .flow-panel-header h2 span {
+                font-size: 9px;
+            }
+            .flow-scroll {
+                padding: 10px 14px 16px 14px;
+            }
+            .fl-node {
+                padding: 4px 8px;
+            }
+            .fl-node .fl-title {
+                font-size: 10px;
+            }
+            .fl-node .fl-sub {
+                font-size: 7.5px;
+            }
+            .fl-step-list .step-item {
+                font-size: 8px;
+            }
+            .fl-step-list .step-item .step-desc {
+                font-size: 7px;
+            }
+            .fl-branch {
+                flex-direction: column;
+                gap: 3px;
+            }
+            .fl-branch::before {
+                display: none;
+            }
+            .fl-branch > .fl-col {
+                width: 100%;
+            }
+            .fl-merge .line-h-wrap .line-h {
+                display: none;
+            }
+            .fl-merge .line-h-wrap .line-v-center {
+                height: 5px;
+            }
+            .fl-connector .line {
+                height: 4px;
+            }
+            .fl-connector .arrow {
+                font-size: 8px;
+            }
+            .fl-footer {
+                font-size: 7px;
+            }
+            .fl-section-label {
+                font-size: 7.5px;
+            }
+        }
+
+        /* 面板打开时，页面主体右移 */
+        body.flow-panel-open {
+            padding-right: 30vw;
+        }
+        @media (max-width: 800px) {
+            body.flow-panel-open {
+                padding-right: 0;
+            }
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+    <!-- ============================================================
+         HEADER
+         ============================================================ -->
+
+    <header class="site-header">
+
+        <div class="project-label">
+            JiaXin Xing / Project —— Group Exposure &amp; Credit Relationship Mapping
+        </div>
+
+        <div class="project-meta">
+            <a href="../JiaXin%20Xing%20%E2%80%94%20Research%20%C2%B7%20Systems%20%C2%B7%20Design.html">← All Projects</a>
+        </div>
+
+    </header>
+
+
+    <!-- ============================================================
+         HERO
+         ============================================================ -->
+
+    <section class="hero reveal">
+
+        <div class="kicker">
+            Risk &amp; Compliance · Relationship Intelligence · Credit Risk Management
+        </div>
+
+        <h1>
+            Group Exposure &amp; Credit<br />
+            Relationship Mapping
+        </h1>
+
+        <div class="heroGrid">
+
+            <div>
+
+                <p class="lead">
+                    Identifying hidden corporate relationships to improve<br />
+                    group-level credit risk management
+                </p>
+
+                <p class="small">
+                    China Merchants Bank · Dalian Branch · 2021–2023
+                </p>
+
+            </div>
+
+            <div class="meta">
+
+                <div>
+                    <b>Role</b>
+                    Risk &amp; Compliance · Relationship Intelligence
+                </div>
+
+                <div>
+                    <b>Period</b>
+                    2021 – 2023
+                </div>
+
+                <div>
+                    <b>Scope</b>
+                    2,000+ customers · group genealogy management
+                </div>
+
+                <div>
+                    <b>Review</b>
+                    Cross-system matching · Relationship identification
+                </div>
+
+                <div>
+                    <b>Core logic</b>
+                    Data → Relationship → Evidence → Decision → Exposure Management
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ============================================================
+         CONTEXT
+         ============================================================ -->
+
+    <section class="section-editorial reveal">
+
+        <div class="editorial-grid">
+
+            <div class="label">
+                CONTEXT
+            </div>
+
+            <div class="content">
+
+                <p>
+                    As the property sector and other high-risk industries placed increasing
+                    pressure on the real economy and related industries,
+                    credit risks began to emerge across interconnected
+                    corporate groups. In some cases, multiple companies
+                    with the same or closely related actual controllers
+                    had been managed as separate borrowers, resulting in
+                    fragmented exposure visibility and potential
+                    multiple-credit risks.
+                </p>
+
+                <p>
+                    The challenge was not simply a lack of customer
+                    information, but the difficulty of connecting
+                    fragmented information across customers, systems
+                    and business processes to identify substantive
+                    relationships.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ============================================================
+         THE PROBLEM
+         ============================================================ -->
+
+    <section class="section-editorial reveal">
+
+        <div class="editorial-grid">
+
+            <div class="label">
+                THE PROBLEM
+            </div>
+
+            <div class="content">
+
+                <p style="font-weight:450; margin-bottom:8px;">
+
+                    Fragmented information<br />
+
+                    <span style="
+                        font-weight:300;
+                        color:var(--muted);
+                    ">↓</span><br />
+
+                    Fragmented relationship visibility
+
+                </p>
+
+
+                <p>
+                    Corporate relationship information was distributed
+                    across multiple systems and business records.
+                </p>
+
+
+                <p style="margin-bottom:16px;">
+                    A relationship could exist through:
+                </p>
+
+
+                <div class="problem-matrix">
+
+
+                    <div class="matrix-item">
+
+                        <h4>PEOPLE</h4>
+
+                        <ul>
+                            <li>Legal representatives</li>
+                            <li>Shareholders</li>
+                            <li>Beneficial owners</li>
+                            <li>Payment contacts</li>
+                            <li>Online banking administrators</li>
+                        </ul>
+
+                    </div>
+
+
+                    <div class="matrix-item">
+
+                        <h4>OWNERSHIP</h4>
+
+                        <ul>
+                            <li>Direct shareholding</li>
+                            <li>Controlling relationships</li>
+                            <li>Common ownership structures</li>
+                        </ul>
+
+                    </div>
+
+
+                    <div class="matrix-item">
+
+                        <h4>INFORMATION</h4>
+
+                        <ul>
+                            <li>Telephone numbers</li>
+                            <li>Registered / business addresses</li>
+                        </ul>
+
+                    </div>
+
+
+                    <div class="matrix-item">
+
+                        <h4>BUSINESS BEHAVIOUR</h4>
+
+                        <ul>
+                            <li>Shared counterparties</li>
+                            <li>Similar transaction patterns</li>
+                            <li>Other supporting indicators</li>
+                        </ul>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ============================================================
+         RELATIONSHIP IDENTIFICATION
+         ============================================================ -->
+
+    <section class="section-full reveal">
+
+        <div class="section-label">
+            RELATIONSHIP IDENTIFICATION
+        </div>
+
+        <div class="section-sub">
+            From fragmented records to structured relationship evidence
+        </div>
+
+
+        <div class="section-body">
+
+            <p>
+                I designed a Relationship Customer Query Tool that used
+                the bank's internal customer ID as the primary reference
+                point and performed cross-system matching across multiple
+                relationship dimensions.
+            </p>
+
+            <p>
+                The mechanism did not simply return identical information.
+            </p>
+
+            <p>
+                Instead, matched relationships were differentiated
+                according to their strength and evidential relevance.
+            </p>
+
+        </div>
+
+
+        <div class="strength-spectrum">
+
+
+            <div class="tier">
+
+                <div class="tier-header">
+
+                    <span class="tier-label strong">
+                        STRONG
+                    </span>
+
+                    <span class="tier-items">
+                        Actual controller · Beneficial owner ·
+                        Shareholder / controlling relationship ·
+                        Common legal representative
+                    </span>
+
+                </div>
+
+                <div class="tier-rule strong-rule"></div>
+
+                <div class="tier-desc">
+                    Strongest indicators of a potential substantive
+                    relationship.
+                </div>
+
+            </div>
+
+
+            <div class="tier">
+
+                <div class="tier-header">
+
+                    <span class="tier-label">
+                        SUPPORTING
+                    </span>
+
+                    <span class="tier-items">
+                        Payment contact · Online banking administrator ·
+                        Telephone number · Registered / business address
+                    </span>
+
+                </div>
+
+                <div class="tier-rule"></div>
+
+                <div class="tier-desc">
+                    Supporting evidence that becomes more meaningful
+                    when combined with other signals.
+                </div>
+
+            </div>
+
+
+            <div class="tier">
+
+                <div class="tier-header">
+
+                    <span class="tier-label">
+                        SUPPLEMENTARY
+                    </span>
+
+                    <span class="tier-items">
+                        Shared counterparties · Similar transaction
+                        behaviour · Other overlapping business information
+                    </span>
+
+                </div>
+
+                <div class="tier-rule"></div>
+
+                <div class="tier-desc">
+                    Supplementary evidence used to support further review
+                    rather than independently determine a relationship.
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="principle-block">
+
+            <div class="principle-line">
+
+                A DATA MATCH
+                <span class="neq">≠</span>
+                A CONCLUSION
+
+            </div>
+
+            <div class="principle-sub">
+                A data match should generate evidence —<br />
+                not automatically generate a conclusion.
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ============================================================
+         DYNAMIC ENTRY POINTS
+         ============================================================ -->
+
+    <section class="section-full reveal">
+
+        <div class="section-label">
+            DYNAMIC ENTRY POINTS
+        </div>
+
+        <div class="section-sub">
+            Relationship management is triggered by business events —
+            not limited to a one-time screening exercise.
+        </div>
+
+
+        <div class="trigger-grid">
+
+
+            <!-- CUSTOMER -->
+
+            <div class="trigger-item">
+
+                <div class="trigger-number">
+                    01
+                </div>
+
+                <div class="flow-icon">
+
+                    <svg viewBox="0 0 28 28">
+
+                        <circle cx="14" cy="9" r="4"></circle>
+
+                        <path d="
+                            M6 23
+                            C6 18.5 9.5 16 14 16
+                            C18.5 16 22 18.5 22 23
+                        "></path>
+
+                    </svg>
+
+                </div>
+
+                <div class="trigger-title">
+                    NEW BUSINESS
+                </div>
+
+                <div class="trigger-desc">
+                    Relationship screening embedded before
+                    new credit or investment exposure is established.
+                </div>
+
+            </div>
+
+
+            <!-- CUSTOMER CHANGE -->
+
+            <div class="trigger-item">
+
+                <div class="trigger-number">
+                    02
+                </div>
+
+                <div class="flow-icon">
+
+                    <svg viewBox="0 0 28 28">
+
+                        <circle cx="14" cy="9" r="4"></circle>
+
+                        <path d="
+                            M7 23
+                            C7 19 10 17 14 17
+                            C18 17 21 19 21 23
+                        "></path>
+
+                        <path d="
+                            M20 5
+                            L24 5
+                            L24 9
+                        "></path>
+
+                        <path d="
+                            M24 5
+                            L20 9
+                        "></path>
+
+                    </svg>
+
+                </div>
+
+                <div class="trigger-title">
+                    CUSTOMER CHANGE
+                </div>
+
+                <div class="trigger-desc">
+                    Changes in ownership, key personnel or
+                    customer information trigger renewed assessment.
+                </div>
+
+            </div>
+
+
+            <!-- RELATIONSHIP CHANGE -->
+
+            <div class="trigger-item">
+
+                <div class="trigger-number">
+                    03
+                </div>
+
+                <div class="flow-icon">
+
+                    <svg viewBox="0 0 28 28">
+
+                        <circle cx="8" cy="14" r="3"></circle>
+
+                        <circle cx="20" cy="8" r="3"></circle>
+
+                        <circle cx="20" cy="20" r="3"></circle>
+
+                        <path d="
+                            M10.5 12.5
+                            L17.5 9.5
+                        "></path>
+
+                        <path d="
+                            M10.5 15.5
+                            L17.5 18.5
+                        "></path>
+
+                    </svg>
+
+                </div>
+
+                <div class="trigger-title">
+                    RELATIONSHIP CHANGE
+                </div>
+
+                <div class="trigger-desc">
+                    Newly identified or changed relationships
+                    update the internal group structure.
+                </div>
+
+            </div>
+
+
+            <!-- PERIODIC -->
+
+            <div class="trigger-item">
+
+                <div class="trigger-number">
+                    04
+                </div>
+
+                <div class="flow-icon accent">
+
+                    <svg viewBox="0 0 28 28">
+
+                        <circle
+                            cx="14"
+                            cy="14"
+                            r="9">
+                        </circle>
+
+                        <path d="
+                            M14 9
+                            L14 14
+                            L18 17
+                        "></path>
+
+                        <path d="
+                            M21 6
+                            L24 7
+                            L23 4
+                        "></path>
+
+                    </svg>
+
+                </div>
+
+                <div class="trigger-title">
+                    PERIODIC RE-SCREENING
+                </div>
+
+                <div class="trigger-desc">
+                    Existing customers are periodically re-screened
+                    to detect relationship changes over time.
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+    <!-- ============================================================
+         FROM MATCHING TO DECISION
+         ============================================================ -->
+
+    <section class="section-full reveal">
+
+        <div class="section-label">
+            FROM MATCHING TO DECISION
+        </div>
+
+        <div class="section-sub">
+            Evidence → Validation → Decision → Relationship Update
+        </div>
+
+
+        <div class="decision-system">
+
+
+            <!-- ORBIT -->
+
+            <div class="decision-orbit">
+
+
+                <div class="orbit-arrow a1">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <path d="
+                            M5 12
+                            H18
+                        " />
+
+                        <path d="
+                            M14 8
+                            L18 12
+                            L14 16
+                        " />
+
+                    </svg>
+
+                </div>
+
+
+                <div class="orbit-arrow a2">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <path d="
+                            M5 12
+                            H18
+                        " />
+
+                        <path d="
+                            M14 8
+                            L18 12
+                            L14 16
+                        " />
+
+                    </svg>
+
+                </div>
+
+
+                <div class="orbit-arrow a3">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <path d="
+                            M5 12
+                            H18
+                        " />
+
+                        <path d="
+                            M14 8
+                            L18 12
+                            L14 16
+                        " />
+
+                    </svg>
+
+                </div>
+
+
+                <div class="orbit-arrow a4">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <path d="
+                            M5 12
+                            H18
+                        " />
+
+                        <path d="
+                            M14 8
+                            L18 12
+                            L14 16
+                        " />
+
+                    </svg>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- CENTER -->
+
+            <div class="decision-center">
+
+                <div class="center-small">
+                    CORE LOOP
+                </div>
+
+                <div class="center-main">
+                    RELATIONSHIP<br />
+                    INTELLIGENCE
+                </div>
+
+                <div class="center-sub">
+                    continuous update
+                </div>
+
+            </div>
+
+
+            <!-- CUSTOMER -->
+
+            <div class="decision-node customer">
+
+                <div class="flow-icon">
+
+                    <svg viewBox="0 0 28 28">
+
+                        <circle cx="14" cy="9" r="4"></circle>
+
+                        <path d="
+                            M6 23
+                            C6 18.5 9.5 16 14 16
+                            C18.5 16 22 18.5 22 23
+                        "></path>
+
+                    </svg>
+
+                </div>
+
+                <div class="dn-role">
+                    DISCOVERY
+                </div>
+
+                <div class="dn-title">
+                    Cross-system matching
+                </div>
+
+                <div class="dn-desc">
+                    Identify relationship signals across
+                    fragmented customer records.
+                </div>
+
+            </div>
+
+
+            <!-- REVIEW -->
+
+            <div class="decision-node review">
+
+                <div class="flow-icon">
+
+                    <svg viewBox="0 0 28 28">
+
+                        <circle cx="12" cy="12" r="6"></circle>
+
+                        <path d="
+                            M16.5 16.5
+                            L23 23
+                        "></path>
+
+                    </svg>
+
+                </div>
+
+                <div class="dn-role">
+                    REVIEW
+                </div>
+
+                <div class="dn-title">
+                    Relationship review
+                </div>
+
+                <div class="dn-desc">
+                    Classify strong, supporting and
+                    supplementary evidence.
+                </div>
+
+            </div>
+
+
+            <!-- APPROVAL -->
+
+            <div class="decision-node approval">
+
+                <div class="flow-icon">
+
+                    <svg viewBox="0 0 28 28">
+
+                        <rect
+                            x="5"
+                            y="5"
+                            width="18"
+                            height="18">
+                        </rect>
+
+                        <path d="
+                            M9 14
+                            L12 17
+                            L19 10
+                        "></path>
+
+                    </svg>
+
+                </div>
+
+                <div class="dn-role">
+                    DECISION
+                </div>
+
+                <div class="dn-title">
+                    Business confirmation
+                </div>
+
+                <div class="dn-desc">
+                    Confirm whether the identified signals
+                    constitute a substantive relationship.
+                </div>
+
+            </div>
+
+
+            <!-- RELATIONSHIP -->
+
+            <div class="decision-node relationship">
+
+                <div class="flow-icon accent">
+
+                    <svg viewBox="0 0 28 28">
+
+                        <circle cx="8" cy="14" r="3"></circle>
+
+                        <circle cx="20" cy="8" r="3"></circle>
+
+                        <circle cx="20" cy="20" r="3"></circle>
+
+                        <path d="
+                            M10.5 12.5
+                            L17.5 9.5
+                        "></path>
+
+                        <path d="
+                            M10.5 15.5
+                            L17.5 18.5
+                        "></path>
+
+                    </svg>
+
+                </div>
+
+                <div class="dn-role">
+                    UPDATE
+                </div>
+
+                <div class="dn-title">
+                    Group relationship maintenance
+                </div>
+
+                <div class="dn-desc">
+                    Create, supplement or remove relationships
+                    within the group genealogy.
+                </div>
+
+            </div>
+
+
+            <div class="loop-caption">
+                Relationship information feeds back into
+                future <span>business decisions</span>.
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+    <!-- ============================================================
+         EMBEDDING INTO CREDIT PROCESS
+         ============================================================ -->
+
+    <section class="section-editorial reveal">
+
+        <div class="editorial-grid">
+
+            <div class="label">
+                CREDIT PROCESS
+            </div>
+
+
+            <div class="content">
+
+                <p style="margin-bottom:24px;">
+
+                    Relationship screening was embedded into
+                    the existing credit workflow while preserving
+                    clear separation between business initiation,
+                    credit assessment and group relationship management.
+
+                </p>
+
+
+                <div class="credit-flowchart">
+
+                    <div class="cf-two-col">
+
+
+                        <!-- MAIN PROCESS -->
+
+                        <div class="cf-left">
+
+                            <div class="cf-group-inner">
+
+
+                                <div class="cf-node-wrapper">
+
+                                    <div class="cf-node-box">
+
+                                        <span class="cf-role">
+                                            Relationship Manager
+                                        </span>
+
+                                        <span class="cf-title">
+                                            BUSINESS INITIATION
+                                        </span>
+
+                                    </div>
+
+                                    <p class="cf-desc">
+                                        Before submitting a credit-related
+                                        application, the relationship manager
+                                        conducts a relationship search and
+                                        reviews identified customer connections.
+                                        Confirmed substantive relationships are
+                                        initiated for group relationship maintenance.
+                                    </p>
+
+                                </div>
+
+
+                                <div class="cf-arrow">
+
+                                    <svg viewBox="0 0 18 14">
+
+                                        <path d="
+                                            M9 0
+                                            L9 10
+                                            M5 6
+                                            L9 10
+                                            L13 6
+                                        " />
+
+                                    </svg>
+
+                                </div>
+
+
+                                <div class="cf-node-wrapper">
+
+                                    <div class="cf-node-box">
+
+                                        <span class="cf-role">
+                                            Credit Approval · Risk Management ·
+                                            Investment &amp; Financing Functions
+                                        </span>
+
+                                        <span class="cf-title">
+                                            CREDIT ASSESSMENT
+                                        </span>
+
+                                    </div>
+
+                                    <p class="cf-desc">
+                                        Relationship information identified by
+                                        the business team is reviewed alongside
+                                        the credit application to ensure that
+                                        group relationships are considered
+                                        before credit exposure is established.
+                                    </p>
+
+                                </div>
+
+
+                                <div class="cf-arrow">
+
+                                    <svg viewBox="0 0 18 14">
+
+                                        <path d="
+                                            M9 0
+                                            L9 10
+                                            M5 6
+                                            L9 10
+                                            L13 6
+                                        " />
+
+                                    </svg>
+
+                                </div>
+
+
+                                <div class="cf-node-wrapper">
+
+                                    <div class="cf-node-box">
+
+                                        <span class="cf-role">
+                                            Group Management Function
+                                        </span>
+
+                                        <span class="cf-title">
+                                            GROUP RELATIONSHIP MANAGEMENT
+                                        </span>
+
+                                    </div>
+
+                                    <p class="cf-desc">
+                                        Confirmed relationships are incorporated
+                                        into the internal group genealogy and
+                                        used to support consolidated management
+                                        of related corporate customers.
+                                    </p>
+
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- PERIODIC REVIEW -->
+
+                        <div class="cf-right">
+
+                            <div class="cf-node-wrapper">
+
+                                <div class="cf-node-box">
+
+                                    <span class="cf-role">
+                                        Group Management · Risk Management
+                                    </span>
+
+                                    <span class="cf-title">
+                                        PERIODIC RE-SCREENING
+                                    </span>
+
+                                </div>
+
+                                <p class="cf-desc">
+                                    Existing credit and investment customers
+                                    are periodically screened in batches.
+                                    Changes in ownership, key personnel,
+                                    customer information or relationship
+                                    structures trigger further review and
+                                    maintenance of the group genealogy.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ============================================================
+         OPERATING MODEL
+         ============================================================ -->
+
+    <section class="section-full reveal">
+
+        <div class="section-label">
+            OPERATING MODEL
+        </div>
+
+
+        <div class="section-sub">
+            A continuous operating mechanism connecting customer,
+            relationship and exposure management.
+        </div>
+
+
+        <div class="operating-wrapper">
+
+            <div class="operating-layout">
+
+
+                <!-- TRIGGER SIDE -->
+
+                <div class="operating-side">
+
+                    <div class="operating-side-title">
+                        INPUT / TRIGGERS
+                    </div>
+
+
+                    <div class="operating-step">
+
+                        <div class="os-number">
+                            01
+                        </div>
+
+                        <div>
+                            <div class="os-main">
+                                Customer information
+                            </div>
+
+                            <div class="os-sub">
+                                Customer profile, key personnel,
+                                ownership and business information.
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="operating-step">
+
+                        <div class="os-number">
+                            02
+                        </div>
+
+                        <div>
+                            <div class="os-main">
+                                Business events
+                            </div>
+
+                            <div class="os-sub">
+                                New business, customer changes
+                                and relationship changes.
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="operating-step">
+
+                        <div class="os-number">
+                            03
+                        </div>
+
+                        <div>
+                            <div class="os-main">
+                                Periodic review
+                            </div>
+
+                            <div class="os-sub">
+                                Scheduled batch screening of
+                                existing credit customers.
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- OUTPUT SIDE -->
+
+                <div class="operating-side">
+
+                    <div class="operating-side-title">
+                        MANAGEMENT OUTPUT
+                    </div>
+
+
+                    <div class="operating-step">
+
+                        <div class="os-number">
+                            01
+                        </div>
+
+                        <div>
+                            <div class="os-main">
+                                Relationship evidence
+                            </div>
+
+                            <div class="os-sub">
+                                Structured evidence classified
+                                by relationship strength.
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="operating-step">
+
+                        <div class="os-number">
+                            02
+                        </div>
+
+                        <div>
+                            <div class="os-main">
+                                Group relationship
+                            </div>
+
+                            <div class="os-sub">
+                                Confirmed relationships incorporated
+                                into group genealogy.
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="operating-step">
+
+                        <div class="os-number">
+                            03
+                        </div>
+
+                        <div>
+                            <div class="os-main">
+                                Credit exposure visibility
+                            </div>
+
+                            <div class="os-sub">
+                                More complete group-level view
+                                of related credit exposure.
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ============================================================
+         IMPLEMENTATION
+         ============================================================ -->
+
+    <section class="section-full reveal">
+
+        <div class="section-label">
+            IMPLEMENTATION
+        </div>
+
+
+        <div class="impl-stats">
+
+
+            <div class="stat">
+
+                <div class="number">
+                    <span class="accent">
+                        2,000
+                    </span>+
+                </div>
+
+                <div class="desc">
+                    corporate credit &amp; investment customers reviewed
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="number">
+                    <span class="accent">
+                        400
+                    </span>+
+                </div>
+
+                <div class="desc">
+                    customers with identified relationship structures
+                    re-mapped and incorporated into group genealogy
+                    management
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="number">
+                    ~<span class="accent">
+                        1
+                    </span> year
+                </div>
+
+                <div class="desc">
+                    of stable operation following implementation
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+    <!-- ============================================================
+         ORGANISATIONAL IMPACT
+         ============================================================ -->
+
+    <section class="section-editorial reveal">
+
+        <div class="editorial-grid">
+
+            <div class="label">
+                ORGANISATIONAL<br />
+                IMPACT
+            </div>
+
+
+            <div class="content">
+
+                <p style="
+                    margin-bottom:24px;
+                    font-weight:450;
+                ">
+                    The project addressed a structural gap between
+                    credit approval and group relationship management.
+                </p>
+
+
+                <div class="impact-grid">
+
+
+                    <div class="side">
+
+                        <div class="side-label">
+                            BEFORE
+                        </div>
+
+
+                        <ul>
+
+                            <li>
+                                <span class="dot"></span>
+                                Business
+                            </li>
+
+                            <li>
+                                <span class="dot"></span>
+                                Credit Approval
+                            </li>
+
+                            <li style="
+                                color:var(--muted);
+                                padding-top:10px;
+                                border-bottom:none;
+                            ">
+                                Relationship information<br />
+                                outside the core process
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+
+                    <div class="side">
+
+                        <div class="side-label after">
+                            AFTER
+                        </div>
+
+
+                        <div class="flow-lines">
+
+                            <div class="fl-item">
+                                Business Discovery
+                            </div>
+
+                            <div class="fl-item">
+                                Relationship Identification
+                            </div>
+
+                            <div class="fl-item">
+                                Credit Decision
+                            </div>
+
+                            <div class="fl-item">
+                                Group Management
+                            </div>
+
+                            <div class="fl-item">
+                                Ongoing Review
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ============================================================
+         FROM BRANCH PRACTICE TO GROUP-LEVEL APPLICATION
+         ============================================================ -->
+
+    <section class="section-editorial reveal">
+
+        <div class="editorial-grid">
+
+            <div class="label">
+
+                FROM BRANCH PRACTICE<br />
+                TO GROUP-LEVEL<br />
+                APPLICATION
+
+            </div>
+
+
+            <div class="content group-app-text">
+
+                <p>
+                    After approximately one year of stable operation,
+                    the relationship-screening model developed by the
+                    Dalian Branch was reviewed and adopted as a reference
+                    by relevant teams at China Merchants Bank's headquarters.
+                </p>
+
+                <p>
+                    The model provided a practical basis for further
+                    strengthening cross-regional group risk management,
+                    helping address information fragmentation between
+                    branches while supporting more consistent identification
+                    of corporate relationships.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ============================================================
+         KEY CONTRIBUTION
+         ============================================================ -->
+
+    <section class="section-full reveal">
+
+        <div class="section-label">
+            KEY CONTRIBUTION
+        </div>
+
+
+        <div class="key-contrib">
+
+            <div class="kc-headline">
+                Making hidden relationships visible.
+            </div>
+
+
+            <div class="kc-body">
+
+                The core contribution was not simply the development
+                of a query tool.<br />
+
+                It was the transformation of fragmented customer
+                information and experience-based relationship
+                identification into a structured, reviewable process.
+
+            </div>
+
+
+            <div class="kc-chain">
+
+                <span class="kc-item">
+                    DATA
+                </span>
+
+                <span class="kc-arrow">
+                    →
+                </span>
+
+                <span class="kc-item">
+                    RELATIONSHIP
+                </span>
+
+                <span class="kc-arrow">
+                    →
+                </span>
+
+                <span class="kc-item">
+                    EVIDENCE
+                </span>
+
+                <span class="kc-arrow">
+                    →
+                </span>
+
+                <span class="kc-item">
+                    DECISION
+                </span>
+
+                <span class="kc-arrow">
+                    →
+                </span>
+
+                <span class="kc-item">
+                    EXPOSURE MANAGEMENT
+                </span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ============================================================
+         PROJECT TRACE
+         ============================================================ -->
+
+    <section class="section-full reveal">
+
+        <div class="section-label">
+            PROJECT TRACE
+        </div>
+
+
+        <div class="trace-horizontal">
+
+
+            <div class="trace-node">
+
+                <div class="tn-label">
+                    DATA FOUNDATION
+                </div>
+
+                <div class="tn-desc">
+                    Earlier customer-information integration
+                    created the data foundation.
+                </div>
+
+            </div>
+
+
+            <span class="trace-arrow">
+                →
+            </span>
+
+
+            <div class="trace-node">
+
+                <div class="tn-label">
+                    RELATIONSHIP INTELLIGENCE
+                </div>
+
+                <div class="tn-desc">
+                    Multi-dimensional relationship matching
+                    revealed previously fragmented connections.
+                </div>
+
+            </div>
+
+
+            <span class="trace-arrow">
+                →
+            </span>
+
+
+            <div class="trace-node">
+
+                <div class="tn-label">
+                    RISK MANAGEMENT
+                </div>
+
+                <div class="tn-desc">
+                    Confirmed relationships were incorporated
+                    into group-level credit exposure management.
+                </div>
+
+            </div>
+
+
+            <span class="trace-arrow">
+                →
+            </span>
+
+
+            <div class="trace-node">
+
+                <div class="tn-label">
+                    DIGITAL PROCESS DESIGN
+                </div>
+
+                <div class="tn-desc">
+                    The mechanism was embedded into existing
+                    business workflows rather than operating
+                    as a separate manual control.
+                </div>
+
+            </div>
+
+
+            <span class="trace-arrow">
+                →
+            </span>
+
+
+            <div class="trace-node">
+
+                <div class="tn-label">
+                    CONTINUOUS MANAGEMENT
+                </div>
+
+                <div class="tn-desc">
+                    Business events and periodic review continuously
+                    feed relationship updates back into decision-making.
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+    <!-- ============================================================
+         FOOTER
+         ============================================================ -->
+
+    <footer class="site-footer reveal">
+
+        <div class="closing">
+
+            <div class="closing-line">
+
+                From fragmented information<br />
+
+                to structured relationships,<br />
+
+                from relationships<br />
+
+                to better decisions,<br />
+
+                and from decisions<br />
+
+                to continuous risk management.
+
+            </div>
+
+
+            <div class="closing-meta">
+
+                Group Exposure &amp; Credit Relationship Mapping<br />
+
+                China Merchants Bank · Dalian Branch · 2021–2023
+
+            </div>
+
+        </div>
+
+    </footer>
+
+
+</div>
+
+
+<!-- ============================================================
+     SIDEBAR — COMPLETE OPERATING MODEL (字号调大 + 行距拉大)
+     ============================================================ -->
+
+<!-- 触发器按钮 -->
+<button class="flow-trigger" id="flowTrigger" aria-label="Toggle operating model flow">
+    <span class="arrow-icon">▶</span>
+</button>
+
+<!-- 流程图面板 -->
+<div class="flow-panel" id="flowPanel">
+    <div class="flow-panel-header">
+        <h2>OPERATING MODEL <span>Continuous mechanism · Input → Core → Output</span></h2>
+        <button class="flow-close-btn" id="flowCloseBtn">✕</button>
+    </div>
+    <div class="flow-scroll">
+        <div class="fl">
+
+            <!-- 1. INPUT / TRIGGERS (三个并列) -->
+            <div class="fl-branch">
+                <div class="fl-col">
+                    <div class="fl-node highlight">
+                        <div class="fl-title"><strong>CUSTOMER INFORMATION</strong></div>
+                        <div class="fl-sub">Customer profile, key personnel, ownership and business information.</div>
+                    </div>
+                </div>
+                <div class="fl-col">
+                    <div class="fl-node highlight">
+                        <div class="fl-title"><strong>BUSINESS EVENTS</strong></div>
+                        <div class="fl-sub">New business, customer changes and relationship changes.</div>
+                    </div>
+                </div>
+                <div class="fl-col">
+                    <div class="fl-node highlight">
+                        <div class="fl-title"><strong>PERIODIC REVIEW</strong></div>
+                        <div class="fl-sub">Scheduled batch screening of existing credit customers.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 合并箭头 -->
+            <div class="fl-merge">
+                <div class="line-h-wrap">
+                    <div class="line-h"></div>
+                    <div class="line-v-center"></div>
+                    <div class="line-h"></div>
+                </div>
+                <div class="line-v"></div>
+                <div class="arrow" style="font-size:9px; color:var(--muted);">▼</div>
+            </div>
+
+            <!-- 2. CONTINUOUS MONITORING & FEEDBACK (四个步骤) -->
+            <div class="fl-section-label">CONTINUOUS MONITORING &amp; FEEDBACK</div>
+
+            <div class="fl-node">
+                <div class="fl-title"><strong>INFORMATION CONSOLIDATION</strong></div>
+                <div class="fl-sub">Collect and maintain customer and relationship‑related information from internal and external sources.</div>
+            </div>
+            <div class="fl-connector"><div class="line"></div><div class="arrow">▼</div></div>
+
+            <div class="fl-node">
+                <div class="fl-title"><strong>BUSINESS TRIGGER DETECTION</strong></div>
+                <div class="fl-sub">Identify triggers from new business, customer changes, relationship changes and periodic review.</div>
+            </div>
+            <div class="fl-connector"><div class="line"></div><div class="arrow">▼</div></div>
+
+            <div class="fl-node">
+                <div class="fl-title"><strong>RELATIONSHIP ASSESSMENT</strong></div>
+                <div class="fl-sub">Assess facts and evidence to determine relationship strength based on policies and rules.</div>
+            </div>
+            <div class="fl-connector"><div class="line"></div><div class="arrow">▼</div></div>
+
+            <div class="fl-node">
+                <div class="fl-title"><strong>DECISION &amp; RELATIONSHIP UPDATE</strong></div>
+                <div class="fl-sub">Confirm relationship results and update group genealogy and relationship records.</div>
+            </div>
+
+            <!-- 3. FROM MATCHING TO DECISION (详细七个步骤) -->
+            <div class="fl-section-label accent">FROM MATCHING TO DECISION</div>
+            <div style="font-size:6.5px; color:var(--muted); text-align:center; margin-bottom:3px;">Evidence → Validation → Decision → Relationship Update</div>
+
+            <div class="fl-step-list">
+                <div class="step-item">
+                    <strong>1. EVIDENCE</strong>
+                    <span class="step-desc">Data match should generate evidence – not automatically generate a conclusion.</span>
+                </div>
+                <div class="step-item">
+                    <strong>2. VALIDATION</strong>
+                    <span class="step-desc">Classify strong, supporting and supplementary evidence.</span>
+                </div>
+                <div class="step-item">
+                    <strong>3. DECISION</strong>
+                    <span class="step-desc">Base relationship decisions strictly on validated facts and policy criteria.</span>
+                </div>
+                <div class="step-item">
+                    <strong>4. RELATIONSHIP UPDATE</strong>
+                    <span class="step-desc">Incorporate confirmed relationships into group structure. Update exposure links and related records.</span>
+                </div>
+                <div class="step-item">
+                    <strong>5. INFORMATION CONSOLIDATION</strong>
+                    <span class="step-desc">Gather potential matches from internal and external data sources. Generate factual evidence without drawing conclusions.</span>
+                </div>
+                <div class="step-item">
+                    <strong>6. BUSINESS TRIGGER DETECTION</strong>
+                    <span class="step-desc">Verify and validate evidence with relevant policies and rules. Classify evidence by relationship strength.</span>
+                </div>
+                <div class="step-item">
+                    <strong>7. DECISION AND RELATIONSHIP ASSESSMENT</strong>
+                    <span class="step-desc">Make relationship decision based on validated evidence and policy thresholds. Ensure consistency and auditability.</span>
+                </div>
+            </div>
+
+            <!-- 箭头连接 -->
+            <div class="fl-connector"><div class="line"></div><div class="arrow">▼</div></div>
+
+            <!-- 4. MANAGEMENT OUTPUT (三个并列) -->
+            <div class="fl-branch" style="padding-top:2px;">
+                <div class="fl-col">
+                    <div class="fl-node highlight">
+                        <div class="fl-title"><strong>RELATIONSHIP EVIDENCE</strong></div>
+                        <div class="fl-sub">Structured evidence classified by relationship strength.</div>
+                    </div>
+                </div>
+                <div class="fl-col">
+                    <div class="fl-node highlight">
+                        <div class="fl-title"><strong>GROUP RELATIONSHIP</strong></div>
+                        <div class="fl-sub">Confirmed relationships incorporated into group genealogy.</div>
+                    </div>
+                </div>
+                <div class="fl-col">
+                    <div class="fl-node highlight">
+                        <div class="fl-title"><strong>CREDIT EXPOSURE VISIBILITY</strong></div>
+                        <div class="fl-sub">More complete group‑level view of related credit exposure.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 合并箭头 -->
+            <div class="fl-merge">
+                <div class="line-h-wrap">
+                    <div class="line-h"></div>
+                    <div class="line-v-center"></div>
+                    <div class="line-h"></div>
+                </div>
+                <div class="line-v"></div>
+                <div class="arrow" style="font-size:9px; color:var(--muted);">▼</div>
+            </div>
+
+            <!-- 5. CONTINUOUS IMPROVEMENT -->
+            <div class="fl-node" style="border-left-color:var(--accent);">
+                <div class="fl-title"><strong>CONTIMUOUS IMPROVEMENT</strong></div>
+                <div class="fl-sub">Feedback from decisions and outcomes drives rule refinement, model improvement and data quality enhancement.</div>
+            </div>
+
+            <!-- 底部标记 -->
+            <div class="fl-footer">
+                <strong>CLOSED‑LOOP GOVERNANCE</strong> · Continuous Improvement Cycle
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- ============================================================
+     JAVASCRIPT — SCROLL REVEAL & SIDEBAR
+     ============================================================ -->
+
+<script>
+    // 原有的 scroll reveal
+    (function() {
+        'use strict';
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver(
+            function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.08,
+                rootMargin: '0px 0px -20px 0px'
+            }
+        );
+        revealElements.forEach(function(el) {
+            revealObserver.observe(el);
+        });
+        setTimeout(function() {
+            revealElements.forEach(function(el) {
+                const rect = el.getBoundingClientRect();
+                const winHeight = window.innerHeight || document.documentElement.clientHeight;
+                if (rect.top < winHeight - 60) {
+                    el.classList.add('visible');
+                }
+            });
+        }, 120);
+    })();
+
+    // 侧边栏交互
+    (function() {
+        const trigger = document.getElementById('flowTrigger');
+        const panel = document.getElementById('flowPanel');
+        const closeBtn = document.getElementById('flowCloseBtn');
+        let isOpen = false;
+
+        function togglePanel(open) {
+            isOpen = (open !== undefined) ? open : !isOpen;
+            if (isOpen) {
+                panel.classList.add('open');
+                document.body.classList.add('flow-panel-open');
+                trigger.querySelector('.arrow-icon').textContent = '◀';
+            } else {
+                panel.classList.remove('open');
+                document.body.classList.remove('flow-panel-open');
+                trigger.querySelector('.arrow-icon').textContent = '▶';
+            }
+        }
+
+        trigger.addEventListener('click', function(e) {
+            e.stopPropagation();
+            togglePanel();
+        });
+
+        closeBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (isOpen) togglePanel(false);
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && isOpen) {
+                togglePanel(false);
+            }
+        });
+    })();
+</script>
+
+</body>
+</html>

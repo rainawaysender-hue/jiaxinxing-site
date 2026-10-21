@@ -1533,9 +1533,24 @@
             .right-panel-base {
                 padding: 16px 14px 24px;
             }
+            /* mobile: triggers stay on screen above full-width panels so the 2nd one remains tappable */
+            .panel-triggers,
             body.right-panel-open .panel-triggers,
             body.right-panel-2-open .panel-triggers {
-                right: var(--panel-width);
+                right: 0;
+                z-index: 10002;
+            }
+            .right-panel-base {
+                right: 28px;
+                width: calc(100vw - 28px);
+                max-width: none;
+                height: 100dvh;
+            }
+            #rightPanel1, #rightPanel2 {
+                transform: translateX(calc(100% + 28px));
+            }
+            #rightPanel1.open, #rightPanel2.open {
+                transform: translateX(0);
             }
             .section-title {
                 font-size: 24px;
